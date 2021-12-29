@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR.PersonalCalendar.WebApi", "HR.PersonalCalendar.WebApi\HR.PersonalCalendar.WebApi.csproj", "{246C8517-29F5-4820-A198-CF3170F1690E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.PersonalCalendar", "HR.PersonalCalendar\HR.PersonalCalendar.csproj", "{C37277D9-B469-42EB-9A26-6C2CAF5848FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{246C8517-29F5-4820-A198-CF3170F1690E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{246C8517-29F5-4820-A198-CF3170F1690E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{246C8517-29F5-4820-A198-CF3170F1690E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{246C8517-29F5-4820-A198-CF3170F1690E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C37277D9-B469-42EB-9A26-6C2CAF5848FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C37277D9-B469-42EB-9A26-6C2CAF5848FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C37277D9-B469-42EB-9A26-6C2CAF5848FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C37277D9-B469-42EB-9A26-6C2CAF5848FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52EF3A96-C869-499A-9A47-91203A7C12BD}
+	EndGlobalSection
+EndGlobal
