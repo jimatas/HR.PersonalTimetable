@@ -32,7 +32,10 @@ namespace HR.PersonalCalendar.WebApi
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(nameof(ApplicationDbContext))));
             services.AddUnitOfWork<ApplicationDbContext>();
 
-            services.AddCachedApiClientFactory(WebUntisConfigurationSection.FromXmlFile("webuntis.config"));
+            var configuration = WebUntisConfigurationSection.FromXmlFile("webuntis.config");
+            services.AddSingleton(_ => configuration);
+
+            services.AddCachedApiClientFactory(configuration);
             services.AddDispatcher();
             services.AddHandlersFromAssembly(Assembly.Load("HR.PersonalCalendar"));
 
