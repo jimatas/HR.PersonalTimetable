@@ -3,6 +3,7 @@
 using HR.PersonalCalendar.Model;
 using HR.WebUntisConnector.Model;
 
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace HR.PersonalCalendar.WebApi.Models
@@ -25,17 +26,19 @@ namespace HR.PersonalCalendar.WebApi.Models
                 ElementType = Ensure.Argument.NotOutOfRange(timetable.ElementType, $"{nameof(timetable)}.{nameof(ElementType)}"),
                 ElementId = timetable.ElementId,
                 ElementName = Ensure.Argument.NotNullOrEmpty(timetable.ElementName, $"{nameof(timetable)}.{nameof(ElementName)}"),
-                SchoolYearId = timetable.SchoolYearId,
                 IsVisible = timetable.IsVisible
             };
         }
         
+        [Required]
         public string UserName { get; set; }
+        [Required]
         public string InstituteName { get; set; }
+        [Required]
         public ElementType ElementType { get; set; }
         public int? ElementId { get; set; }
+        [Required]
         public string ElementName { get; set; }
-        public int? SchoolYearId { get; set; }
         [JsonPropertyName("visible")]
         public bool IsVisible { get; set; }
     }
