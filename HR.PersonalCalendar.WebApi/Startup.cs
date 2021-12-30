@@ -36,6 +36,7 @@ namespace HR.PersonalCalendar.WebApi
             services.AddDispatcher();
             services.AddHandlersFromAssembly(Assembly.Load("HR.PersonalCalendar"));
 
+            services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
