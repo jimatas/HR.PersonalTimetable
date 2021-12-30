@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.WebApi.Controllers
 {
-    [ApiController]
     public class ElementsController : ApiControllerBase
     {
         public ElementsController(
