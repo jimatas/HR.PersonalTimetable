@@ -1,5 +1,7 @@
 ﻿using Developist.Core.Cqrs;
+using Developist.Core.Utilities;
 
+using HR.PersonalCalendar.Infrastructure;
 using HR.PersonalCalendar.Queries;
 using HR.WebUntisConnector.Extensions;
 using HR.WebUntisConnector.Model;
@@ -19,12 +21,13 @@ namespace HR.PersonalCalendar.WebApi.Controllers
 {
     public class TimetablesController : ApiControllerBase
     {
+        private readonly IClock clock;
+
         public TimetablesController(
+            IClock clock,
             IWebHostEnvironment environment,
             IConfiguration configuration,
-            IDispatcher dispatcher) : base(environment, configuration, dispatcher)
-        {
-        }
+            IDispatcher dispatcher) : base(environment, configuration, dispatcher) => this.clock = Ensure.Argument.NotNull(() => clock);
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TimetableGroup>>> GetAsync(
@@ -47,8 +50,8 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             {
                 InstituteName = instituteName,
                 Element = element,
-                StartDate = startDate ?? DateTime.Today.GetFirstWeekday(),
-                EndDate = endDate ?? DateTime.Today.GetLastWeekday().AddDays(1)
+                StartDate = startDate ?? clock.Now.Date.GetFirstWeekday(),
+                EndDate = endDate ?? clock.Now.Date.GetLastWeekday().AddDays(1)
             }, cancellationToken);
 
             return Ok(timetableGroups);
