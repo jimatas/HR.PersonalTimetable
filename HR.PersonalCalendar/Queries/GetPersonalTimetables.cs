@@ -17,12 +17,12 @@ namespace HR.PersonalCalendar.Queries
 
     public class GetPersonalTimetablesHandler : IQueryHandler<GetPersonalTimetables, IEnumerable<PersonalTimetable>>
     {
-        private readonly IUnitOfWork uow;
+        private readonly IUnitOfWork unitOfWork;
 
-        public GetPersonalTimetablesHandler(IUnitOfWork uow) 
-            => this.uow = Ensure.Argument.NotNull(() => uow);
+        public GetPersonalTimetablesHandler(IUnitOfWork unitOfWork)
+            => this.unitOfWork = Ensure.Argument.NotNull(() => unitOfWork);
 
-        public async Task<IEnumerable<PersonalTimetable>> HandleAsync(GetPersonalTimetables query, CancellationToken cancellationToken) 
-            => await uow.Repository<PersonalTimetable>().FindAsync(table => table.UserName == query.UserName, cancellationToken).ConfigureAwait(false);
+        public async Task<IEnumerable<PersonalTimetable>> HandleAsync(GetPersonalTimetables query, CancellationToken cancellationToken)
+            => await unitOfWork.Repository<PersonalTimetable>().FindAsync(table => table.UserName == query.UserName, cancellationToken).ConfigureAwait(false);
     }
 }
