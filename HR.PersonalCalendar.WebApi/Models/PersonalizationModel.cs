@@ -9,26 +9,27 @@ namespace HR.PersonalCalendar.WebApi.Models
 {
     public class PersonalizationModel
     {
-        public PersonalizationModel() { }
-
         /// <summary>
-        /// Mapping constructor. 
-        /// Maps the properties of the specified <see cref="PersonalTimetable"/> entity to the corresponding properties in this <see cref="PersonalizationModel"/> object.
+        /// Creates a new instance of the <see cref="PersonalizationModel"/> class with its properties initialized from the corresponding ones in the specified <see cref="PersonalTimetable"/> object.
         /// </summary>
-        /// <param name="table"></param>
-        public PersonalizationModel(PersonalTimetable table)
+        /// <param name="timetable"></param>
+        /// <returns></returns>
+        public static PersonalizationModel FromEntity(PersonalTimetable timetable)
         {
-            Ensure.Argument.NotNull(() => table);
+            Ensure.Argument.NotNull(() => timetable);
 
-            UserName = table.UserName;
-            InstituteName = table.InstituteName;
-            ElementType = table.ElementType;
-            ElementId = table.ElementId;
-            ElementName = table.ElementName;
-            SchoolYearId = table.SchoolYearId;
-            IsVisible = table.IsVisible;
+            return new()
+            {
+                UserName = Ensure.Argument.NotNullOrEmpty(timetable.UserName, $"{nameof(timetable)}.{nameof(UserName)}"),
+                InstituteName = Ensure.Argument.NotNullOrEmpty(timetable.InstituteName, $"{nameof(timetable)}.{nameof(InstituteName)}"),
+                ElementType = Ensure.Argument.NotOutOfRange(timetable.ElementType, $"{nameof(timetable)}.{nameof(ElementType)}"),
+                ElementId = timetable.ElementId,
+                ElementName = Ensure.Argument.NotNullOrEmpty(timetable.ElementName, $"{nameof(timetable)}.{nameof(ElementName)}"),
+                SchoolYearId = timetable.SchoolYearId,
+                IsVisible = timetable.IsVisible
+            };
         }
-
+        
         public string UserName { get; set; }
         public string InstituteName { get; set; }
         public ElementType ElementType { get; set; }
