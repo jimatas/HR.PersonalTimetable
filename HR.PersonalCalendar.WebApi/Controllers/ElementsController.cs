@@ -5,8 +5,10 @@ using HR.WebUntisConnector.Model;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,10 +24,10 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpGet("type/{elementType}")]
-        public async Task<ActionResult<Element>> GetAsync(ElementType elementType, [FromQuery(Name = "institute")] string instituteName, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Element>> GetAsync(ElementType elementType, [FromQuery(Name = "institute"), BindRequired] string instituteName, CancellationToken cancellationToken = default)
         {
             var elements = await QueryDispatcher.DispatchAsync(new GetElementsByType { InstituteName = instituteName, ElementType = elementType }, cancellationToken);
-            return Ok(elements);
+            return elements;
         }
     }
 }

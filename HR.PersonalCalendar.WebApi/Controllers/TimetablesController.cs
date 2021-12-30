@@ -1,10 +1,12 @@
 ﻿using Developist.Core.Cqrs;
 
 using HR.PersonalCalendar.Queries;
+using HR.WebUntisConnector.Extensions;
 using HR.WebUntisConnector.Model;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 
 using System;
@@ -26,11 +28,11 @@ namespace HR.PersonalCalendar.WebApi.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TimetableGroup>>> GetAsync(
-            [FromQuery(Name = "institute")] string instituteName,
-            [FromQuery(Name = "element")] ElementType elementType,
-            [FromQuery(Name = "name")] string elementName,
-            [FromQuery(Name = "start")] DateTime startDate,
-            [FromQuery(Name = "end")] DateTime endDate,
+            [FromQuery(Name = "institute"), BindRequired] string instituteName,
+            [FromQuery(Name = "element"), BindRequired] ElementType elementType,
+            [FromQuery(Name = "name"), BindRequired] string elementName,
+            [FromQuery(Name = "start")] DateTime? startDate,
+            [FromQuery(Name = "end")] DateTime? endDate,
             CancellationToken cancellationToken = default)
         {
             var elements = await QueryDispatcher.DispatchAsync(new GetElementsByType { InstituteName = instituteName, ElementType = elementType }, cancellationToken);
@@ -45,8 +47,8 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             {
                 InstituteName = instituteName,
                 Element = element,
-                StartDate = startDate,
-                EndDate = endDate
+                StartDate = startDate ?? DateTime.Today.GetFirstWeekday(),
+                EndDate = endDate ?? DateTime.Today.GetLastWeekday().AddDays(1)
             }, cancellationToken);
 
             return Ok(timetableGroups);
