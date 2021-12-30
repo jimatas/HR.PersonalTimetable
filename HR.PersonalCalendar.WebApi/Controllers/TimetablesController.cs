@@ -1,9 +1,6 @@
 ﻿using Developist.Core.Cqrs;
-using Developist.Core.Utilities;
 
-using HR.PersonalCalendar.Infrastructure;
 using HR.PersonalCalendar.Queries;
-using HR.WebUntisConnector;
 using HR.WebUntisConnector.Model;
 
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,33 +17,25 @@ namespace HR.PersonalCalendar.WebApi.Controllers
 {
     public class TimetablesController : ApiControllerBase
     {
-        private readonly IApiClientFactory apiClientFactory;
-
         public TimetablesController(
-            ICachedApiClientFactory apiClientFactory,
             IWebHostEnvironment environment,
             IConfiguration configuration,
             IDispatcher dispatcher) : base(environment, configuration, dispatcher)
         {
-            this.apiClientFactory = Ensure.Argument.NotNull(() => apiClientFactory);
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TimetableGroup>>> GetAsync(
-            string instituteName,
-            ElementType elementType,
-            string elementName,
-            DateTime startDate,
-            DateTime endDate,
+            [FromQuery(Name = "institute")] string instituteName,
+            [FromQuery(Name = "element")] ElementType elementType,
+            [FromQuery(Name = "name")] string elementName,
+            [FromQuery(Name = "start")] DateTime startDate,
+            [FromQuery(Name = "end")] DateTime endDate,
             CancellationToken cancellationToken = default)
         {
-            var element = await QueryDispatcher.DispatchAsync(new LookupElement
-            {
-                InstituteName = instituteName,
-                ElementName = elementName,
-                ElementType = elementType
-            }, cancellationToken);
+            var elements = await QueryDispatcher.DispatchAsync(new GetElementsByType { InstituteName = instituteName, ElementType = elementType }, cancellationToken);
 
+            var element = elements.FirstOrDefault(e => e.Name.Equals(elementName, StringComparison.InvariantCultureIgnoreCase));
             if (element is null)
             {
                 return NotFound();
@@ -60,6 +50,12 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             }, cancellationToken);
 
             return Ok(timetableGroups);
+        }
+
+        [HttpGet("personalized")]
+        public Task<ActionResult<IEnumerable<TimetableGroup>>> GetPersonalizedAsync([FromQuery(Name = "user")] string userName, CancellationToken cancellationToken = default)
+        {
+            return null;
         }
     }
 }

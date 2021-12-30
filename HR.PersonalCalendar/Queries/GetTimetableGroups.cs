@@ -26,9 +26,7 @@ namespace HR.PersonalCalendar.Queries
         private readonly IApiClientFactory apiClientFactory;
 
         public GetTimetableGroupsHandler(ICachedApiClientFactory apiClientFactory)
-        {
-            this.apiClientFactory = Ensure.Argument.NotNull(() => apiClientFactory);
-        }
+            => this.apiClientFactory = Ensure.Argument.NotNull(() => apiClientFactory);
 
         public async Task<IEnumerable<TimetableGroup>> HandleAsync(GetTimetableGroups query, CancellationToken cancellationToken)
         {
