@@ -53,8 +53,15 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpGet("personalized")]
-        public Task<ActionResult<IEnumerable<TimetableGroup>>> GetPersonalizedAsync([FromQuery(Name = "user")] string userName, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<TimetableGroup>>> GetPersonalizedAsync([FromQuery(Name = "user")] string userName, CancellationToken cancellationToken = default)
         {
+            var preferences = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
+            foreach (var preference in preferences)
+            {
+                // Get timetable group for preference
+            }
+
+            // return timetable groups
             return null;
         }
     }
