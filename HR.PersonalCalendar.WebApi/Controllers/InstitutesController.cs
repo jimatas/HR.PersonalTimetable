@@ -24,7 +24,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             IDispatcher dispatcher) : base(environment, configuration, dispatcher) => this.configuration = Ensure.Argument.NotNull(() => webuntisConfiguration);
 
         [HttpGet]
-        public ActionResult<IEnumerable<InstituteModel>> Get()
+        public IEnumerable<InstituteModel> Get()
         {
             var instituteModels = configuration.Schools.SelectMany(school => school.Institutes).Where(institute => institute.IsVisible)
                 .Select(institute => new InstituteModel
@@ -34,7 +34,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                     DisplayName = string.IsNullOrEmpty(institute.DisplayName) ? institute.Name : institute.DisplayName
                 });
 
-            return Ok(instituteModels);
+            return instituteModels;
         }
     }
 }
