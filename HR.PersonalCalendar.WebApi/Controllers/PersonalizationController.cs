@@ -1,5 +1,6 @@
 ﻿using Developist.Core.Cqrs;
 
+using HR.PersonalCalendar.Commands;
 using HR.PersonalCalendar.Queries;
 using HR.PersonalCalendar.WebApi.Models;
 
@@ -24,11 +25,26 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         {
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetForUser")]
         public async Task<IEnumerable<PersonalizationModel>> GetAsync([FromQuery(Name = "user"), BindRequired] string userName, CancellationToken cancellationToken = default)
         {
             var timetables = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
             return timetables.Select(PersonalizationModel.FromEntity);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> PostAsync([FromBody] PersonalizationModel personalization, CancellationToken cancellationToken = default)
+        {
+            await CommandDispatcher.DispatchAsync(new CreatePersonalTimetable
+            {
+                UserName = personalization.UserName,
+                InstituteName = personalization.InstituteName,
+                ElementType = personalization.ElementType,
+                ElementName = personalization.ElementName,
+                SchoolYearId = personalization.SchoolYearId
+            }, cancellationToken);
+
+            return CreatedAtRoute("GetForUser", new { user = personalization.UserName }, personalization);
         }
     }
 }
