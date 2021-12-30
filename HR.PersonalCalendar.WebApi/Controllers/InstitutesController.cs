@@ -26,13 +26,9 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         [HttpGet]
         public IEnumerable<InstituteModel> Get()
         {
-            var instituteModels = configuration.Schools.SelectMany(school => school.Institutes).Where(institute => institute.IsVisible)
-                .Select(institute => new InstituteModel
-                {
-                    Code = institute.Code,
-                    Name = institute.Name,
-                    DisplayName = string.IsNullOrEmpty(institute.DisplayName) ? institute.Name : institute.DisplayName
-                });
+            var instituteModels = configuration.Schools.SelectMany(school => school.Institutes)
+                .Where(institute => institute.IsVisible)
+                .Select(InstituteModel.FromElement);
 
             return instituteModels;
         }
