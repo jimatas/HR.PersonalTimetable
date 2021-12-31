@@ -1,8 +1,9 @@
-﻿using HR.WebUntisConnector.Model;
+﻿using HR.PersonalCalendar.WebApi.Models;
+using HR.WebUntisConnector.Model;
 
 using System;
 
-namespace HR.PersonalCalendar.WebApi.Models
+namespace HR.PersonalCalendar.WebApi.Extensions
 {
     public static class PersonalizationModelExtensions
     {
