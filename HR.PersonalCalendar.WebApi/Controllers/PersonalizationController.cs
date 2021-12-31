@@ -43,7 +43,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 return Unauthorized();
             }
 
-            await CommandDispatcher.DispatchAsync(new CreatePersonalTimetable
+            await CommandDispatcher.DispatchAsync(new AddPersonalTimetable
             {
                 UserName = personalizationModel.UserName,
                 InstituteName = personalizationModel.InstituteName,

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.Commands
 {
-    public class CreatePersonalTimetable : ICommand
+    public class AddPersonalTimetable : ICommand
     {
         public string UserName { get; set; }
         public string InstituteName { get; set; }
@@ -25,14 +25,14 @@ namespace HR.PersonalCalendar.Commands
         public string ElementName { get; set; }
     }
 
-    public class CreatePersonalTimetableHandler : ICommandHandler<CreatePersonalTimetable>
+    public class AddPersonalTimetableHandler : ICommandHandler<AddPersonalTimetable>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IClock clock;
         private readonly IQueryDispatcher queryDispatcher;
         private readonly IApiClientFactory apiClientFactory;
 
-        public CreatePersonalTimetableHandler(IUnitOfWork unitOfWork, IClock clock, IQueryDispatcher queryDispatcher, ICachedApiClientFactory apiClientFactory)
+        public AddPersonalTimetableHandler(IUnitOfWork unitOfWork, IClock clock, IQueryDispatcher queryDispatcher, ICachedApiClientFactory apiClientFactory)
         {
             this.unitOfWork = Ensure.Argument.NotNull(() => unitOfWork);
             this.clock = Ensure.Argument.NotNull(() => clock);
@@ -40,7 +40,7 @@ namespace HR.PersonalCalendar.Commands
             this.apiClientFactory = Ensure.Argument.NotNull(() => apiClientFactory);
         }
 
-        public async Task HandleAsync(CreatePersonalTimetable command, CancellationToken cancellationToken)
+        public async Task HandleAsync(AddPersonalTimetable command, CancellationToken cancellationToken)
         {
             var timetable = new PersonalTimetable
             {
