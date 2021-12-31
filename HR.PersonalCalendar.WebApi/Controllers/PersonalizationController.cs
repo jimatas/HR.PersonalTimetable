@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.WebApi.Controllers
 {
+    [Authorize]
     public class PersonalizationController : ApiControllerBase
     {
         public PersonalizationController(
@@ -35,7 +36,6 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<ActionResult> PostAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
         {
             if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
@@ -52,6 +52,26 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             }, cancellationToken);
 
             return CreatedAtRoute("GetForUser", new { user = personalizationModel.UserName }, personalizationModel);
+        }
+
+        [HttpPatch]
+        public async Task<ActionResult> PatchAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
+        {
+            if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Unauthorized();
+            }
+
+            await CommandDispatcher.DispatchAsync(new ChangeVisibility
+            {
+                UserName = personalizationModel.UserName,
+                InstituteName = personalizationModel.InstituteName,
+                ElementType = personalizationModel.ElementType,
+                ElementName = personalizationModel.ElementName,
+                IsVisible = personalizationModel.IsVisible
+            }, cancellationToken);
+
+            return Ok();
         }
     }
 }

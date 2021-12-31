@@ -18,7 +18,7 @@ namespace HR.PersonalCalendar.WebApi.Models
             return new()
             {
                 Code = instituteElement.Code,
-                Name = Ensure.Argument.NotNullOrEmpty(instituteElement.Name, $"{nameof(instituteElement)}.{nameof(Name)}"),
+                Name = Ensure.Argument.NotNullOrEmpty(instituteElement.Name, $"{nameof(instituteElement)}.{nameof(instituteElement.Name)}"),
                 DisplayName = string.IsNullOrEmpty(instituteElement.DisplayName) ? instituteElement.Name : instituteElement.DisplayName
             };
         }
