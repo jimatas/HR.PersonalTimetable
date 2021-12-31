@@ -55,7 +55,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpPatch]
-        public async Task<ActionResult> PatchAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<PersonalizationModel>> PatchAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
         {
             if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -71,7 +71,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 IsVisible = personalizationModel.IsVisible
             }, cancellationToken);
 
-            return NoContent();
+            return Ok(personalizationModel);
         }
 
         [HttpDelete]
