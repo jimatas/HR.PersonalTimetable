@@ -21,15 +21,15 @@ namespace HR.PersonalCalendar.WebApi.Models
 
             return new()
             {
-                UserName = Ensure.Argument.NotNullOrEmpty(personalTimetable.UserName, $"{nameof(personalTimetable)}.{nameof(UserName)}"),
-                InstituteName = Ensure.Argument.NotNullOrEmpty(personalTimetable.InstituteName, $"{nameof(personalTimetable)}.{nameof(InstituteName)}"),
-                ElementType = Ensure.Argument.NotOutOfRange(personalTimetable.ElementType, $"{nameof(personalTimetable)}.{nameof(ElementType)}"),
+                UserName = Ensure.Argument.NotNullOrEmpty(personalTimetable.UserName, $"{nameof(personalTimetable)}.{nameof(personalTimetable.UserName)}"),
+                InstituteName = Ensure.Argument.NotNullOrEmpty(personalTimetable.InstituteName, $"{nameof(personalTimetable)}.{nameof(personalTimetable.InstituteName)}"),
+                ElementType = Ensure.Argument.NotOutOfRange(personalTimetable.ElementType, $"{nameof(personalTimetable)}.{nameof(personalTimetable.ElementType)}"),
                 ElementId = personalTimetable.ElementId,
-                ElementName = Ensure.Argument.NotNullOrEmpty(personalTimetable.ElementName, $"{nameof(personalTimetable)}.{nameof(ElementName)}"),
+                ElementName = Ensure.Argument.NotNullOrEmpty(personalTimetable.ElementName, $"{nameof(personalTimetable)}.{nameof(personalTimetable.ElementName)}"),
                 IsVisible = personalTimetable.IsVisible
             };
         }
-        
+
         [Required]
         public string UserName { get; set; }
         [Required]
