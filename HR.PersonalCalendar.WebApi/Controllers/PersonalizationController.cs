@@ -71,7 +71,26 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 IsVisible = personalizationModel.IsVisible
             }, cancellationToken);
 
-            return Ok();
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
+        {
+            if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Unauthorized();
+            }
+
+            await CommandDispatcher.DispatchAsync(new RemovePersonalTimetable
+            {
+                UserName = personalizationModel.UserName,
+                InstituteName = personalizationModel.InstituteName,
+                ElementType = personalizationModel.ElementType,
+                ElementName = personalizationModel.ElementName
+            }, cancellationToken);
+
+            return NoContent();
         }
     }
 }
