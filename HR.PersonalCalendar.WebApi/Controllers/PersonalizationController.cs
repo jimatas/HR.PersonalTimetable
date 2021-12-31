@@ -36,22 +36,22 @@ namespace HR.PersonalCalendar.WebApi.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> PostAsync([FromBody] PersonalizationModel personalization, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> PostAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
         {
-            if (!User.Identity.Name.Equals(personalization.UserName, StringComparison.InvariantCultureIgnoreCase))
+            if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Unauthorized();
             }
 
             await CommandDispatcher.DispatchAsync(new CreatePersonalTimetable
             {
-                UserName = personalization.UserName,
-                InstituteName = personalization.InstituteName,
-                ElementType = personalization.ElementType,
-                ElementName = personalization.ElementName
+                UserName = personalizationModel.UserName,
+                InstituteName = personalizationModel.InstituteName,
+                ElementType = personalizationModel.ElementType,
+                ElementName = personalizationModel.ElementName
             }, cancellationToken);
 
-            return CreatedAtRoute("GetForUser", new { user = personalization.UserName }, personalization);
+            return CreatedAtRoute("GetForUser", new { user = personalizationModel.UserName }, personalizationModel);
         }
     }
 }
