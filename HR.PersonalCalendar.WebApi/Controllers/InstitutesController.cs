@@ -28,7 +28,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         {
             var instituteModels = configuration.Schools.SelectMany(school => school.Institutes)
                 .Where(institute => institute.IsVisible)
-                .Select(InstituteModel.FromElement);
+                .Select(InstituteModel.FromInstituteElement);
 
             return instituteModels;
         }

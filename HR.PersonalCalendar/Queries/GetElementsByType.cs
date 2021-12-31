@@ -37,7 +37,8 @@ namespace HR.PersonalCalendar.Queries
                     ElementType.Teacher => await apiClient.GetTeachersAsync(cancellationToken).ConfigureAwait(false),
                     ElementType.Subject => await apiClient.GetSubjectsAsync(cancellationToken).ConfigureAwait(false),
                     ElementType.Room => await apiClient.GetRoomsAsync(cancellationToken).ConfigureAwait(false),
-                    _ => throw new ArgumentOutOfRangeException(nameof(query), $"{nameof(query)}.{nameof(query.ElementType)} is not a valid {nameof(ElementType)}."),
+                    ElementType.Student => await apiClient.GetStudentsAsync(cancellationToken).ConfigureAwait(false),
+                    _ => throw new ArgumentOutOfRangeException(nameof(query), query.ElementType, $"{nameof(query)}.{nameof(query.ElementType)} is not a valid {nameof(ElementType)}."),
                 };
             }
             finally

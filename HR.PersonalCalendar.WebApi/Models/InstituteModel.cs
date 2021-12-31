@@ -9,17 +9,17 @@ namespace HR.PersonalCalendar.WebApi.Models
         /// <summary>
         /// Creates a new instance of the <see cref="InstituteModel"/> class with its properties initialized from the corresponding ones in the specified <see cref="InstituteElement"/> object.
         /// </summary>
-        /// <param name="institute"></param>
+        /// <param name="instituteElement"></param>
         /// <returns></returns>
-        public static InstituteModel FromElement(InstituteElement institute)
+        public static InstituteModel FromInstituteElement(InstituteElement instituteElement)
         {
-            Ensure.Argument.NotNull(() => institute);
+            Ensure.Argument.NotNull(() => instituteElement);
 
             return new()
             {
-                Code = institute.Code,
-                Name = Ensure.Argument.NotNullOrEmpty(institute.Name, $"{nameof(institute)}.{nameof(Name)}"),
-                DisplayName = string.IsNullOrEmpty(institute.DisplayName) ? institute.Name : institute.DisplayName
+                Code = instituteElement.Code,
+                Name = Ensure.Argument.NotNullOrEmpty(instituteElement.Name, $"{nameof(instituteElement)}.{nameof(Name)}"),
+                DisplayName = string.IsNullOrEmpty(instituteElement.DisplayName) ? instituteElement.Name : instituteElement.DisplayName
             };
         }
 

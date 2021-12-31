@@ -3,6 +3,7 @@ using Developist.Core.Utilities;
 
 using HR.PersonalCalendar.Infrastructure;
 using HR.PersonalCalendar.Queries;
+using HR.PersonalCalendar.WebApi.Models;
 using HR.WebUntisConnector.Extensions;
 using HR.WebUntisConnector.Model;
 
@@ -63,7 +64,13 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             var preferences = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
             foreach (var preference in preferences)
             {
-                // Get timetable group for preference
+                var timetableGroups = await QueryDispatcher.DispatchAsync(new GetTimetableGroups
+                {
+                    InstituteName = preference.InstituteName,
+                    Element = PersonalizationModel.FromPersonalTimetable(preference).ToElement(),
+                    StartDate = clock.Now.Date.GetFirstWeekday(),
+                    EndDate = clock.Now.Date.GetLastWeekday().AddDays(1)
+                }, cancellationToken);
             }
 
             // return timetable groups
