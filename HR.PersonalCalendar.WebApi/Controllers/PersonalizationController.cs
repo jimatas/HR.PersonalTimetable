@@ -62,7 +62,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 return Unauthorized();
             }
 
-            await CommandDispatcher.DispatchAsync(new ChangeVisibility
+            await CommandDispatcher.DispatchAsync(new ChangeTimetableVisibility
             {
                 UserName = personalizationModel.UserName,
                 InstituteName = personalizationModel.InstituteName,
