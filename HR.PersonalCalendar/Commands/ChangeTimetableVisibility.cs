@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.Commands
 {
-    public class ChangeVisibility : ICommand
+    public class ChangeTimetableVisibility : ICommand
     {
         public string UserName { get; set; }
         public string InstituteName { get; set; }
@@ -21,18 +21,18 @@ namespace HR.PersonalCalendar.Commands
         public bool IsVisible { get; set; }
     }
 
-    public class ChangeVisibilityHandler : ICommandHandler<ChangeVisibility>
+    public class ChangeTimetableVisibilityHandler : ICommandHandler<ChangeTimetableVisibility>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IClock clock;
 
-        public ChangeVisibilityHandler(IUnitOfWork unitOfWork, IClock clock)
+        public ChangeTimetableVisibilityHandler(IUnitOfWork unitOfWork, IClock clock)
         {
             this.unitOfWork = Ensure.Argument.NotNull(() => unitOfWork);
             this.clock = Ensure.Argument.NotNull(() => clock);
         }
 
-        public async Task HandleAsync(ChangeVisibility command, CancellationToken cancellationToken)
+        public async Task HandleAsync(ChangeTimetableVisibility command, CancellationToken cancellationToken)
         {
             var personalTimetable = (await unitOfWork.Repository<PersonalTimetable>().FindAsync(new FilterByCommand(command), cancellationToken).ConfigureAwait(false)).FirstOrDefault();
             if (personalTimetable is not null && personalTimetable.IsVisible != command.IsVisible)
@@ -46,8 +46,8 @@ namespace HR.PersonalCalendar.Commands
 
         private class FilterByCommand : IQueryableFilter<PersonalTimetable>
         {
-            private readonly ChangeVisibility command;
-            public FilterByCommand(ChangeVisibility command) => this.command = command;
+            private readonly ChangeTimetableVisibility command;
+            public FilterByCommand(ChangeTimetableVisibility command) => this.command = command;
             public IQueryable<PersonalTimetable> Filter(IQueryable<PersonalTimetable> sequence)
             {
                 sequence = sequence.Where(table => table.UserName == command.UserName);
