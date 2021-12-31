@@ -75,7 +75,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         {
             var calendarModels = new List<PersonalCalendarModel>();
 
-            var holidaysByInstitute = new Dictionary<string, IEnumerable<Holiday>>();
+            var holidaysByInstitute = new Dictionary<string, IEnumerable<Holiday>>(StringComparer.InvariantCultureIgnoreCase);
             var instituteModels = configuration.Schools.SelectMany(school => school.Institutes).Select(InstituteModel.FromInstituteElement);
 
             var personalTimetables = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
