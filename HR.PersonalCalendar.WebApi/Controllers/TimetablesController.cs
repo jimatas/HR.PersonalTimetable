@@ -3,6 +3,7 @@ using Developist.Core.Utilities;
 
 using HR.PersonalCalendar.Infrastructure;
 using HR.PersonalCalendar.Queries;
+using HR.PersonalCalendar.WebApi.Extensions;
 using HR.PersonalCalendar.WebApi.Models;
 using HR.WebUntisConnector.Extensions;
 using HR.WebUntisConnector.Model;
@@ -59,22 +60,27 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpGet("personalized")]
-        public async Task<ActionResult<IEnumerable<TimetableGroup>>> GetPersonalizedAsync([FromQuery(Name = "user"), BindRequired] string userName, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<TimetableGroup>>> GetPersonalizedAsync(
+            [FromQuery(Name = "user"), BindRequired] string userName,
+            [FromQuery(Name = "start")] DateTime? startDate,
+            [FromQuery(Name = "end")] DateTime? endDate,
+            CancellationToken cancellationToken = default)
         {
-            var preferences = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
-            foreach (var preference in preferences)
+            var timetableGroups = new List<TimetableGroup>();
+
+            var personalTimetables = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
+            foreach (var personalTimetable in personalTimetables)
             {
-                var timetableGroups = await QueryDispatcher.DispatchAsync(new GetTimetableGroups
+                timetableGroups.AddRange(await QueryDispatcher.DispatchAsync(new GetTimetableGroups
                 {
-                    InstituteName = preference.InstituteName,
-                    Element = PersonalizationModel.FromPersonalTimetable(preference).ToElement(),
-                    StartDate = clock.Now.Date.GetFirstWeekday(),
-                    EndDate = clock.Now.Date.GetLastWeekday().AddDays(1)
-                }, cancellationToken);
+                    InstituteName = personalTimetable.InstituteName,
+                    Element = PersonalizationModel.FromPersonalTimetable(personalTimetable).ToElement(),
+                    StartDate = startDate ?? clock.Now.Date.GetFirstWeekday(),
+                    EndDate = endDate ?? clock.Now.Date.GetLastWeekday().AddDays(1)
+                }, cancellationToken));
             }
 
-            // return timetable groups
-            return null;
+            return timetableGroups;
         }
     }
 }
