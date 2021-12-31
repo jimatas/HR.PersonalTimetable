@@ -1,10 +1,12 @@
 using Developist.Core.Cqrs.DependencyInjection;
 using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
 
+using HR.Cwips.Client;
 using HR.PersonalCalendar.Infrastructure;
 using HR.PersonalCalendar.Persistence;
 using HR.WebUntisConnector.Configuration;
 
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +43,14 @@ namespace HR.PersonalCalendar.WebApi
             services.AddDispatcher();
             services.AddHandlersFromAssembly(Assembly.Load("HR.PersonalCalendar"));
 
+            services.AddAuthentication(CwipsAuthenticationDefaults.AuthenticationScheme)
+                .AddCwips(options =>
+                {
+                    options.AllowAuthenticationMethod = AuthenticationMethods.MobileChallengeResponse | AuthenticationMethods.NetworkCredentialsForTokenless | AuthenticationMethods.UsernameAndPasswordWithToken;
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie();
+
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -63,6 +73,7 @@ namespace HR.PersonalCalendar.WebApi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

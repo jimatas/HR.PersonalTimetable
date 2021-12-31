@@ -4,11 +4,13 @@ using HR.PersonalCalendar.Commands;
 using HR.PersonalCalendar.Queries;
 using HR.PersonalCalendar.WebApi.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -33,15 +35,20 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> PostAsync([FromBody] PersonalizationModel personalization, CancellationToken cancellationToken = default)
         {
+            if (!User.Identity.Name.Equals(personalization.UserName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Unauthorized();
+            }
+
             await CommandDispatcher.DispatchAsync(new CreatePersonalTimetable
             {
                 UserName = personalization.UserName,
                 InstituteName = personalization.InstituteName,
                 ElementType = personalization.ElementType,
-                ElementName = personalization.ElementName,
-                SchoolYearId = personalization.SchoolYearId
+                ElementName = personalization.ElementName
             }, cancellationToken);
 
             return CreatedAtRoute("GetForUser", new { user = personalization.UserName }, personalization);
