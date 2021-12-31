@@ -96,9 +96,9 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                     EndDate = calendarModel.EndDate
                 }, cancellationToken);
 
-                if (!holidaysByInstitute.ContainsKey(personalTimetable.InstituteName))
+                if (!holidaysByInstitute.TryGetValue(personalTimetable.InstituteName, out var holidays))
                 {
-                    var holidays = await QueryDispatcher.DispatchAsync(new GetHolidays
+                    holidays = await QueryDispatcher.DispatchAsync(new GetHolidays
                     {
                         InstituteName = personalTimetable.InstituteName,
                         StartDate = calendarModel.StartDate,
@@ -107,8 +107,8 @@ namespace HR.PersonalCalendar.WebApi.Controllers
 
                     holidaysByInstitute.Add(personalTimetable.InstituteName, holidays);
                 }
+                calendarModel.Holidays = holidays;
 
-                calendarModel.Holidays = holidaysByInstitute[personalTimetable.InstituteName];
                 calendarModels.Add(calendarModel);
             }
 
