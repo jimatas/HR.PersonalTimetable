@@ -13,20 +13,20 @@ namespace HR.PersonalCalendar.WebApi.Models
         /// <summary>
         /// Creates a new instance of the <see cref="PersonalizationModel"/> class with its properties initialized from the corresponding ones in the specified <see cref="PersonalTimetable"/> object.
         /// </summary>
-        /// <param name="timetable"></param>
+        /// <param name="personalTimetable"></param>
         /// <returns></returns>
-        public static PersonalizationModel FromEntity(PersonalTimetable timetable)
+        public static PersonalizationModel FromPersonalTimetable(PersonalTimetable personalTimetable)
         {
-            Ensure.Argument.NotNull(() => timetable);
+            Ensure.Argument.NotNull(() => personalTimetable);
 
             return new()
             {
-                UserName = Ensure.Argument.NotNullOrEmpty(timetable.UserName, $"{nameof(timetable)}.{nameof(UserName)}"),
-                InstituteName = Ensure.Argument.NotNullOrEmpty(timetable.InstituteName, $"{nameof(timetable)}.{nameof(InstituteName)}"),
-                ElementType = Ensure.Argument.NotOutOfRange(timetable.ElementType, $"{nameof(timetable)}.{nameof(ElementType)}"),
-                ElementId = timetable.ElementId,
-                ElementName = Ensure.Argument.NotNullOrEmpty(timetable.ElementName, $"{nameof(timetable)}.{nameof(ElementName)}"),
-                IsVisible = timetable.IsVisible
+                UserName = Ensure.Argument.NotNullOrEmpty(personalTimetable.UserName, $"{nameof(personalTimetable)}.{nameof(UserName)}"),
+                InstituteName = Ensure.Argument.NotNullOrEmpty(personalTimetable.InstituteName, $"{nameof(personalTimetable)}.{nameof(InstituteName)}"),
+                ElementType = Ensure.Argument.NotOutOfRange(personalTimetable.ElementType, $"{nameof(personalTimetable)}.{nameof(ElementType)}"),
+                ElementId = personalTimetable.ElementId,
+                ElementName = Ensure.Argument.NotNullOrEmpty(personalTimetable.ElementName, $"{nameof(personalTimetable)}.{nameof(ElementName)}"),
+                IsVisible = personalTimetable.IsVisible
             };
         }
         
