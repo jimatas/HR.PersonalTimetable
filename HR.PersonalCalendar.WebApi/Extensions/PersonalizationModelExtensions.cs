@@ -2,6 +2,7 @@
 using HR.WebUntisConnector.Model;
 
 using System;
+using System.ComponentModel;
 
 namespace HR.PersonalCalendar.WebApi.Extensions
 {
@@ -11,12 +12,12 @@ namespace HR.PersonalCalendar.WebApi.Extensions
         {
             return personalizationModel.ElementType switch
             {
-                ElementType.Klasse => new Klasse { Id = (int)personalizationModel.ElementId, Name = personalizationModel.ElementName },
-                ElementType.Teacher => new Teacher { Id = (int)personalizationModel.ElementId, Name = personalizationModel.ElementName },
-                ElementType.Subject => new Subject { Id = (int)personalizationModel.ElementId, Name = personalizationModel.ElementName },
-                ElementType.Room => new Room { Id = (int)personalizationModel.ElementId, Name = personalizationModel.ElementName },
-                ElementType.Student => new Student { Id = (int)personalizationModel.ElementId, Name = personalizationModel.ElementName },
-                _ => throw new ArgumentOutOfRangeException(nameof(personalizationModel), personalizationModel.ElementType, $"{nameof(personalizationModel)}.{nameof(ElementType)} is not a valid {nameof(ElementType)}."),
+                ElementType.Klasse => new Klasse { Id = personalizationModel.ElementId, Name = personalizationModel.ElementName },
+                ElementType.Teacher => new Teacher { Id = personalizationModel.ElementId, Name = personalizationModel.ElementName },
+                ElementType.Subject => new Subject { Id = personalizationModel.ElementId, Name = personalizationModel.ElementName },
+                ElementType.Room => new Room { Id = personalizationModel.ElementId, Name = personalizationModel.ElementName },
+                ElementType.Student => new Student { Id = personalizationModel.ElementId, Name = personalizationModel.ElementName },
+                _ => throw new InvalidEnumArgumentException($"{nameof(personalizationModel)}.{nameof(personalizationModel.ElementType)}", Convert.ToInt32(personalizationModel.ElementType), typeof(ElementType))
             };
         }
     }

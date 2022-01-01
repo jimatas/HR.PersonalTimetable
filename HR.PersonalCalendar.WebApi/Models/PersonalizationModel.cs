@@ -1,8 +1,7 @@
-﻿using Developist.Core.Utilities;
-
-using HR.PersonalCalendar.Model;
+﻿using HR.PersonalCalendar.Model;
 using HR.WebUntisConnector.Model;
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -15,31 +14,40 @@ namespace HR.PersonalCalendar.WebApi.Models
         /// </summary>
         /// <param name="personalTimetable"></param>
         /// <returns></returns>
-        public static PersonalizationModel FromPersonalTimetable(PersonalTimetable personalTimetable)
+        public static PersonalizationModel FromPersonalTimetable(PersonalTimetable personalTimetable) => new()
         {
-            Ensure.Argument.NotNull(() => personalTimetable);
+            Id = personalTimetable.Id,
+            UserName = personalTimetable.UserName,
+            InstituteName = personalTimetable.InstituteName,
+            ElementType = personalTimetable.ElementType,
+            ElementId = personalTimetable.ElementId,
+            ElementName = personalTimetable.ElementName,
+            IsVisible = personalTimetable.IsVisible
+        };
 
-            return new()
-            {
-                UserName = Ensure.Argument.NotNullOrEmpty(personalTimetable.UserName, $"{nameof(personalTimetable)}.{nameof(personalTimetable.UserName)}"),
-                InstituteName = Ensure.Argument.NotNullOrEmpty(personalTimetable.InstituteName, $"{nameof(personalTimetable)}.{nameof(personalTimetable.InstituteName)}"),
-                ElementType = Ensure.Argument.NotOutOfRange(personalTimetable.ElementType, $"{nameof(personalTimetable)}.{nameof(personalTimetable.ElementType)}"),
-                ElementId = personalTimetable.ElementId,
-                ElementName = Ensure.Argument.NotNullOrEmpty(personalTimetable.ElementName, $"{nameof(personalTimetable)}.{nameof(personalTimetable.ElementName)}"),
-                IsVisible = personalTimetable.IsVisible
-            };
-        }
+        public Guid? Id { get; set; }
 
         [Required]
+        [StringLength(25)]
+        [RegularExpression("[0-9]{7,8}|[a-zA-Z]{5}", ErrorMessage = "The field {0} must be either a student number or an employee code.")]
         public string UserName { get; set; }
+        
         [Required]
+        [StringLength(50)]
         public string InstituteName { get; set; }
+
         [Required]
-        public ElementType ElementType { get; set; }
-        public int? ElementId { get; set; }
+        public ElementType ElementType { get; set; } = ElementType.Klasse;
+
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
+        public int ElementId { get; set; } = 0;
+
+        [Required]
+        [StringLength(100)]
         public string ElementName { get; set; }
+
         [JsonPropertyName("visible")]
-        public bool IsVisible { get; set; }
+        public bool IsVisible { get; set; } = true;
     }
 }

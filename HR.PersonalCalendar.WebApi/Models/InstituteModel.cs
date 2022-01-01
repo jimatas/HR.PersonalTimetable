@@ -1,6 +1,4 @@
-﻿using Developist.Core.Utilities;
-
-using HR.WebUntisConnector.Configuration;
+﻿using HR.WebUntisConnector.Configuration;
 
 namespace HR.PersonalCalendar.WebApi.Models
 {
@@ -11,17 +9,12 @@ namespace HR.PersonalCalendar.WebApi.Models
         /// </summary>
         /// <param name="instituteElement"></param>
         /// <returns></returns>
-        public static InstituteModel FromInstituteElement(InstituteElement instituteElement)
+        public static InstituteModel FromInstituteElement(InstituteElement instituteElement) => new()
         {
-            Ensure.Argument.NotNull(() => instituteElement);
-
-            return new()
-            {
-                Code = instituteElement.Code,
-                Name = Ensure.Argument.NotNullOrEmpty(instituteElement.Name, $"{nameof(instituteElement)}.{nameof(instituteElement.Name)}"),
-                DisplayName = string.IsNullOrEmpty(instituteElement.DisplayName) ? instituteElement.Name : instituteElement.DisplayName
-            };
-        }
+            Code = instituteElement.Code,
+            Name = instituteElement.Name,
+            DisplayName = string.IsNullOrEmpty(instituteElement.DisplayName) ? instituteElement.Name : instituteElement.DisplayName
+        };
 
         public string Code { get; set; }
         public string Name { get; set; }

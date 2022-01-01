@@ -8,6 +8,7 @@ using HR.WebUntisConnector.Model;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace HR.PersonalCalendar.Queries
                     ElementType.Subject => await apiClient.GetSubjectsAsync(cancellationToken).ConfigureAwait(false),
                     ElementType.Room => await apiClient.GetRoomsAsync(cancellationToken).ConfigureAwait(false),
                     ElementType.Student => await apiClient.GetStudentsAsync(cancellationToken).ConfigureAwait(false),
-                    _ => throw new ArgumentOutOfRangeException(nameof(query), query.ElementType, $"{nameof(query)}.{nameof(query.ElementType)} is not a valid {nameof(ElementType)}."),
+                    _ => throw new InvalidEnumArgumentException($"{nameof(query)}.{nameof(query.ElementType)}", Convert.ToInt32(query.ElementType), typeof(ElementType)),
                 };
             }
             finally

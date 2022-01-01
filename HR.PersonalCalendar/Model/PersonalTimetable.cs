@@ -34,7 +34,7 @@ namespace HR.PersonalCalendar.Model
         /// The primary key of the element in the WebUntis database.
         /// </summary>
         /// <seealso cref="Element.Id"/>
-        public int? ElementId { get; set; }
+        public int ElementId { get; set; }
 
         /// <summary>
         /// The unique name of the element. 
