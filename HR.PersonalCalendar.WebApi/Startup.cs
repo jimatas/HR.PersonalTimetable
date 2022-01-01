@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace HR.PersonalCalendar.WebApi
 {
@@ -54,7 +55,12 @@ namespace HR.PersonalCalendar.WebApi
                 .AddCookie();
 
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HR.PersonalCalendar.WebApi", Version = "v1" });
