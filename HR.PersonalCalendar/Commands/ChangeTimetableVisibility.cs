@@ -2,6 +2,7 @@
 using Developist.Core.Persistence;
 using Developist.Core.Utilities;
 
+using HR.PersonalCalendar.Extensions;
 using HR.PersonalCalendar.Infrastructure;
 using HR.PersonalCalendar.Model;
 
@@ -32,9 +33,7 @@ namespace HR.PersonalCalendar.Commands
         public async Task HandleAsync(ChangeTimetableVisibility command, CancellationToken cancellationToken)
         {
             var personalTimetable = await unitOfWork.Repository<PersonalTimetable>().GetAsync(command.PersonalTimetableId, cancellationToken).ConfigureAwait(false);
-            if (personalTimetable is not null && 
-                personalTimetable.IsVisible != command.IsVisible &&
-                personalTimetable.UserName.Equals(command.UserNameToVerify, StringComparison.InvariantCultureIgnoreCase))
+            if (personalTimetable is not null && personalTimetable.EnsureHasAccess(command.UserNameToVerify) && personalTimetable.IsVisible != command.IsVisible)
             {
                 personalTimetable.IsVisible = command.IsVisible;
                 personalTimetable.DateLastModified = clock.Now;
