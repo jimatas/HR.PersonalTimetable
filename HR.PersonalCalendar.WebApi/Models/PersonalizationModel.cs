@@ -40,7 +40,7 @@ namespace HR.PersonalCalendar.WebApi.Models
         public ElementType ElementType { get; set; } = ElementType.Klasse;
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
+        [Range(1, int.MaxValue, ErrorMessage = "The field {0} must be an integer between {1} and {2}.")]
         public int ElementId { get; set; } = 0;
 
         [Required]
