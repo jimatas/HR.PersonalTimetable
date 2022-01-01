@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
+using System;
+using System.IO;
 using System.Reflection;
 
 namespace HR.PersonalCalendar.WebApi
@@ -56,6 +58,12 @@ namespace HR.PersonalCalendar.WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HR.PersonalCalendar.WebApi", Version = "v1" });
+
+                var xmlFilePath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+                if (File.Exists(xmlFilePath))
+                {
+                    c.IncludeXmlComments(xmlFilePath);
+                }
             });
         }
 

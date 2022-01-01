@@ -91,7 +91,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 calendarModel.TimetableGroups = await QueryDispatcher.DispatchAsync(new GetTimetableGroups
                 {
                     InstituteName = personalTimetable.InstituteName,
-                    Element = PersonalizationModel.FromPersonalTimetable(personalTimetable).ToElement(),
+                    Element = PersonalizationReadModel.FromPersonalTimetable(personalTimetable).ToElement(),
                     StartDate = calendarModel.StartDate,
                     EndDate = calendarModel.EndDate
                 }, cancellationToken);

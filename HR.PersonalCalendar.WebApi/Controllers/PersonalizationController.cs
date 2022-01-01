@@ -30,14 +30,14 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpGet(Name = "GetForUser")]
-        public async Task<IEnumerable<PersonalizationModel>> GetAsync([FromQuery(Name = "user"), BindRequired] string userName, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<PersonalizationReadModel>> GetAsync([FromQuery(Name = "user"), BindRequired] string userName, CancellationToken cancellationToken = default)
         {
             var personalTimetables = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
-            return personalTimetables.Select(PersonalizationModel.FromPersonalTimetable);
+            return personalTimetables.Select(PersonalizationReadModel.FromPersonalTimetable);
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> PostAsync([FromBody] PersonalizationWriteModel personalizationModel, CancellationToken cancellationToken = default)
         {
             if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
             {

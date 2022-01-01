@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HR.PersonalCalendar.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:HR.PersonalCalendar.WebApi.Models.InstituteModel.FromInstituteElement(HR.WebUntisConnector.Configuration.InstituteElement)">
+            <summary>
+            Creates a new instance of the <see cref="T:HR.PersonalCalendar.WebApi.Models.InstituteModel"/> class with its properties initialized from the corresponding ones in the specified <see cref="T:HR.WebUntisConnector.Configuration.InstituteElement"/> object.
+            </summary>
+            <param name="instituteElement"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HR.PersonalCalendar.WebApi.Models.PersonalizationModel.FromPersonalTimetable(HR.PersonalCalendar.Model.PersonalTimetable)">
+            <summary>
+            Creates a new instance of the <see cref="T:HR.PersonalCalendar.WebApi.Models.PersonalizationModel"/> class with its properties initialized from the corresponding ones in the specified <see cref="T:HR.PersonalCalendar.Model.PersonalTimetable"/> object.
+            </summary>
+            <param name="personalTimetable"></param>
+            <returns></returns>
+        </member>
+        <member name="P:HR.PersonalCalendar.WebApi.Models.PersonalizationModel.Id">
+            <example>null</example>
+        </member>
+    </members>
+</doc>
