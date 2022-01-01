@@ -1,5 +1,6 @@
 ﻿using Developist.Core.Utilities;
 
+using HR.PersonalCalendar.Extensions;
 using HR.WebUntisConnector;
 
 using System.Collections.Generic;
@@ -24,8 +25,7 @@ namespace HR.PersonalCalendar.Infrastructure
         {
             IApiClient apiClient;
 
-            mutex.Wait();
-            try
+            using (mutex.WaitAndRelease())
             {
                 if (cachedApiClients.TryGetValue(schoolOrInstituteName, out var cachedApiClient))
                 {
@@ -36,10 +36,6 @@ namespace HR.PersonalCalendar.Infrastructure
                     apiClient = apiClientFactory.CreateApiClient(schoolOrInstituteName, out userName, out password);
                     cachedApiClients.Add(schoolOrInstituteName, new(apiClient, userName, password));
                 }
-            }
-            finally
-            {
-                mutex.Release();
             }
 
             return apiClient;
