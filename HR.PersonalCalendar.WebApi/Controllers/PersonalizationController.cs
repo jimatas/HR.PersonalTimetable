@@ -48,6 +48,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 UserName = personalizationModel.UserName,
                 InstituteName = personalizationModel.InstituteName,
                 ElementType = personalizationModel.ElementType,
+                ElementId = personalizationModel.ElementId,
                 ElementName = personalizationModel.ElementName
             }, cancellationToken);
 
@@ -55,39 +56,28 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpPatch]
-        public async Task<ActionResult<PersonalizationModel>> PatchAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> PatchAsync(
+            [FromQuery(Name = "id"), BindRequired] Guid personalTimetableId, 
+            [FromQuery(Name = "visible"), BindRequired] bool isVisible, 
+            CancellationToken cancellationToken = default)
         {
-            if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return Unauthorized();
-            }
-
             await CommandDispatcher.DispatchAsync(new ChangeTimetableVisibility
             {
-                UserName = personalizationModel.UserName,
-                InstituteName = personalizationModel.InstituteName,
-                ElementType = personalizationModel.ElementType,
-                ElementName = personalizationModel.ElementName,
-                IsVisible = personalizationModel.IsVisible
+                PersonalTimetableId = personalTimetableId,
+                IsVisible = isVisible,
+                UserNameToVerify = User.Identity.Name
             }, cancellationToken);
 
-            return Ok(personalizationModel);
+            return NoContent();
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteAsync([FromBody] PersonalizationModel personalizationModel, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> DeleteAsync([FromQuery(Name = "id"), BindRequired] Guid personalTimetableId, CancellationToken cancellationToken = default)
         {
-            if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return Unauthorized();
-            }
-
             await CommandDispatcher.DispatchAsync(new RemovePersonalTimetable
             {
-                UserName = personalizationModel.UserName,
-                InstituteName = personalizationModel.InstituteName,
-                ElementType = personalizationModel.ElementType,
-                ElementName = personalizationModel.ElementName
+                PersonalTimetableId = personalTimetableId,
+                UserNameToVerify = User.Identity.Name
             }, cancellationToken);
 
             return NoContent();
