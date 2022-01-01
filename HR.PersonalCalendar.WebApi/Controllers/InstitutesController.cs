@@ -24,13 +24,13 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             IDispatcher dispatcher) : base(environment, configuration, dispatcher) => this.configuration = Ensure.Argument.NotNull(() => webuntisConfiguration);
 
         [HttpGet]
-        public IEnumerable<InstituteModel> Get()
+        public IEnumerable<Institute> Get()
         {
-            var instituteModels = configuration.Schools.SelectMany(school => school.Institutes)
+            var institutes = configuration.Schools.SelectMany(school => school.Institutes)
                 .Where(institute => institute.IsVisible)
-                .Select(InstituteModel.FromInstituteElement);
+                .Select(Institute.FromInstituteElement);
 
-            return instituteModels;
+            return institutes;
         }
     }
 }

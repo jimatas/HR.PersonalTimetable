@@ -30,30 +30,30 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpGet(Name = "GetForUser")]
-        public async Task<IEnumerable<PersonalizationReadModel>> GetAsync([FromQuery(Name = "user"), BindRequired] string userName, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Personalization>> GetAsync([FromQuery(Name = "user"), BindRequired] string userName, CancellationToken cancellationToken = default)
         {
             var personalTimetables = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
-            return personalTimetables.Select(PersonalizationReadModel.FromPersonalTimetable);
+            return personalTimetables.Select(Personalization.FromPersonalTimetable);
         }
 
         [HttpPost]
-        public async Task<ActionResult> PostAsync([FromBody] PersonalizationWriteModel personalizationModel, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> PostAsync([FromBody] PersonalizationParameters personalization, CancellationToken cancellationToken = default)
         {
-            if (!User.Identity.Name.Equals(personalizationModel.UserName, StringComparison.InvariantCultureIgnoreCase))
+            if (!User.Identity.Name.Equals(personalization.UserName, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Unauthorized();
             }
 
             await CommandDispatcher.DispatchAsync(new AddPersonalTimetable
             {
-                UserName = personalizationModel.UserName,
-                InstituteName = personalizationModel.InstituteName,
-                ElementType = personalizationModel.ElementType,
-                ElementId = personalizationModel.ElementId,
-                ElementName = personalizationModel.ElementName
+                UserName = personalization.UserName,
+                InstituteName = personalization.InstituteName,
+                ElementType = personalization.ElementType,
+                ElementId = personalization.ElementId,
+                ElementName = personalization.ElementName
             }, cancellationToken);
 
-            return CreatedAtRoute("GetForUser", new { user = personalizationModel.UserName }, personalizationModel);
+            return CreatedAtRoute("GetForUser", new { user = personalization.UserName }, personalization);
         }
 
         [HttpPatch]

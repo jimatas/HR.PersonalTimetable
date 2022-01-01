@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HR.PersonalCalendar.WebApi.Models
 {
-    public class PersonalizationWriteModel
+    public class PersonalizationParameters
     {
         [Required]
         [StringLength(25)]
