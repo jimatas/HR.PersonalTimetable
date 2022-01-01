@@ -2,6 +2,7 @@
 
 using HR.PersonalCalendar.Commands;
 using HR.PersonalCalendar.Queries;
+using HR.PersonalCalendar.WebApi.Filters;
 using HR.PersonalCalendar.WebApi.Models;
 
 using Microsoft.AspNetCore.Authorization;
@@ -56,9 +57,10 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpPatch]
+        [UnauthorizedExceptionFilter]
         public async Task<ActionResult> PatchAsync(
-            [FromQuery(Name = "id"), BindRequired] Guid personalTimetableId, 
-            [FromQuery(Name = "visible"), BindRequired] bool isVisible, 
+            [FromQuery(Name = "id"), BindRequired] Guid personalTimetableId,
+            [FromQuery(Name = "visible"), BindRequired] bool isVisible,
             CancellationToken cancellationToken = default)
         {
             await CommandDispatcher.DispatchAsync(new ChangeTimetableVisibility
@@ -72,6 +74,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpDelete]
+        [UnauthorizedExceptionFilter]
         public async Task<ActionResult> DeleteAsync([FromQuery(Name = "id"), BindRequired] Guid personalTimetableId, CancellationToken cancellationToken = default)
         {
             await CommandDispatcher.DispatchAsync(new RemovePersonalTimetable

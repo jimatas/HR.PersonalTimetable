@@ -2,6 +2,7 @@
 using Developist.Core.Persistence;
 using Developist.Core.Utilities;
 
+using HR.PersonalCalendar.Extensions;
 using HR.PersonalCalendar.Model;
 
 using System;
@@ -26,7 +27,7 @@ namespace HR.PersonalCalendar.Commands
         public async Task HandleAsync(RemovePersonalTimetable command, CancellationToken cancellationToken)
         {
             var personalTimetable = await unitOfWork.Repository<PersonalTimetable>().GetAsync(command.PersonalTimetableId, cancellationToken).ConfigureAwait(false);
-            if (personalTimetable is not null && personalTimetable.UserName.Equals(command.UserNameToVerify, StringComparison.InvariantCultureIgnoreCase))
+            if (personalTimetable is not null && personalTimetable.EnsureHasAccess(command.UserNameToVerify))
             {
                 unitOfWork.Repository<PersonalTimetable>().Remove(personalTimetable);
 
