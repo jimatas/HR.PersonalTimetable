@@ -48,12 +48,12 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             [FromQuery(Name = "end")] DateTime? endDate,
             CancellationToken cancellationToken = default)
         {
-            var elements = await QueryDispatcher.DispatchAsync(new GetElementsByType { InstituteName = instituteName, ElementType = elementType }, cancellationToken);
-
             if (elementId is null && string.IsNullOrEmpty(elementName))
             {
                 return BadRequest();
             }
+
+            var elements = await QueryDispatcher.DispatchAsync(new GetElementsByType { InstituteName = instituteName, ElementType = elementType }, cancellationToken);
 
             var element = elements.FirstOrDefault(e => e.Id == elementId || e.Name.Equals(elementName, StringComparison.InvariantCultureIgnoreCase));
             if (element is null)
