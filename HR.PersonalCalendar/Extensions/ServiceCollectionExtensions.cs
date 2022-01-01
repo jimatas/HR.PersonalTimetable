@@ -1,10 +1,11 @@
-﻿using HR.WebUntisConnector;
+﻿using HR.PersonalCalendar.Infrastructure;
+using HR.WebUntisConnector;
 using HR.WebUntisConnector.Configuration;
 using HR.WebUntisConnector.DependencyInjection;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HR.PersonalCalendar.Infrastructure
+namespace HR.PersonalCalendar.Extensions
 {
     public static class ServiceCollectionExtensions
     {
