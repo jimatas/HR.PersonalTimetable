@@ -2,6 +2,7 @@ using Developist.Core.Cqrs.DependencyInjection;
 using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
 
 using HR.Cwips.Client;
+using HR.PersonalCalendar.Extensions;
 using HR.PersonalCalendar.Infrastructure;
 using HR.PersonalCalendar.Persistence;
 using HR.WebUntisConnector.Configuration;
