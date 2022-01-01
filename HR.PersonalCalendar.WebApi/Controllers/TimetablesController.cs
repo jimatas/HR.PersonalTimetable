@@ -42,14 +42,20 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         public async Task<ActionResult<IEnumerable<TimetableGroup>>> GetAsync(
             [FromQuery(Name = "institute"), BindRequired] string instituteName,
             [FromQuery(Name = "element"), BindRequired] ElementType elementType,
-            [FromQuery(Name = "name"), BindRequired] string elementName,
+            [FromQuery(Name = "id")] int? elementId,
+            [FromQuery(Name = "name")] string elementName,
             [FromQuery(Name = "start")] DateTime? startDate,
             [FromQuery(Name = "end")] DateTime? endDate,
             CancellationToken cancellationToken = default)
         {
             var elements = await QueryDispatcher.DispatchAsync(new GetElementsByType { InstituteName = instituteName, ElementType = elementType }, cancellationToken);
 
-            var element = elements.FirstOrDefault(e => e.Name.Equals(elementName, StringComparison.InvariantCultureIgnoreCase));
+            if (elementId is null && string.IsNullOrEmpty(elementName))
+            {
+                return BadRequest();
+            }
+
+            var element = elements.FirstOrDefault(e => e.Id == elementId || e.Name.Equals(elementName, StringComparison.InvariantCultureIgnoreCase));
             if (element is null)
             {
                 return NotFound();
