@@ -3,7 +3,7 @@
 namespace HR.PersonalCalendar.Infrastructure
 {
     /// <summary>
-    /// Marker interface to facilitate constructor injection.
+    /// Marker interface to support constructor injection.
     /// </summary>
     public interface ICachedApiClientFactory : IApiClientFactory
     {

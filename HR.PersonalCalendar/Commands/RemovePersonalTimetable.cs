@@ -27,7 +27,7 @@ namespace HR.PersonalCalendar.Commands
         public async Task HandleAsync(RemovePersonalTimetable command, CancellationToken cancellationToken)
         {
             var personalTimetable = await unitOfWork.Repository<PersonalTimetable>().GetAsync(command.PersonalTimetableId, cancellationToken).ConfigureAwait(false);
-            if (personalTimetable is not null && personalTimetable.EnsureHasAccess(command.UserNameToVerify))
+            if (personalTimetable is not null && personalTimetable.VerifyAccess(command.UserNameToVerify))
             {
                 unitOfWork.Repository<PersonalTimetable>().Remove(personalTimetable);
 
