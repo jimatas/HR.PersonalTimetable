@@ -73,34 +73,34 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpGet("personalized")]
-        public async Task<ActionResult<IEnumerable<PersonalCalendarModel>>> GetPersonalizedAsync(
+        public async Task<ActionResult<IEnumerable<Models.PersonalCalendar>>> GetPersonalizedAsync(
             [FromQuery(Name = "user"), BindRequired] string userName,
             [FromQuery(Name = "start")] DateTime? startDate,
             [FromQuery(Name = "end")] DateTime? endDate,
             CancellationToken cancellationToken = default)
         {
-            var calendarModels = new List<PersonalCalendarModel>();
+            var calendars = new List<Models.PersonalCalendar>();
 
             var holidaysByInstitute = new Dictionary<string, IEnumerable<Holiday>>(StringComparer.InvariantCultureIgnoreCase);
-            var instituteModels = configuration.Schools.SelectMany(school => school.Institutes).Select(InstituteModel.FromInstituteElement);
+            var institutes = configuration.Schools.SelectMany(school => school.Institutes).Select(Institute.FromInstituteElement);
 
             var personalTimetables = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
             foreach (var personalTimetable in personalTimetables)
             {
-                var calendarModel = new PersonalCalendarModel
+                var calendar = new Models.PersonalCalendar
                 {
                     StartDate = startDate ?? clock.Now.Date.GetFirstWeekday(),
                     EndDate = endDate ?? clock.Now.Date.GetLastWeekday().AddDays(1),
-                    Institute = instituteModels.FirstOrDefault(institute => institute.Name.Equals(personalTimetable.InstituteName, StringComparison.InvariantCultureIgnoreCase)),
-                    Element = PersonalizationReadModel.FromPersonalTimetable(personalTimetable).ToElement()
+                    Institute = institutes.FirstOrDefault(institute => institute.Name.Equals(personalTimetable.InstituteName, StringComparison.InvariantCultureIgnoreCase)),
+                    Element = Personalization.FromPersonalTimetable(personalTimetable).ToElement()
                 };
 
-                calendarModel.TimetableGroups = await QueryDispatcher.DispatchAsync(new GetTimetableGroups
+                calendar.TimetableGroups = await QueryDispatcher.DispatchAsync(new GetTimetableGroups
                 {
                     InstituteName = personalTimetable.InstituteName,
-                    Element = calendarModel.Element,
-                    StartDate = calendarModel.StartDate,
-                    EndDate = calendarModel.EndDate
+                    Element = calendar.Element,
+                    StartDate = calendar.StartDate,
+                    EndDate = calendar.EndDate
                 }, cancellationToken);
 
                 if (!holidaysByInstitute.TryGetValue(personalTimetable.InstituteName, out var holidays))
@@ -108,18 +108,18 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                     holidays = await QueryDispatcher.DispatchAsync(new GetHolidays
                     {
                         InstituteName = personalTimetable.InstituteName,
-                        StartDate = calendarModel.StartDate,
-                        EndDate = calendarModel.EndDate
+                        StartDate = calendar.StartDate,
+                        EndDate = calendar.EndDate
                     }, cancellationToken);
 
                     holidaysByInstitute.Add(personalTimetable.InstituteName, holidays);
                 }
-                calendarModel.Holidays = holidays;
+                calendar.Holidays = holidays;
 
-                calendarModels.Add(calendarModel);
+                calendars.Add(calendar);
             }
 
-            return calendarModels;
+            return calendars;
         }
     }
 }

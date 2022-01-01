@@ -5,14 +5,14 @@ using System.Text.Json.Serialization;
 
 namespace HR.PersonalCalendar.WebApi.Models
 {
-    public class PersonalizationReadModel : PersonalizationWriteModel
+    public class Personalization : PersonalizationParameters
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="PersonalizationReadModel"/> class with its properties initialized from the corresponding ones in the specified <see cref="PersonalTimetable"/> object.
+        /// Creates a new instance of the <see cref="Personalization"/> class with its properties initialized from the corresponding ones in the specified <see cref="PersonalTimetable"/> object.
         /// </summary>
         /// <param name="personalTimetable"></param>
         /// <returns></returns>
-        public static PersonalizationReadModel FromPersonalTimetable(PersonalTimetable personalTimetable) => new()
+        public static Personalization FromPersonalTimetable(PersonalTimetable personalTimetable) => new()
         {
             Id = personalTimetable.Id,
             UserName = personalTimetable.UserName,
