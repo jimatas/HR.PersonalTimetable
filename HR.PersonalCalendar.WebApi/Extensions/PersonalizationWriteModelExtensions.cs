@@ -6,9 +6,9 @@ using System.ComponentModel;
 
 namespace HR.PersonalCalendar.WebApi.Extensions
 {
-    public static class PersonalizationModelExtensions
+    public static class PersonalizationWriteModelExtensions
     {
-        public static Element ToElement(this PersonalizationModel personalizationModel)
+        public static Element ToElement(this PersonalizationWriteModel personalizationModel)
         {
             return personalizationModel.ElementType switch
             {
