@@ -1,6 +1,7 @@
 ﻿using Developist.Core.Cqrs;
 using Developist.Core.Utilities;
 
+using HR.PersonalCalendar.Extensions;
 using HR.PersonalCalendar.Infrastructure;
 using HR.PersonalCalendar.Queries;
 using HR.PersonalCalendar.WebApi.Extensions;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -73,7 +75,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         }
 
         [HttpGet("personalized")]
-        public async Task<ActionResult<IEnumerable<Models.PersonalCalendar>>> GetPersonalizedAsync(
+        public async Task<IEnumerable<Models.PersonalCalendar>> GetPersonalizedAsync(
             [FromQuery(Name = "user"), BindRequired] string userName,
             [FromQuery(Name = "start")] DateTime? startDate,
             [FromQuery(Name = "end")] DateTime? endDate,
@@ -120,6 +122,18 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             }
 
             return calendars;
+        }
+
+        [HttpGet("personalized/export")]
+        public async Task<ActionResult> GetPersonalizedExportAsync(
+            [FromQuery(Name = "user"), BindRequired] string userName,
+            [FromQuery(Name = "start")] DateTime? startDate,
+            [FromQuery(Name = "end")] DateTime? endDate,
+            CancellationToken cancellationToken = default)
+        {
+            var calendars = await GetPersonalizedAsync(userName, startDate, endDate, cancellationToken);
+            var exportedData = calendars.SelectMany(calendar => calendar.TimetableGroups).ExportCalendar();
+            return File(Encoding.UTF8.GetBytes(exportedData), contentType: "text/calendar", fileDownloadName: "HR_Rooster.ics");
         }
     }
 }
