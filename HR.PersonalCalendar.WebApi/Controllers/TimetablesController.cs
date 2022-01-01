@@ -91,13 +91,14 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 {
                     StartDate = startDate ?? clock.Now.Date.GetFirstWeekday(),
                     EndDate = endDate ?? clock.Now.Date.GetLastWeekday().AddDays(1),
-                    Institute = instituteModels.FirstOrDefault(institute => institute.Name.Equals(personalTimetable.InstituteName, StringComparison.InvariantCultureIgnoreCase))
+                    Institute = instituteModels.FirstOrDefault(institute => institute.Name.Equals(personalTimetable.InstituteName, StringComparison.InvariantCultureIgnoreCase)),
+                    Element = PersonalizationReadModel.FromPersonalTimetable(personalTimetable).ToElement()
                 };
 
                 calendarModel.TimetableGroups = await QueryDispatcher.DispatchAsync(new GetTimetableGroups
                 {
                     InstituteName = personalTimetable.InstituteName,
-                    Element = PersonalizationReadModel.FromPersonalTimetable(personalTimetable).ToElement(),
+                    Element = calendarModel.Element,
                     StartDate = calendarModel.StartDate,
                     EndDate = calendarModel.EndDate
                 }, cancellationToken);
