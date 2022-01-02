@@ -1,6 +1,7 @@
 ﻿using Developist.Core.Cqrs.Queries;
 using Developist.Core.Utilities;
 
+using HR.PersonalCalendar.Extensions;
 using HR.PersonalCalendar.Infrastructure;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Extensions;
@@ -35,7 +36,7 @@ namespace HR.PersonalCalendar.Queries
             {
                 var holidays = await apiClient.GetHolidaysAsync(cancellationToken).ConfigureAwait(false);
                 var (startDate, endDate) = await EnsureStartAndEndDatesAsync(query.StartDate, query.EndDate, apiClient, cancellationToken).ConfigureAwait(false);
-                
+
                 holidays = holidays.Where(holiday => holiday.ToDateTimeRange().Overlaps(new(startDate, endDate)));
                 return holidays;
             }
@@ -47,7 +48,7 @@ namespace HR.PersonalCalendar.Queries
 
         private static async Task<(DateTime StartDate, DateTime EndDate)> EnsureStartAndEndDatesAsync(DateTime? startDate, DateTime? endDate, IApiClient apiClient, CancellationToken cancellationToken)
         {
-            if (startDate is null || endDate is null)
+            if (startDate.IsNullOrDefault() || endDate.IsNullOrDefault())
             {
                 var currentSchoolYear = await apiClient.GetCurrentSchoolYearAsync(cancellationToken).ConfigureAwait(false);
                 startDate ??= currentSchoolYear.GetStartDateTime();

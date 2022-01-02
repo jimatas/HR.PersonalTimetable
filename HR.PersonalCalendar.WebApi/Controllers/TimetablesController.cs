@@ -50,7 +50,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             [FromQuery(Name = "end")] DateTime? endDate,
             CancellationToken cancellationToken = default)
         {
-            if (elementId is null && string.IsNullOrEmpty(elementName))
+            if (elementId.IsNullOrDefault() && string.IsNullOrEmpty(elementName))
             {
                 return BadRequest();
             }
