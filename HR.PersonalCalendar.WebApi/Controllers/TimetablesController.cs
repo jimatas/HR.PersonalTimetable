@@ -87,7 +87,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             var institutes = configuration.Schools.SelectMany(school => school.Institutes).Select(Institute.FromInstituteElement);
 
             var personalTimetables = await QueryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = userName }, cancellationToken);
-            foreach (var personalTimetable in personalTimetables)
+            foreach (var personalTimetable in personalTimetables.Where(table => table.IsVisible))
             {
                 var calendar = new Models.PersonalCalendar
                 {
