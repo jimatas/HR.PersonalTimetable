@@ -44,6 +44,11 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 return Unauthorized();
             }
 
+            if (personalization.ElementId.GetValueOrDefault() == default && string.IsNullOrEmpty(personalization.ElementName))
+            {
+                return BadRequest();
+            }
+
             await CommandDispatcher.DispatchAsync(new AddPersonalTimetable
             {
                 UserName = personalization.UserName,

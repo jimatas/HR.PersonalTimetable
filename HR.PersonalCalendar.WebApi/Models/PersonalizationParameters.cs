@@ -1,6 +1,5 @@
 ﻿using HR.WebUntisConnector.Model;
 
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HR.PersonalCalendar.WebApi.Models
@@ -19,11 +18,8 @@ namespace HR.PersonalCalendar.WebApi.Models
         [Required]
         public ElementType ElementType { get; set; } = ElementType.Klasse;
 
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "The field {0} must be an integer between {1} and {2}.")]
-        public int ElementId { get; set; } = 0;
+        public int? ElementId { get; set; }
 
-        [Required]
         [StringLength(100)]
         public string ElementName { get; set; }
     }
