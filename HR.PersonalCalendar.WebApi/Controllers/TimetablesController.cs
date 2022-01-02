@@ -52,8 +52,8 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         {
             if (elementId.IsNullOrDefault() && string.IsNullOrEmpty(elementName))
             {
-                ModelState.AddModelError("id", "Either the element's id or its name must be specified.");
-                ModelState.AddModelError("name", "Either the element's id or its name must be specified.");
+                ModelState.AddModelError("id", "Either the element's id, its name, or both must be specified.");
+                ModelState.AddModelError("name", "Either the element's id, its name, or both must be specified.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
