@@ -47,8 +47,8 @@ namespace HR.PersonalCalendar.WebApi.Controllers
 
             if (personalization.ElementId.IsNullOrDefault() && string.IsNullOrEmpty(personalization.ElementName))
             {
-                ModelState.AddModelError(nameof(personalization.ElementId), "Either the element's id or its name must be specified.");
-                ModelState.AddModelError(nameof(personalization.ElementName), "Either the element's id or its name must be specified.");
+                ModelState.AddModelError(nameof(personalization.ElementId), "Either the element's id, its name, or both must be specified.");
+                ModelState.AddModelError(nameof(personalization.ElementName), "Either the element's id, its name, or both must be specified.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
