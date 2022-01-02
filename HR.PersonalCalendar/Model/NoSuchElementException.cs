@@ -10,9 +10,9 @@ namespace HR.PersonalCalendar.Model
     public class NoSuchElementException : Exception
     {
         public NoSuchElementException(ElementType elementType, int elementId)
-            : base(message: $"No {elementType} with {nameof(Element.Id)} {elementId}.") { }
+            : base(message: $"No {elementType} element with {nameof(Element.Id)} {elementId}.") { }
 
         public NoSuchElementException(ElementType elementType, string elementName)
-            : base(message: $"No {elementType} with {nameof(Element.Name)} \"{elementName}\".") { }
+            : base(message: $"No {elementType} element with {nameof(Element.Name)} \"{elementName}\".") { }
     }
 }
