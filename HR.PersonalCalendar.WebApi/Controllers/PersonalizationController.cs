@@ -46,7 +46,9 @@ namespace HR.PersonalCalendar.WebApi.Controllers
 
             if (personalization.ElementId.GetValueOrDefault() == default && string.IsNullOrEmpty(personalization.ElementName))
             {
-                return BadRequest();
+                ModelState.AddModelError(nameof(personalization.ElementId), "Either the element's id or its name must be specified.");
+                ModelState.AddModelError(nameof(personalization.ElementName), "Either the element's id or its name must be specified.");
+                return BadRequest(ModelState);
             }
 
             await CommandDispatcher.DispatchAsync(new AddPersonalTimetable

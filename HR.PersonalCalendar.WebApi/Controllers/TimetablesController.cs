@@ -52,7 +52,9 @@ namespace HR.PersonalCalendar.WebApi.Controllers
         {
             if (elementId.IsNullOrDefault() && string.IsNullOrEmpty(elementName))
             {
-                return BadRequest();
+                ModelState.AddModelError("id", "Either the element's id or its name must be specified.");
+                ModelState.AddModelError("name", "Either the element's id or its name must be specified.");
+                return BadRequest(ModelState);
             }
 
             var elements = await QueryDispatcher.DispatchAsync(new GetElementsByType { InstituteName = instituteName, ElementType = elementType }, cancellationToken);
