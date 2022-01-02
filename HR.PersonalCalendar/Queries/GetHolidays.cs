@@ -51,8 +51,8 @@ namespace HR.PersonalCalendar.Queries
             if (startDate.IsNullOrDefault() || endDate.IsNullOrDefault())
             {
                 var currentSchoolYear = await apiClient.GetCurrentSchoolYearAsync(cancellationToken).ConfigureAwait(false);
-                startDate ??= currentSchoolYear.GetStartDateTime();
-                endDate ??= currentSchoolYear.GetEndDateTime();
+                startDate = startDate.IsNullOrDefault() ? currentSchoolYear.GetStartDateTime() : startDate;
+                endDate = endDate.IsNullOrDefault() ? currentSchoolYear.GetEndDateTime() : endDate;
             }
             return ((DateTime)startDate, (DateTime)endDate);
         }
