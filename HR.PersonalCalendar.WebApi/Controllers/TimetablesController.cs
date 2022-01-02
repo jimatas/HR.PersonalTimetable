@@ -54,7 +54,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
             {
                 ModelState.AddModelError("id", "Either the element's id or its name must be specified.");
                 ModelState.AddModelError("name", "Either the element's id or its name must be specified.");
-                return BadRequest(ModelState);
+                return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
             var elements = await QueryDispatcher.DispatchAsync(new GetElementsByType { InstituteName = instituteName, ElementType = elementType }, cancellationToken);
