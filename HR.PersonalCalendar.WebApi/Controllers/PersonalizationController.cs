@@ -1,6 +1,7 @@
 ﻿using Developist.Core.Cqrs;
 
 using HR.PersonalCalendar.Commands;
+using HR.PersonalCalendar.Extensions;
 using HR.PersonalCalendar.Queries;
 using HR.PersonalCalendar.WebApi.Filters;
 using HR.PersonalCalendar.WebApi.Models;
@@ -44,7 +45,7 @@ namespace HR.PersonalCalendar.WebApi.Controllers
                 return Unauthorized();
             }
 
-            if (personalization.ElementId.GetValueOrDefault() == default && string.IsNullOrEmpty(personalization.ElementName))
+            if (personalization.ElementId.IsNullOrDefault() && string.IsNullOrEmpty(personalization.ElementName))
             {
                 ModelState.AddModelError(nameof(personalization.ElementId), "Either the element's id or its name must be specified.");
                 ModelState.AddModelError(nameof(personalization.ElementName), "Either the element's id or its name must be specified.");
