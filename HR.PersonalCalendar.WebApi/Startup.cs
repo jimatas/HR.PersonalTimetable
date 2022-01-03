@@ -50,7 +50,7 @@ namespace HR.PersonalCalendar.WebApi
             services.AddAuthentication(CwipsAuthenticationDefaults.AuthenticationScheme)
                 .AddCwips(options =>
                 {
-                    options.AllowAuthenticationMethod = AuthenticationMethods.MobileChallengeResponse | AuthenticationMethods.NetworkCredentialsForTokenless | AuthenticationMethods.UsernameAndPasswordWithToken;
+                    options.AllowAuthenticationMethod = AuthenticationMethods.MobileChallengeResponse | AuthenticationMethods.NetworkCredentialsForTokenless | AuthenticationMethods.UsernameAndPassword;
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
                 .AddCookie();
