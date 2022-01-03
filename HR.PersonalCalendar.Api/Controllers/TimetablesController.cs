@@ -25,7 +25,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpGet]
-        [ValidationExceptionFilter, NoSuchElementExceptionFilter]
+        [NoSuchElementExceptionFilter]
         public async Task<ActionResult<IEnumerable<TimetableGroup>>> GetAsync([FromQuery] GetTimetableGroups query, CancellationToken cancellationToken = default)
         {
             return Ok(await queryDispatcher.DispatchAsync(query, cancellationToken));
