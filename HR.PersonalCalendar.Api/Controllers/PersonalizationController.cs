@@ -38,7 +38,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpPost]
-        [ValidationExceptionFilter, NoSuchElementExceptionFilter]
+        [NoSuchElementExceptionFilter]
         public async Task<ActionResult<PersonalTimetable>> PostAsync([FromBody] AddPersonalTimetable parameters, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(parameters, cancellationToken);
