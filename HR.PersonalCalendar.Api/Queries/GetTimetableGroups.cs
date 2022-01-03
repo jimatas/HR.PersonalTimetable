@@ -1,6 +1,7 @@
 ﻿using Developist.Core.Cqrs.Queries;
 using Developist.Core.Utilities;
 
+using HR.PersonalCalendar.Api.Extensions;
 using HR.PersonalCalendar.Api.Infrastructure;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Extensions;
@@ -11,12 +12,13 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.Api.Queries
 {
-    public class GetTimetableGroups : IQuery<IEnumerable<TimetableGroup>>
+    public class GetTimetableGroups : IQuery<IEnumerable<TimetableGroup>>, IValidatableObject
     {
         [Required]
         [FromQuery(Name = "institute")]
@@ -37,6 +39,17 @@ namespace HR.PersonalCalendar.Api.Queries
 
         [FromQuery(Name = "end")]
         public DateTime? EndDate { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (ElementId.IsNullOrDefault() && string.IsNullOrEmpty(ElementName))
+            {
+                var errorMessage = $"Either the {nameof(ElementId)} field or the {nameof(ElementName)} field, or both must be specified.";
+                var memberNames = new[] { nameof(ElementId), nameof(ElementName) };
+                return new ValidationResult[] { new(errorMessage, memberNames) };
+            }
+            return Enumerable.Empty<ValidationResult>();
+        }
     }
 
     public class GetTimetableGroupsHandler : IQueryHandler<GetTimetableGroups, IEnumerable<TimetableGroup>>

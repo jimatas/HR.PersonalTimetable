@@ -2,6 +2,7 @@
 using Developist.Core.Persistence;
 using Developist.Core.Utilities;
 
+using HR.PersonalCalendar.Api.Extensions;
 using HR.PersonalCalendar.Api.Infrastructure;
 using HR.PersonalCalendar.Api.Models;
 using HR.PersonalCalendar.Api.Validators;
@@ -9,15 +10,17 @@ using HR.WebUntisConnector;
 using HR.WebUntisConnector.Extensions;
 using HR.WebUntisConnector.Model;
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.Api.Commands
 {
     [DisplayName("PersonalTimetableParameters")]
-    public class AddPersonalTimetable : ICommand
+    public class AddPersonalTimetable : ICommand, IValidatableObject
     {
         [Required, UserName]
         public string UserName { get; set; }
@@ -32,6 +35,17 @@ namespace HR.PersonalCalendar.Api.Commands
 
         [StringLength(100)]
         public string ElementName { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (ElementId.IsNullOrDefault() && string.IsNullOrEmpty(ElementName))
+            {
+                var errorMessage = $"Either the {nameof(ElementId)} field or the {nameof(ElementName)} field, or both must be specified.";
+                var memberNames = new[] { nameof(ElementId), nameof(ElementName) };
+                return new ValidationResult[] { new(errorMessage, memberNames) };
+            }
+            return Enumerable.Empty<ValidationResult>();
+        }
     }
 
     public class AddPersonalTimetableHandler : ICommandHandler<AddPersonalTimetable>
