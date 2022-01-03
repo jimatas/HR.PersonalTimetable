@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR.PersonalCalendar.WebApi", "HR.PersonalCalendar.WebApi\HR.PersonalCalendar.WebApi.csproj", "{246C8517-29F5-4820-A198-CF3170F1690E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.PersonalCalendar", "HR.PersonalCalendar\HR.PersonalCalendar.csproj", "{C37277D9-B469-42EB-9A26-6C2CAF5848FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR.PersonalCalendar", "HR.PersonalCalendar\HR.PersonalCalendar.csproj", "{C37277D9-B469-42EB-9A26-6C2CAF5848FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.PersonalCalendar.Api", "HR.PersonalCalendar.Api\HR.PersonalCalendar.Api.csproj", "{54940B7F-D800-4B22-B5E1-CF9FDA948F2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C37277D9-B469-42EB-9A26-6C2CAF5848FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C37277D9-B469-42EB-9A26-6C2CAF5848FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C37277D9-B469-42EB-9A26-6C2CAF5848FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54940B7F-D800-4B22-B5E1-CF9FDA948F2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54940B7F-D800-4B22-B5E1-CF9FDA948F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54940B7F-D800-4B22-B5E1-CF9FDA948F2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54940B7F-D800-4B22-B5E1-CF9FDA948F2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
