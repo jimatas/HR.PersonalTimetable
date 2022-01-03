@@ -10,7 +10,6 @@ using HR.WebUntisConnector.Model;
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,19 +29,8 @@ namespace HR.PersonalCalendar.Api.Queries
 
         public async Task<IEnumerable<TimetableGroup>> HandleAsync(GetTimetableGroups query, HandlerDelegate<IEnumerable<TimetableGroup>> next, CancellationToken cancellationToken)
         {
-            var isElementIdMissing = query.ElementId.IsNullOrDefault();
-            var isElementNameMissing = string.IsNullOrEmpty(query.ElementName);
-
-            if (isElementIdMissing || isElementNameMissing)
+            if (query.ElementId.IsNullOrDefault() || string.IsNullOrEmpty(query.ElementName))
             {
-                if (isElementIdMissing && isElementNameMissing)
-                {
-                    string errorMessage = $"Either the {nameof(query.ElementId)} field or the {nameof(query.ElementName)} field, or both must be specified.";
-                    string[] memberNames = new[] { nameof(query.ElementId), nameof(query.ElementName) };
-
-                    throw new ValidationException(new ValidationResult(errorMessage, memberNames), validatingAttribute: null, value: null);
-                }
-
                 var elements = await queryDispatcher.DispatchAsync(new GetElements
                 {
                     InstituteName = query.InstituteName,
@@ -52,7 +40,7 @@ namespace HR.PersonalCalendar.Api.Queries
                 var element = elements.FirstOrDefault(e => e.Id == query.ElementId || e.Name.Equals(query.ElementName, StringComparison.InvariantCultureIgnoreCase));
                 if (element is null)
                 {
-                    throw isElementIdMissing switch
+                    throw query.ElementId.IsNullOrDefault() switch
                     {
                         true => new NoSuchElementException(query.ElementType, query.ElementName),
                         false => new NoSuchElementException(query.ElementType, (int)query.ElementId),

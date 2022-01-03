@@ -8,7 +8,6 @@ using HR.PersonalCalendar.Api.Models;
 using HR.PersonalCalendar.Api.Queries;
 
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,19 +25,8 @@ namespace HR.PersonalCalendar.Api.Commands
 
         public async Task HandleAsync(AddPersonalTimetable parameters, HandlerDelegate next, CancellationToken cancellationToken)
         {
-            var isElementIdMissing = parameters.ElementId.IsNullOrDefault();
-            var isElementNameMissing = string.IsNullOrEmpty(parameters.ElementName);
-
-            if (isElementIdMissing || isElementNameMissing)
+            if (parameters.ElementId.IsNullOrDefault() || string.IsNullOrEmpty(parameters.ElementName))
             {
-                if (isElementIdMissing && isElementNameMissing)
-                {
-                    string errorMessage = $"Either the {nameof(parameters.ElementId)} field or the {nameof(parameters.ElementName)} field, or both must be specified.";
-                    string[] memberNames = new[] { nameof(parameters.ElementId), nameof(parameters.ElementName) };
-
-                    throw new ValidationException(new ValidationResult(errorMessage, memberNames), validatingAttribute: null, value: null);
-                }
-
                 var elements = await queryDispatcher.DispatchAsync(new GetElements
                 {
                     InstituteName = parameters.InstituteName,
@@ -48,7 +36,7 @@ namespace HR.PersonalCalendar.Api.Commands
                 var element = elements.FirstOrDefault(e => e.Id == parameters.ElementId || e.Name.Equals(parameters.ElementName, StringComparison.InvariantCultureIgnoreCase));
                 if (element is null)
                 {
-                    throw isElementIdMissing switch
+                    throw parameters.ElementId.IsNullOrDefault() switch
                     {
                         true => new NoSuchElementException(parameters.ElementType, parameters.ElementName),
                         false => new NoSuchElementException(parameters.ElementType, (int)parameters.ElementId),
