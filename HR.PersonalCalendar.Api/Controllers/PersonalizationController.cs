@@ -46,9 +46,9 @@ namespace HR.PersonalCalendar.Api.Controllers
             return CreatedAtRoute("GetForUser", new { user = lastTimetableAdded.UserName }, lastTimetableAdded);
         }
 
-        [HttpPatch]
+        [HttpPatch("{id}")]
         [ApiExceptionFilter]
-        public async Task<IActionResult> PatchAsync([FromBody] ChangeTimetableVisibility command, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> PatchAsync([FromRoute, FromQuery] ChangeTimetableVisibility command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
             return NoContent();

@@ -5,10 +5,11 @@ using Developist.Core.Utilities;
 using HR.PersonalCalendar.Api.Infrastructure;
 using HR.PersonalCalendar.Api.Models;
 
+using Microsoft.AspNetCore.Mvc;
+
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,11 +19,11 @@ namespace HR.PersonalCalendar.Api.Commands
     public class ChangeTimetableVisibility : ICommand
     {
         [Required]
-        [JsonPropertyName("id")]
+        [FromRoute(Name = "id")]
         public Guid PersonalTimetableId { get; set; }
 
         [Required]
-        [JsonPropertyName("visible")]
+        [FromQuery(Name = "visible")]
         public bool IsVisible { get; set; }
 
         internal string UserNameToVerify { get; set; }
