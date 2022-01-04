@@ -38,7 +38,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpPost]
-        [NoSuchElementExceptionFilter]
+        [ApiExceptionFilter]
         public async Task<ActionResult<PersonalTimetable>> PostAsync([FromBody] AddPersonalTimetable command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
@@ -47,7 +47,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpPatch]
-        [UnauthorizedExceptionFilter]
+        [ApiExceptionFilter]
         public async Task<IActionResult> PatchAsync([FromBody] ChangeTimetableVisibility command, CancellationToken cancellationToken = default)
         {
             command.UserNameToVerify = User.Identity.Name;
@@ -57,7 +57,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [UnauthorizedExceptionFilter]
+        [ApiExceptionFilter]
         public async Task<IActionResult> DeleteAsync([FromRoute] RemovePersonalTimetable command, CancellationToken cancellationToken = default)
         {
             command.UserNameToVerify = User.Identity.Name;

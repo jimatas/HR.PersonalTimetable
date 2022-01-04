@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Net;
 
 namespace HR.PersonalCalendar.Api.Models
 {
     /// <summary>
-    /// The exception thrown to indicate that a user attempted to access some restricted resource.
+    /// Thrown to indicate that the user attempted to access a restricted resource.
     /// </summary>
-    public class UnauthorizedException : Exception
+    public class UnauthorizedException : ApiException
     {
-        public UnauthorizedException() { }
-        public UnauthorizedException(string message) : base(message) { }
-        public UnauthorizedException(string message, Exception innerException) : base(message, innerException) { }
+        public UnauthorizedException() 
+            : base(HttpStatusCode.Unauthorized) { }
+        public UnauthorizedException(string message) 
+            : base(HttpStatusCode.Unauthorized, message) { }
+        public UnauthorizedException(string message, Exception innerException) 
+            : base(HttpStatusCode.Unauthorized, message, innerException) { }
     }
 }

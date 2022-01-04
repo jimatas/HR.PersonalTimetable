@@ -6,6 +6,7 @@ using Developist.Core.Utilities;
 using HR.PersonalCalendar.Api.Extensions;
 using HR.PersonalCalendar.Api.Models;
 using HR.PersonalCalendar.Api.Queries;
+using HR.WebUntisConnector.Model;
 
 using System;
 using System.Linq;
@@ -38,8 +39,8 @@ namespace HR.PersonalCalendar.Api.Commands
                 {
                     throw command.ElementId.IsNullOrDefault() switch
                     {
-                        true => new NoSuchElementException(command.ElementType, command.ElementName),
-                        false => new NoSuchElementException(command.ElementType, (int)command.ElementId),
+                        true => new NotFoundException($"No {command.ElementType} with {nameof(Element.Name)} {command.ElementName} found."),
+                        false => new NotFoundException($"No {command.ElementType} with {nameof(Element.Id)} {command.ElementId} found."),
                     };
                 }
 
