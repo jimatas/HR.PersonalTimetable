@@ -22,10 +22,10 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Institute>> Get()
+        public IEnumerable<Institute> Get()
         {
             var institutes = configuration.Schools.SelectMany(school => school.Institutes).Where(institute => institute.IsVisible).Select(Institute.FromInstituteElement);
-            return Ok(institutes);
+            return institutes;
         }
     }
 }
