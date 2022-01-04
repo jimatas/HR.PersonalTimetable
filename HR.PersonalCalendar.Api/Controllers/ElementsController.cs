@@ -24,9 +24,9 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Element>>> GetAsync([FromQuery] GetElements query, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Element>> GetAsync([FromQuery] GetElements query, CancellationToken cancellationToken = default)
         {
-            return Ok(await queryDispatcher.DispatchAsync(query, cancellationToken));
+            return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
     }
 }

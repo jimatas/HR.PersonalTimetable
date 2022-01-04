@@ -32,9 +32,9 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpGet("{user}", Name = "GetForUser")]
-        public async Task<ActionResult<IEnumerable<PersonalTimetable>>> GetAsync([FromRoute] GetPersonalTimetables query, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<PersonalTimetable>> GetAsync([FromRoute] GetPersonalTimetables query, CancellationToken cancellationToken = default)
         {
-            return Ok(await queryDispatcher.DispatchAsync(query, cancellationToken));
+            return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
 
         [HttpPost]
