@@ -39,29 +39,29 @@ namespace HR.PersonalCalendar.Api.Controllers
 
         [HttpPost]
         [NoSuchElementExceptionFilter]
-        public async Task<ActionResult<PersonalTimetable>> PostAsync([FromBody] AddPersonalTimetable parameters, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<PersonalTimetable>> PostAsync([FromBody] AddPersonalTimetable command, CancellationToken cancellationToken = default)
         {
-            await commandDispatcher.DispatchAsync(parameters, cancellationToken);
-            var lastTimetableAdded = (await queryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = parameters.UserName }, cancellationToken)).OrderBy(timetable => timetable.DateCreated).Last();
+            await commandDispatcher.DispatchAsync(command, cancellationToken);
+            var lastTimetableAdded = (await queryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = command.UserName }, cancellationToken)).OrderBy(timetable => timetable.DateCreated).Last();
             return CreatedAtRoute("GetForUser", new { user = lastTimetableAdded.UserName }, lastTimetableAdded);
         }
 
         [HttpPatch]
         [UnauthorizedExceptionFilter]
-        public async Task<IActionResult> PatchAsync([FromBody] ChangeTimetableVisibility parameters, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> PatchAsync([FromBody] ChangeTimetableVisibility command, CancellationToken cancellationToken = default)
         {
-            parameters.UserNameToVerify = User.Identity.Name;
-            await commandDispatcher.DispatchAsync(parameters, cancellationToken);
+            command.UserNameToVerify = User.Identity.Name;
+            await commandDispatcher.DispatchAsync(command, cancellationToken);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         [UnauthorizedExceptionFilter]
-        public async Task<IActionResult> DeleteAsync([FromRoute] RemovePersonalTimetable parameters, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> DeleteAsync([FromRoute] RemovePersonalTimetable command, CancellationToken cancellationToken = default)
         {
-            parameters.UserNameToVerify = User.Identity.Name;
-            await commandDispatcher.DispatchAsync(parameters, cancellationToken);
+            command.UserNameToVerify = User.Identity.Name;
+            await commandDispatcher.DispatchAsync(command, cancellationToken);
 
             return NoContent();
         }

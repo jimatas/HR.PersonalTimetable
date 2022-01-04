@@ -23,28 +23,28 @@ namespace HR.PersonalCalendar.Api.Commands
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
         }
 
-        public async Task HandleAsync(AddPersonalTimetable parameters, HandlerDelegate next, CancellationToken cancellationToken)
+        public async Task HandleAsync(AddPersonalTimetable command, HandlerDelegate next, CancellationToken cancellationToken)
         {
-            if (parameters.ElementId.IsNullOrDefault() || string.IsNullOrEmpty(parameters.ElementName))
+            if (command.ElementId.IsNullOrDefault() || string.IsNullOrEmpty(command.ElementName))
             {
                 var elements = await queryDispatcher.DispatchAsync(new GetElements
                 {
-                    InstituteName = parameters.InstituteName,
-                    ElementType = parameters.ElementType
+                    InstituteName = command.InstituteName,
+                    ElementType = command.ElementType
                 }, cancellationToken).ConfigureAwait(false);
 
-                var element = elements.FirstOrDefault(e => e.Id == parameters.ElementId || e.Name.Equals(parameters.ElementName, StringComparison.InvariantCultureIgnoreCase));
+                var element = elements.FirstOrDefault(e => e.Id == command.ElementId || e.Name.Equals(command.ElementName, StringComparison.InvariantCultureIgnoreCase));
                 if (element is null)
                 {
-                    throw parameters.ElementId.IsNullOrDefault() switch
+                    throw command.ElementId.IsNullOrDefault() switch
                     {
-                        true => new NoSuchElementException(parameters.ElementType, parameters.ElementName),
-                        false => new NoSuchElementException(parameters.ElementType, (int)parameters.ElementId),
+                        true => new NoSuchElementException(command.ElementType, command.ElementName),
+                        false => new NoSuchElementException(command.ElementType, (int)command.ElementId),
                     };
                 }
 
-                parameters.ElementId = element.Id;
-                parameters.ElementName = element.Name;
+                command.ElementId = element.Id;
+                command.ElementName = element.Name;
             }
 
             await next().ConfigureAwait(false);
