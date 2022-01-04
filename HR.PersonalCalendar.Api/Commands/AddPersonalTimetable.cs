@@ -36,6 +36,8 @@ namespace HR.PersonalCalendar.Api.Commands
         [StringLength(100)]
         public string ElementName { get; set; }
 
+        internal string UserNameToVerify { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (ElementId.IsNullOrDefault() && string.IsNullOrEmpty(ElementName))
@@ -73,6 +75,8 @@ namespace HR.PersonalCalendar.Api.Commands
                 SchoolYearId = (await LookupSchoolYearAsync(command.InstituteName, cancellationToken).ConfigureAwait(false))?.Id,
                 DateCreated = clock.Now
             };
+            
+            entity.VerifyCreateAccess(command.UserNameToVerify);
 
             unitOfWork.Repository<PersonalTimetable>().Add(entity);
             await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);

@@ -50,9 +50,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         [ApiExceptionFilter]
         public async Task<IActionResult> PatchAsync([FromBody] ChangeTimetableVisibility command, CancellationToken cancellationToken = default)
         {
-            command.UserNameToVerify = User.Identity.Name;
             await commandDispatcher.DispatchAsync(command, cancellationToken);
-
             return NoContent();
         }
 
@@ -60,9 +58,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         [ApiExceptionFilter]
         public async Task<IActionResult> DeleteAsync([FromRoute] RemovePersonalTimetable command, CancellationToken cancellationToken = default)
         {
-            command.UserNameToVerify = User.Identity.Name;
             await commandDispatcher.DispatchAsync(command, cancellationToken);
-
             return NoContent();
         }
     }
