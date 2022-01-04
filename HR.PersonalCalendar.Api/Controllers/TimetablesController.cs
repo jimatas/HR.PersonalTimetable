@@ -30,5 +30,11 @@ namespace HR.PersonalCalendar.Api.Controllers
         {
             return Ok(await queryDispatcher.DispatchAsync(query, cancellationToken));
         }
+
+        [HttpGet("personalized")]
+        public async Task<ActionResult<IEnumerable<Models.PersonalCalendar>>> GetPersonalizedAsync([FromQuery] GetPersonalCalendars query, CancellationToken cancellationToken = default)
+        {
+            return Ok(await queryDispatcher.DispatchAsync(query, cancellationToken));
+        }
     }
 }
