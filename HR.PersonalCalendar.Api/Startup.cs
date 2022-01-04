@@ -56,6 +56,8 @@ namespace HR.PersonalCalendar.Api
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
                 .AddCookie();
+            
+            services.AddHttpContextAccessor();
 
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers().AddJsonOptions(options =>
