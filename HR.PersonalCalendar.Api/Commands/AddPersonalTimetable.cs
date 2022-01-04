@@ -61,16 +61,16 @@ namespace HR.PersonalCalendar.Api.Commands
             this.apiClientFactory = Ensure.Argument.NotNull(() => apiClientFactory);
         }
 
-        public async Task HandleAsync(AddPersonalTimetable parameters, CancellationToken cancellationToken)
+        public async Task HandleAsync(AddPersonalTimetable command, CancellationToken cancellationToken)
         {
             PersonalTimetable entity = new()
             {
-                UserName = parameters.UserName,
-                InstituteName = parameters.InstituteName,
-                ElementType = parameters.ElementType,
-                ElementName = parameters.ElementName,
-                ElementId = (int)parameters.ElementId,
-                SchoolYearId = (await LookupSchoolYearAsync(parameters.InstituteName, cancellationToken).ConfigureAwait(false))?.Id,
+                UserName = command.UserName,
+                InstituteName = command.InstituteName,
+                ElementType = command.ElementType,
+                ElementName = command.ElementName,
+                ElementId = (int)command.ElementId,
+                SchoolYearId = (await LookupSchoolYearAsync(command.InstituteName, cancellationToken).ConfigureAwait(false))?.Id,
                 DateCreated = clock.Now
             };
 
