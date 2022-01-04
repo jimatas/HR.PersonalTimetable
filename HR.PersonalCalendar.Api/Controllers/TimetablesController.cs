@@ -43,8 +43,8 @@ namespace HR.PersonalCalendar.Api.Controllers
         [HttpGet("personalized/{user}/export")]
         public async Task<IActionResult> GetPersonalizedExportAsync([FromRoute, FromQuery] GetPersonalCalendars query, CancellationToken cancellationToken = default)
         {
-            var exportedCalendarData = (await GetPersonalizedAsync(query, cancellationToken)).SelectMany(calendar => calendar.TimetableGroups).ExportCalendar();
-            return File(Encoding.UTF8.GetBytes(exportedCalendarData), contentType: "text/calendar", fileDownloadName: "HR_Rooster.ics");
+            var calendarData = (await GetPersonalizedAsync(query, cancellationToken)).SelectMany(calendar => calendar.TimetableGroups).ExportCalendar();
+            return File(Encoding.UTF8.GetBytes(calendarData), contentType: "text/calendar", fileDownloadName: "HR_Rooster.ics");
         }
     }
 }
