@@ -34,18 +34,17 @@ namespace HR.PersonalCalendar.Api.Controllers
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
 
-        [HttpGet("personalized")]
-        public async Task<IEnumerable<Models.PersonalCalendar>> GetPersonalizedAsync([FromQuery] GetPersonalCalendars query, CancellationToken cancellationToken = default)
+        [HttpGet("personalized/{user}")]
+        public async Task<IEnumerable<Models.PersonalCalendar>> GetPersonalizedAsync([FromRoute, FromQuery] GetPersonalCalendars query, CancellationToken cancellationToken = default)
         {
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
 
-        [HttpGet("personalized/export")]
-        public async Task<IActionResult> GetPersonalizedExportAsync([FromQuery] GetPersonalCalendars query, CancellationToken cancellationToken = default)
+        [HttpGet("personalized/{user}/export")]
+        public async Task<IActionResult> GetPersonalizedExportAsync([FromRoute, FromQuery] GetPersonalCalendars query, CancellationToken cancellationToken = default)
         {
-            var calendars = await GetPersonalizedAsync(query, cancellationToken);
-            var exportedData = calendars.SelectMany(calendar => calendar.TimetableGroups).ExportCalendar();
-            return File(Encoding.UTF8.GetBytes(exportedData), contentType: "text/calendar", fileDownloadName: "HR_Rooster.ics");
+            var exportedCalendarData = (await GetPersonalizedAsync(query, cancellationToken)).SelectMany(calendar => calendar.TimetableGroups).ExportCalendar();
+            return File(Encoding.UTF8.GetBytes(exportedCalendarData), contentType: "text/calendar", fileDownloadName: "HR_Rooster.ics");
         }
     }
 }
