@@ -43,7 +43,12 @@ namespace HR.PersonalCalendar.Api.Commands
         public async Task HandleAsync(ChangeTimetableVisibility command, CancellationToken cancellationToken)
         {
             var personalTimetable = await unitOfWork.Repository<PersonalTimetable>().GetAsync(command.PersonalTimetableId, cancellationToken).ConfigureAwait(false);
-            if (personalTimetable is not null && personalTimetable.VerifyAccess(command.UserNameToVerify) && personalTimetable.IsVisible != command.IsVisible)
+            if (personalTimetable is null)
+            {
+                throw new NotFoundException($"No {nameof(PersonalTimetable)} with {nameof(PersonalTimetable.Id)} {command.PersonalTimetableId} found.");
+            }
+
+            if (personalTimetable.VerifyAccess(command.UserNameToVerify) && personalTimetable.IsVisible != command.IsVisible)
             {
                 personalTimetable.IsVisible = command.IsVisible;
                 personalTimetable.DateLastModified = clock.Now;
