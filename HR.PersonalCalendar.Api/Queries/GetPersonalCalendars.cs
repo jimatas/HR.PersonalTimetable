@@ -24,7 +24,7 @@ namespace HR.PersonalCalendar.Api.Queries
     public class GetPersonalCalendars : IQuery<IEnumerable<Models.PersonalCalendar>>
     {
         [Required, UserName]
-        [FromQuery(Name = "user")]
+        [FromRoute(Name = "user")]
         public string UserName { get; set; }
 
         [FromQuery(Name = "start")]
