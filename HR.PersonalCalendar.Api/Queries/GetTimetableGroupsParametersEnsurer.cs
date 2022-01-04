@@ -37,7 +37,7 @@ namespace HR.PersonalCalendar.Api.Queries
                     ElementType = query.ElementType
                 }, cancellationToken).ConfigureAwait(false);
 
-                var element = elements.FirstOrDefault(e => e.Id == query.ElementId || e.Name.Equals(query.ElementName, StringComparison.InvariantCultureIgnoreCase));
+                var element = elements.FirstOrDefault(e => e.Id == query.ElementId || e.Name.Equals(query.ElementName, StringComparison.OrdinalIgnoreCase));
                 if (element is null)
                 {
                     throw query.ElementId.IsNullOrDefault() switch

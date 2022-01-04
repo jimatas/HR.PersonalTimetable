@@ -68,7 +68,7 @@ namespace HR.PersonalCalendar.Api.Models
         /// </summary>
         /// <param name="userNameToVerify"></param>
         /// <returns></returns>
-        public bool VerifyAccess(string userNameToVerify) => UserName.Equals(userNameToVerify, StringComparison.InvariantCultureIgnoreCase) ? true
+        public bool VerifyAccess(string userNameToVerify) => UserName.Equals(userNameToVerify, StringComparison.OrdinalIgnoreCase) ? true
             : throw new UnauthorizedException($"User {userNameToVerify} does not have access to {this}.");
     }
 }
