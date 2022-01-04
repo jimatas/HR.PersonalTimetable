@@ -42,8 +42,8 @@ namespace HR.PersonalCalendar.Api.Queries
                 {
                     throw query.ElementId.IsNullOrDefault() switch
                     {
-                        true => new NoSuchElementException(query.ElementType, query.ElementName),
-                        false => new NoSuchElementException(query.ElementType, (int)query.ElementId),
+                        true => new NotFoundException($"No {query.ElementType} with {nameof(Element.Name)} {query.ElementName} found."),
+                        false => new NotFoundException($"No {query.ElementType} with {nameof(Element.Id)} {query.ElementId} found."),
                     };
                 }
 
