@@ -56,7 +56,7 @@ namespace HR.PersonalCalendar.Api.Infrastructure
         /// <param name="schoolOrInstituteName"></param>
         private void EnsureSchoolOrInstituteExists(string schoolOrInstituteName)
         {
-            if (!configuration.Schools.Any(school => school.Name.Equals(schoolOrInstituteName, StringComparison.InvariantCultureIgnoreCase) || school.Institutes.Any(institute => institute.Name.Equals(schoolOrInstituteName, StringComparison.InvariantCultureIgnoreCase))))
+            if (!configuration.Schools.Any(school => school.Name.Equals(schoolOrInstituteName, StringComparison.OrdinalIgnoreCase) || school.Institutes.Any(institute => institute.Name.Equals(schoolOrInstituteName, StringComparison.OrdinalIgnoreCase))))
             {
                 throw new NotFoundException($"No school or institute with the name {schoolOrInstituteName} found.");
             }

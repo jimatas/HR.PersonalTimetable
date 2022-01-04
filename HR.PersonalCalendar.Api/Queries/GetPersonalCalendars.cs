@@ -51,7 +51,7 @@ namespace HR.PersonalCalendar.Api.Queries
         {
             var calendars = new List<Models.PersonalCalendar>();
 
-            var holidaysByInstitute = new Dictionary<string, IEnumerable<Holiday>>(StringComparer.InvariantCultureIgnoreCase);
+            var holidaysByInstitute = new Dictionary<string, IEnumerable<Holiday>>(StringComparer.OrdinalIgnoreCase);
             var institutes = configuration.Schools.SelectMany(school => school.Institutes).Select(Institute.FromInstituteElement);
 
             var personalTimetables = await queryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = query.UserName }, cancellationToken).ConfigureAwait(false);
@@ -61,7 +61,7 @@ namespace HR.PersonalCalendar.Api.Queries
                 {
                     StartDate = (DateTime)query.StartDate,
                     EndDate = (DateTime)query.EndDate,
-                    Institute = institutes.FirstOrDefault(institute => institute.Name.Equals(personalTimetable.InstituteName, StringComparison.InvariantCultureIgnoreCase)),
+                    Institute = institutes.FirstOrDefault(institute => institute.Name.Equals(personalTimetable.InstituteName, StringComparison.OrdinalIgnoreCase)),
                     Element = personalTimetable.ToElement()
                 };
 

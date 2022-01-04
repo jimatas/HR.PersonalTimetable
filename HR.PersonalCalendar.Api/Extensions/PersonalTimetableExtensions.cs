@@ -16,7 +16,7 @@ namespace HR.PersonalCalendar.Api.Extensions
         /// <returns></returns>
         public static bool VerifyCreateAccess(this PersonalTimetable personalTimetable, string userNameToVerify)
         {
-            return personalTimetable.UserName.Equals(userNameToVerify, StringComparison.InvariantCultureIgnoreCase) ? true :
+            return personalTimetable.UserName.Equals(userNameToVerify, StringComparison.OrdinalIgnoreCase) ? true :
                 throw new UnauthorizedException($"User {userNameToVerify} cannot create a {nameof(PersonalTimetable)} on behalf of another user.");
         }
 

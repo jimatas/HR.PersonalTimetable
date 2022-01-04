@@ -34,7 +34,7 @@ namespace HR.PersonalCalendar.Api.Commands
                     ElementType = command.ElementType
                 }, cancellationToken).ConfigureAwait(false);
 
-                var element = elements.FirstOrDefault(e => e.Id == command.ElementId || e.Name.Equals(command.ElementName, StringComparison.InvariantCultureIgnoreCase));
+                var element = elements.FirstOrDefault(e => e.Id == command.ElementId || e.Name.Equals(command.ElementName, StringComparison.OrdinalIgnoreCase));
                 if (element is null)
                 {
                     throw command.ElementId.IsNullOrDefault() switch
