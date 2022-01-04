@@ -72,7 +72,7 @@ namespace HR.PersonalCalendar.Api.Commands
                 ElementType = command.ElementType,
                 ElementName = command.ElementName,
                 ElementId = (int)command.ElementId,
-                SchoolYearId = (await LookupSchoolYearAsync(command.InstituteName, cancellationToken).ConfigureAwait(false))?.Id,
+                SchoolYearId = (await GetSchoolYearAsync(command.InstituteName, cancellationToken).ConfigureAwait(false))?.Id,
                 DateCreated = clock.Now
             };
             
@@ -82,7 +82,7 @@ namespace HR.PersonalCalendar.Api.Commands
             await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<SchoolYear> LookupSchoolYearAsync(string instituteName, CancellationToken cancellationToken)
+        private async Task<SchoolYear> GetSchoolYearAsync(string instituteName, CancellationToken cancellationToken)
         {
             var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(instituteName, cancellationToken).ConfigureAwait(false);
             try
