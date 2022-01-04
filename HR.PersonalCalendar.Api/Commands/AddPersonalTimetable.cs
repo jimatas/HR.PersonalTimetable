@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.Api.Commands
 {
-    [DisplayName("PersonalTimetableParameters")]
+    [DisplayName("TimetablePersonalization")]
     public class AddPersonalTimetable : ICommand, IValidatableObject
     {
         [Required, UserName]
