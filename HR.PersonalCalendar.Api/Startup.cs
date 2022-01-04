@@ -3,6 +3,7 @@ using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
 
 using HR.Cwips.Client;
 using HR.PersonalCalendar.Api.Extensions;
+using HR.PersonalCalendar.Api.Filters;
 using HR.PersonalCalendar.Api.Infrastructure;
 using HR.PersonalCalendar.Api.Persistence;
 using HR.WebUntisConnector.Configuration;
@@ -60,7 +61,7 @@ namespace HR.PersonalCalendar.Api
             services.AddHttpContextAccessor();
 
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddControllers().AddJsonOptions(options =>
+            services.AddControllers(options => options.Filters.Add(new ApiExceptionFilterAttribute())).AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());

@@ -2,7 +2,6 @@
 using Developist.Core.Utilities;
 
 using HR.PersonalCalendar.Api.Extensions;
-using HR.PersonalCalendar.Api.Filters;
 using HR.PersonalCalendar.Api.Queries;
 using HR.WebUntisConnector.Model;
 
@@ -28,7 +27,6 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpGet]
-        [ApiExceptionFilter]
         public async Task<IEnumerable<TimetableGroup>> GetAsync([FromQuery] GetTimetableGroups query, CancellationToken cancellationToken = default)
         {
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
