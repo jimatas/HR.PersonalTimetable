@@ -22,7 +22,7 @@ namespace HR.PersonalCalendar.Api.Extensions
 
             services.Add(new ServiceDescriptor(
                 serviceType: typeof(ICachedApiClientFactory),
-                provider => new CachedApiClientFactory(provider.GetRequiredService<IApiClientFactory>()),
+                provider => new CachedApiClientFactory(provider.GetRequiredService<IApiClientFactory>(), configuration),
                 serviceLifetime));
 
             return services;
