@@ -3,7 +3,6 @@ using Developist.Core.Cqrs.Queries;
 using Developist.Core.Utilities;
 
 using HR.PersonalCalendar.Api.Commands;
-using HR.PersonalCalendar.Api.Filters;
 using HR.PersonalCalendar.Api.Models;
 using HR.PersonalCalendar.Api.Queries;
 
@@ -38,7 +37,6 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpPost]
-        [ApiExceptionFilter]
         public async Task<ActionResult<PersonalTimetable>> PostAsync([FromBody] AddPersonalTimetable command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
@@ -47,7 +45,6 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpPatch("{id}")]
-        [ApiExceptionFilter]
         public async Task<IActionResult> PatchAsync([FromRoute, FromQuery] ChangeTimetableVisibility command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
@@ -55,7 +52,6 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ApiExceptionFilter]
         public async Task<IActionResult> DeleteAsync([FromRoute] RemovePersonalTimetable command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
