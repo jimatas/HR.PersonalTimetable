@@ -4,16 +4,19 @@ using Developist.Core.Utilities;
 using HR.PersonalCalendar.Api.Queries;
 using HR.WebUntisConnector.Model;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Produces(MediaTypeNames.Application.Json)]
     public class ElementsController : ControllerBase
     {
         private readonly IQueryDispatcher queryDispatcher;
@@ -24,6 +27,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IEnumerable<Element>> GetAsync([FromQuery] GetElements query, CancellationToken cancellationToken = default)
         {
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
