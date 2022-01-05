@@ -5,9 +5,7 @@ using HR.PersonalCalendar.Api.Models;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Configuration;
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace HR.PersonalCalendar.Api.Infrastructure
@@ -32,34 +30,22 @@ namespace HR.PersonalCalendar.Api.Infrastructure
         public IApiClient CreateApiClient(string schoolOrInstituteName, out string userName, out string password)
         {
             IApiClient apiClient;
+            var school = configuration.FindSchool(schoolOrInstituteName)
+                ?? throw new NotFoundException($"No school or institute with the name {schoolOrInstituteName} found.");
 
             using (mutex.WaitAndRelease())
             {
-                if (cachedApiClients.TryGetValue(schoolOrInstituteName, out var cachedApiClient))
+                if (cachedApiClients.TryGetValue(school.Name, out var cachedApiClient))
                 {
                     (apiClient, userName, password) = cachedApiClient;
                 }
                 else
                 {
-                    EnsureSchoolOrInstituteExists(schoolOrInstituteName);
-                    apiClient = apiClientFactory.CreateApiClient(schoolOrInstituteName, out userName, out password);
-                    cachedApiClients.Add(schoolOrInstituteName, new(apiClient, userName, password));
+                    apiClient = apiClientFactory.CreateApiClient(school.Name, out userName, out password);
+                    cachedApiClients.Add(school.Name, new(apiClient, userName, password));
                 }
             }
-
             return apiClient;
-        }
-
-        /// <summary>
-        /// Throws <see cref="NotFoundException"/> if <paramref name="schoolOrInstituteName"/> does not refer to a valid school or institute configuration element.
-        /// </summary>
-        /// <param name="schoolOrInstituteName"></param>
-        private void EnsureSchoolOrInstituteExists(string schoolOrInstituteName)
-        {
-            if (!configuration.Schools.Any(school => school.Name.Equals(schoolOrInstituteName, StringComparison.OrdinalIgnoreCase) || school.Institutes.Any(institute => institute.Name.Equals(schoolOrInstituteName, StringComparison.OrdinalIgnoreCase))))
-            {
-                throw new NotFoundException($"No school or institute with the name {schoolOrInstituteName} found.");
-            }
         }
 
         private record CachedApiClient(IApiClient ApiClient, string UserName, string Password);
