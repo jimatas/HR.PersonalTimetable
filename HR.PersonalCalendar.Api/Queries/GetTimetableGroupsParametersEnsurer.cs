@@ -40,11 +40,9 @@ namespace HR.PersonalCalendar.Api.Queries
                 var element = elements.FirstOrDefault(e => e.Id == query.ElementId || e.Name.Equals(query.ElementName, StringComparison.OrdinalIgnoreCase));
                 if (element is null)
                 {
-                    throw query.ElementId.IsNullOrDefault() switch
-                    {
-                        true => new NotFoundException($"No {query.ElementType} with {nameof(Element.Name)} {query.ElementName} found."),
-                        false => new NotFoundException($"No {query.ElementType} with {nameof(Element.Id)} {query.ElementId} found."),
-                    };
+                    throw query.ElementId.IsNullOrDefault()
+                        ? new NotFoundException($"No {query.ElementType} with {nameof(Element.Name)} {query.ElementName} found.")
+                        : new NotFoundException($"No {query.ElementType} with {nameof(Element.Id)} {query.ElementId} found.");
                 }
 
                 query.ElementId = element.Id;
