@@ -7,6 +7,7 @@ using HR.PersonalCalendar.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace HR.PersonalCalendar.Api.Commands
 {
     public class RemovePersonalTimetable : ICommand
     {
+        [Required]
         [FromRoute(Name = "id")]
         public Guid PersonalTimetableId { get; set; }
 

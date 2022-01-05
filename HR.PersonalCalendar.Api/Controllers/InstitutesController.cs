@@ -3,15 +3,18 @@
 using HR.PersonalCalendar.Api.Models;
 using HR.WebUntisConnector.Configuration;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 
 namespace HR.PersonalCalendar.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Produces(MediaTypeNames.Application.Json)]
     public class InstitutesController : ControllerBase
     {
         private readonly WebUntisConfigurationSection configuration;
@@ -22,6 +25,7 @@ namespace HR.PersonalCalendar.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<Institute> Get()
         {
             var institutes = configuration.Schools.SelectMany(school => school.Institutes).Where(institute => institute.IsVisible).Select(Institute.FromInstituteElement);
