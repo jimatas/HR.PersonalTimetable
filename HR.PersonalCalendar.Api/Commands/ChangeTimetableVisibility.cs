@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalCalendar.Api.Commands
 {
-    [DisplayName("TimetableVisibility")]
     public class ChangeTimetableVisibility : ICommand
     {
         [Required]
