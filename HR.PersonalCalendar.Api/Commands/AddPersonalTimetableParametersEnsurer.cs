@@ -37,11 +37,9 @@ namespace HR.PersonalCalendar.Api.Commands
                 var element = elements.FirstOrDefault(e => e.Id == command.ElementId || e.Name.Equals(command.ElementName, StringComparison.OrdinalIgnoreCase));
                 if (element is null)
                 {
-                    throw command.ElementId.IsNullOrDefault() switch
-                    {
-                        true => new NotFoundException($"No {command.ElementType} with {nameof(Element.Name)} {command.ElementName} found."),
-                        false => new NotFoundException($"No {command.ElementType} with {nameof(Element.Id)} {command.ElementId} found."),
-                    };
+                    throw command.ElementId.IsNullOrDefault()
+                        ? new NotFoundException($"No {command.ElementType} with {nameof(Element.Name)} {command.ElementName} found.")
+                        : new NotFoundException($"No {command.ElementType} with {nameof(Element.Id)} {command.ElementId} found.");
                 }
 
                 command.ElementId = element.Id;
