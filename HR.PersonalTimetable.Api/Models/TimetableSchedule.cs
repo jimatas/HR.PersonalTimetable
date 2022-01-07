@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace HR.PersonalTimetable.Api.Models
 {
     /// <summary>
-    /// A timetable based schedule for a particular period, includes holidays.
+    /// A timetable based schedule for a particular timetable, period and institute, includes holidays.
     /// </summary>
     public class TimetableSchedule
     {
