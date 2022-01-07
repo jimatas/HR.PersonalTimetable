@@ -53,7 +53,7 @@ namespace HR.PersonalTimetable.Api.Models
         public int? SchoolYearId { get; set; }
 
         /// <summary>
-        /// Allows the user to temporarily hide a timetable without having to delete it from their personal calendar.
+        /// Allows the user to temporarily hide a timetable without having to delete it from their personal timetable.
         /// Default value is <c>true</c>.
         /// </summary>
         [JsonPropertyName("visible")]

@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Queries
 {
-    public class GetPersonalCalendars : IQuery<IEnumerable<Models.PersonalCalendar>>
+    public class GetTimetableSchedules : IQuery<IEnumerable<TimetableSchedule>>
     {
         [Required, UserName]
         [FromRoute(Name = "user")]
@@ -34,22 +34,22 @@ namespace HR.PersonalTimetable.Api.Queries
         public DateTime? EndDate { get; set; }
     }
 
-    public class GetPersonalCalendarsHandler : IQueryHandler<GetPersonalCalendars, IEnumerable<Models.PersonalCalendar>>
+    public class GetTimetableSchedulesHandler : IQueryHandler<GetTimetableSchedules, IEnumerable<TimetableSchedule>>
     {
         private readonly IQueryDispatcher queryDispatcher;
         private readonly IApiClientFactory apiClientFactory;
         private readonly WebUntisConfigurationSection configuration;
 
-        public GetPersonalCalendarsHandler(IQueryDispatcher queryDispatcher, ICachedApiClientFactory apiClientFactory, WebUntisConfigurationSection configuration)
+        public GetTimetableSchedulesHandler(IQueryDispatcher queryDispatcher, ICachedApiClientFactory apiClientFactory, WebUntisConfigurationSection configuration)
         {
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
             this.apiClientFactory = Ensure.Argument.NotNull(() => apiClientFactory);
             this.configuration = Ensure.Argument.NotNull(() => configuration);
         }
 
-        public async Task<IEnumerable<Models.PersonalCalendar>> HandleAsync(GetPersonalCalendars query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<TimetableSchedule>> HandleAsync(GetTimetableSchedules query, CancellationToken cancellationToken)
         {
-            var calendars = new List<Models.PersonalCalendar>();
+            var schedules = new List<TimetableSchedule>();
 
             var holidaysByInstitute = new Dictionary<string, IEnumerable<Holiday>>(StringComparer.OrdinalIgnoreCase);
             var institutes = configuration.Schools.SelectMany(school => school.Institutes).Select(Institute.FromInstituteElement);
@@ -57,7 +57,7 @@ namespace HR.PersonalTimetable.Api.Queries
             var personalTimetables = await queryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = query.UserName }, cancellationToken).ConfigureAwait(false);
             foreach (var personalTimetable in personalTimetables.Where(table => table.IsVisible))
             {
-                var calendar = new Models.PersonalCalendar
+                var schedule = new TimetableSchedule
                 {
                     StartDate = (DateTime)query.StartDate,
                     EndDate = (DateTime)query.EndDate,
@@ -65,27 +65,27 @@ namespace HR.PersonalTimetable.Api.Queries
                     Element = personalTimetable.ToElement()
                 };
 
-                calendar.TimetableGroups = await queryDispatcher.DispatchAsync(new GetTimetableGroups
+                schedule.TimetableGroups = await queryDispatcher.DispatchAsync(new GetTimetableGroups
                 {
                     InstituteName = personalTimetable.InstituteName,
-                    ElementId = calendar.Element.Id,
-                    ElementName = calendar.Element.Name,
-                    ElementType = calendar.Element.Type,
-                    StartDate = calendar.StartDate,
-                    EndDate = calendar.EndDate
+                    ElementId = schedule.Element.Id,
+                    ElementName = schedule.Element.Name,
+                    ElementType = schedule.Element.Type,
+                    StartDate = schedule.StartDate,
+                    EndDate = schedule.EndDate
                 }, cancellationToken).ConfigureAwait(false);
 
                 if (!holidaysByInstitute.TryGetValue(personalTimetable.InstituteName, out var holidays))
                 {
-                    holidays = await GetHolidaysAsync(personalTimetable.InstituteName, calendar.StartDate, calendar.EndDate, cancellationToken).ConfigureAwait(false);
+                    holidays = await GetHolidaysAsync(personalTimetable.InstituteName, schedule.StartDate, schedule.EndDate, cancellationToken).ConfigureAwait(false);
                     holidaysByInstitute.Add(personalTimetable.InstituteName, holidays);
                 }
-                calendar.Holidays = holidays;
+                schedule.Holidays = holidays;
 
-                calendars.Add(calendar);
+                schedules.Add(schedule);
             }
 
-            return calendars;
+            return schedules;
         }
 
         private async Task<IEnumerable<Holiday>> GetHolidaysAsync(string instituteName, DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
