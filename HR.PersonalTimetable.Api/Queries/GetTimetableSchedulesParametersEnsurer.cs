@@ -4,6 +4,7 @@ using Developist.Core.Utilities;
 
 using HR.PersonalTimetable.Api.Extensions;
 using HR.PersonalTimetable.Api.Infrastructure;
+using HR.PersonalTimetable.Api.Models;
 using HR.WebUntisConnector.Extensions;
 
 using System.Collections.Generic;
@@ -12,16 +13,16 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Queries
 {
-    public class GetPersonalCalendarsParametersEnsurer : IQueryHandlerWrapper<GetPersonalCalendars, IEnumerable<Models.PersonalCalendar>>
+    public class GetTimetableSchedulesParametersEnsurer : IQueryHandlerWrapper<GetTimetableSchedules, IEnumerable<TimetableSchedule>>
     {
         private readonly IClock clock;
 
-        public GetPersonalCalendarsParametersEnsurer(IClock clock)
+        public GetTimetableSchedulesParametersEnsurer(IClock clock)
         {
             this.clock = Ensure.Argument.NotNull(() => clock);
         }
 
-        public Task<IEnumerable<Models.PersonalCalendar>> HandleAsync(GetPersonalCalendars query, HandlerDelegate<IEnumerable<Models.PersonalCalendar>> next, CancellationToken cancellationToken)
+        public Task<IEnumerable<TimetableSchedule>> HandleAsync(GetTimetableSchedules query, HandlerDelegate<IEnumerable<TimetableSchedule>> next, CancellationToken cancellationToken)
         {
             if (query.StartDate.IsNullOrDefault())
             {

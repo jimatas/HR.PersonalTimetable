@@ -5,7 +5,10 @@ using System.Collections.Generic;
 
 namespace HR.PersonalTimetable.Api.Models
 {
-    public class PersonalCalendar
+    /// <summary>
+    /// A timetable based schedule for a particular period, includes holidays.
+    /// </summary>
+    public class TimetableSchedule
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
