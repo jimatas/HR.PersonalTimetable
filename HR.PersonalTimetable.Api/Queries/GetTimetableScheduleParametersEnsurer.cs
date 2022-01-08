@@ -8,26 +8,29 @@ using HR.PersonalTimetable.Api.Models;
 using HR.WebUntisConnector.Extensions;
 using HR.WebUntisConnector.Model;
 
+using Microsoft.Extensions.Options;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Queries
 {
-    public class GetTimetableGroupsParametersEnsurer : IQueryHandlerWrapper<GetTimetableGroups, IEnumerable<TimetableGroup>>
+    public class GetTimetableScheduleParametersEnsurer : IQueryHandlerWrapper<GetTimetableSchedule, TimetableSchedule>
     {
         private readonly IQueryDispatcher queryDispatcher;
         private readonly IClock clock;
+        private readonly AppSettings appSettings;
 
-        public GetTimetableGroupsParametersEnsurer(IQueryDispatcher queryDispatcher, IClock clock)
+        public GetTimetableScheduleParametersEnsurer(IQueryDispatcher queryDispatcher, IClock clock, IOptions<AppSettings> appSettings)
         {
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
             this.clock = Ensure.Argument.NotNull(() => clock);
+            this.appSettings = Ensure.Argument.NotNull(() => appSettings).Value;
         }
 
-        public async Task<IEnumerable<TimetableGroup>> HandleAsync(GetTimetableGroups query, HandlerDelegate<IEnumerable<TimetableGroup>> next, CancellationToken cancellationToken)
+        public async Task<TimetableSchedule> HandleAsync(GetTimetableSchedule query, HandlerDelegate<TimetableSchedule> next, CancellationToken cancellationToken)
         {
             if (query.ElementId.IsNullOrDefault() || string.IsNullOrEmpty(query.ElementName))
             {
@@ -57,6 +60,11 @@ namespace HR.PersonalTimetable.Api.Queries
             if (query.EndDate.IsNullOrDefault())
             {
                 query.EndDate = clock.Now.Date.GetLastWeekday().AddDays(1);
+            }
+
+            if (new DateTimeRange((DateTime)query.StartDate, (DateTime)query.EndDate).Duration.TotalDays > appSettings.MaxTimetableRangeInDays)
+            {
+                throw new BadRequestException($"Requested timetable range too large. Maximum of {appSettings.MaxTimetableRangeInDays} days allowed.");
             }
 
             return await next().ConfigureAwait(false);

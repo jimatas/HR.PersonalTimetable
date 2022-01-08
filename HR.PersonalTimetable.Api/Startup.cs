@@ -5,6 +5,7 @@ using HR.Cwips.Client;
 using HR.PersonalTimetable.Api.Extensions;
 using HR.PersonalTimetable.Api.Filters;
 using HR.PersonalTimetable.Api.Infrastructure;
+using HR.PersonalTimetable.Api.Models;
 using HR.PersonalTimetable.Api.Persistence;
 using HR.WebUntisConnector.Configuration;
 
@@ -38,6 +39,7 @@ namespace HR.PersonalTimetable.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
             services.AddSingleton<IClock, SystemClock>();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(nameof(ApplicationDbContext))));
