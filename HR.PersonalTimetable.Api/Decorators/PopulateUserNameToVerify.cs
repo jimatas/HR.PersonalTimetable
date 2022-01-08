@@ -8,14 +8,14 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HR.PersonalTimetable.Api.Commands
+namespace HR.PersonalTimetable.Api.Decorators
 {
-    public class UserNameToVerifyPopulator<TCommand> : ICommandHandlerWrapper<TCommand>
+    public class PopulateUserNameToVerify<TCommand> : ICommandHandlerWrapper<TCommand>
         where TCommand : ICommand
     {
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public UserNameToVerifyPopulator(IHttpContextAccessor httpContextAccessor)
+        public PopulateUserNameToVerify(IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = Ensure.Argument.NotNull(() => httpContextAccessor);
         }

@@ -31,7 +31,7 @@ namespace HR.PersonalTimetable.Api.Infrastructure
         {
             IApiClient apiClient;
             var school = configuration.FindSchool(schoolOrInstituteName)
-                ?? throw new NotFoundException($"No school or institute with the name {schoolOrInstituteName} found.");
+                ?? throw new NotFoundException($"No school or institute with the name \"{schoolOrInstituteName}\" found.");
 
             using (mutex.WaitAndRelease())
             {
