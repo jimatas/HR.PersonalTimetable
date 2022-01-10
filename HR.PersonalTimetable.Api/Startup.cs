@@ -1,7 +1,7 @@
 using Developist.Core.Cqrs.DependencyInjection;
 using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
 
-using HR.Cwips.Client;
+using HR.CwipsClient;
 using HR.PersonalTimetable.Api.Extensions;
 using HR.PersonalTimetable.Api.Filters;
 using HR.PersonalTimetable.Api.Infrastructure;
