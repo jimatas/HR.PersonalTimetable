@@ -41,7 +41,7 @@ namespace HR.PersonalTimetable.Api.Controllers
 
         [HttpGet("{institute}/last-imported")]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<DateTime> GetLastImportAsync([FromRoute] GetLastImportTime query, CancellationToken cancellationToken = default)
+        public async Task<DateTime> GetLastImportedAsync([FromRoute] GetLastImportTime query, CancellationToken cancellationToken = default)
         {
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
