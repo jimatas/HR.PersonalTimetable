@@ -57,12 +57,6 @@ namespace HR.PersonalTimetable.Api
                 .PersistKeysToFileSystem(new DirectoryInfo("C:\\datamap\\Key_Ring"))
                 .SetApplicationName("hrweb");
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.Name = ".AspNet.SharedCookie";
-                options.Cookie.Path = "/";
-            });
-
             services.AddAuthentication(CwipsAuthenticationDefaults.AuthenticationScheme)
                 .AddCwips(options =>
                 {
@@ -72,6 +66,7 @@ namespace HR.PersonalTimetable.Api
                 .AddCookie(options =>
                 {
                     options.Cookie.Name = ".AspNet.SharedCookie";
+                    options.Cookie.Path = "/";
                 });
 
             services.AddHttpContextAccessor();
