@@ -11,6 +11,7 @@ using HR.WebUntisConnector.Configuration;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -51,6 +52,16 @@ namespace HR.PersonalTimetable.Api
             services.AddCachedApiClientFactory(configuration);
             services.AddDispatcher();
             services.AddHandlersFromAssembly(Assembly.GetExecutingAssembly());
+            
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo("C:\\datamap\\Key_Ring"))
+                .SetApplicationName("hrweb");
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = ".AspNet.SharedCookie";
+                options.Cookie.Path = "/";
+            });
 
             services.AddAuthentication(CwipsAuthenticationDefaults.AuthenticationScheme)
                 .AddCwips(options =>
@@ -58,7 +69,10 @@ namespace HR.PersonalTimetable.Api
                     options.AllowAuthenticationMethod = AuthenticationMethods.MobileChallengeResponse | AuthenticationMethods.NetworkCredentialsForTokenless | AuthenticationMethods.UsernameAndPassword;
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
-                .AddCookie();
+                .AddCookie(options =>
+                {
+                    options.Cookie.Name = ".AspNet.SharedCookie";
+                });
 
             services.AddHttpContextAccessor();
 
