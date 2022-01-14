@@ -88,7 +88,7 @@ namespace HR.PersonalTimetable.Api
                     policy.AllowCredentials();
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
-                    policy.AllowAnyOrigin();
+                    policy.SetIsOriginAllowed(_ => true);
                 });
             });
         }
