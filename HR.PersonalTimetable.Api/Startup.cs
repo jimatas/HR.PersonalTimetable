@@ -59,7 +59,7 @@ namespace HR.PersonalTimetable.Api
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
                 .AddCookie();
-            
+
             services.AddHttpContextAccessor();
 
             services.AddRouting(options => options.LowercaseUrls = true);
@@ -85,6 +85,7 @@ namespace HR.PersonalTimetable.Api
             {
                 options.AddDefaultPolicy(policy =>
                 {
+                    policy.AllowCredentials();
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
                     policy.AllowAnyOrigin();
@@ -100,15 +101,14 @@ namespace HR.PersonalTimetable.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            // Use Swagger outside of development as well.
+            // Allow use of Swagger outside of development.
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("../swagger/v1/swagger.json", "HR.PersonalTimetable.Api v1"));
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
             app.UseCors();
+
+            app.UseHttpsRedirection();
+            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
