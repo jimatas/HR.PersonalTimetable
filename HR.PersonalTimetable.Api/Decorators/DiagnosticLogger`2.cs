@@ -27,13 +27,13 @@ namespace HR.PersonalTimetable.Api.Decorators
 
         public async Task<TResult> HandleAsync(TQuery query, HandlerDelegate<TResult> next, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Executing {QueryType} {QueryDetails}", query.GetType().Name, JsonSerialize(query));
+            logger.LogDebug("Executing {QueryType} query {QueryDetails}", query.GetType().Name, JsonSerialize(query));
 
             var stopwatch = Stopwatch.StartNew();
             var result = await next().ConfigureAwait(false);
             stopwatch.Stop();
 
-            logger.LogDebug("Executed {QueryType} in {Milliseconds} ms.", query.GetType().Name, stopwatch.ElapsedMilliseconds);
+            logger.LogDebug("Executed {QueryType} query in {Milliseconds} ms.", query.GetType().Name, stopwatch.ElapsedMilliseconds);
 
             return result;
         }

@@ -27,13 +27,13 @@ namespace HR.PersonalTimetable.Api.Decorators
 
         public async Task HandleAsync(TCommand command, HandlerDelegate next, CancellationToken cancellationToken)
         {
-            logger.LogDebug("Executing {CommandType} {CommandDetails}", command.GetType().Name, JsonSerialize(command));
+            logger.LogDebug("Executing {CommandType} command {CommandDetails}", command.GetType().Name, JsonSerialize(command));
 
             var stopwatch = Stopwatch.StartNew();
             await next().ConfigureAwait(false);
             stopwatch.Stop();
 
-            logger.LogDebug("Executed {CommandType} in {Milliseconds} ms.", command.GetType().Name, stopwatch.ElapsedMilliseconds);
+            logger.LogDebug("Executed {CommandType} command in {Milliseconds} ms.", command.GetType().Name, stopwatch.ElapsedMilliseconds);
         }
 
         private static object JsonSerialize(object value)
