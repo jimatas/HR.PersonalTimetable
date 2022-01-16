@@ -11,7 +11,7 @@
     <PackageReference Include="Developist.Core.Persistence.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection" Version="3.0.0" />
     <PackageReference Include="Developist.Core.Utilities" Version="2.1.0" />
-    <PackageReference Include="HR.CwipsClient" Version="2.1.0" />
+    <PackageReference Include="HR.CwipsClient" Version="3.0.0" />
     <PackageReference Include="HR.WebUntisConnector" Version="2.2.2" />
     <PackageReference Include="HR.WebUntisConnector.DependencyInjection" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.13" />
