@@ -76,7 +76,10 @@ namespace HR.PersonalTimetable.Api.Models
         /// </summary>
         /// <param name="userNameToVerify"></param>
         /// <returns></returns>
-        public bool VerifyCreateAccess(string userNameToVerify) => UserName.Equals(userNameToVerify, StringComparison.OrdinalIgnoreCase) ? true
-            : throw new UnauthorizedException($"User {userNameToVerify} cannot create a {nameof(PersonalTimetable)} on behalf of another user.");
+        public bool VerifyCreateAccess(string userNameToVerify)
+        {
+            try { return VerifyAccess(userNameToVerify); }
+            catch (UnauthorizedException) { throw new UnauthorizedException($"User {userNameToVerify} cannot create a {nameof(PersonalTimetable)} on behalf of another user."); }
+        }
     }
 }
