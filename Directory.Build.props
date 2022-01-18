@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Product>HR.Account-v2</Product>
+    <Product>HR.PersonalTimetable.Api</Product>
     <Authors>atask</Authors>
     <Company>Rotterdam University of Applied Sciences</Company>
     <Copyright>Copyright (c) 2021-2022 Rotterdam University of Applied Sciences</Copyright>
