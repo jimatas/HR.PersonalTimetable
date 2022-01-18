@@ -4,6 +4,7 @@ using Developist.Core.Utilities;
 
 using HR.PersonalTimetable.Api.Extensions;
 using HR.PersonalTimetable.Api.Infrastructure;
+using HR.PersonalTimetable.Api.Models;
 using HR.PersonalTimetable.Api.Validators;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Extensions;
@@ -24,6 +25,9 @@ namespace HR.PersonalTimetable.Api.Commands
         [Required, UserName]
         public string UserName { get; set; }
 
+        [Required, StringLength(64, MinimumLength = 64)]
+        public string UserNameHash { get; set; }
+
         [Required, StringLength(50)]
         public string InstituteName { get; set; }
 
@@ -35,8 +39,8 @@ namespace HR.PersonalTimetable.Api.Commands
         [StringLength(100)]
         public string ElementName { get; set; }
 
-        internal string UserNameToVerify { get; set; }
-
+        internal Integration Integration { get; set; }
+        
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (ElementId.IsNullOrDefault() && string.IsNullOrEmpty(ElementName))
@@ -66,6 +70,7 @@ namespace HR.PersonalTimetable.Api.Commands
         {
             Models.PersonalTimetable entity = new()
             {
+                Integration = command.Integration,
                 UserName = command.UserName,
                 InstituteName = command.InstituteName,
                 ElementType = command.ElementType,
@@ -75,8 +80,6 @@ namespace HR.PersonalTimetable.Api.Commands
                 DateCreated = clock.Now
             };
             
-            entity.VerifyCreateAccess(command.UserNameToVerify);
-
             unitOfWork.Repository<Models.PersonalTimetable>().Add(entity);
             await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
         }
