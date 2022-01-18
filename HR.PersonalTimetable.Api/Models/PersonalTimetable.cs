@@ -19,6 +19,12 @@ namespace HR.PersonalTimetable.Api.Models
         public override bool IsTransient => base.IsTransient;
 
         /// <summary>
+        /// The integration through which this personal timetable was created.
+        /// </summary>
+        [JsonIgnore]
+        public Integration Integration { get; set; }
+
+        /// <summary>
         /// Depending on whether the user is a student or an employee, either their student number or their employee code.
         /// </summary>
         public string UserName { get; set; }
