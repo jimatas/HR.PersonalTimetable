@@ -41,7 +41,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         }
 
         /// <summary>
-        /// Get the last-imported timestamp for a particular WebUntis school/RUAS institute.
+        /// Get the timestamp of when timetables were last imported from Untis.
         /// </summary>
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>

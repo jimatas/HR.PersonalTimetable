@@ -47,7 +47,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// Add a new timetable to the user's personal schedule.
         /// </summary>
         /// <remarks>
-        /// Note that either the elementId or the elementName (or both) must be provided.
+        /// Note that either the element's id or its name (or both) must be provided.
         /// If only one of them is supplied, a lookup will be done to retrieve the value of the other. 
         /// If both are supplied, their values will be saved as-is.
         /// </remarks>
