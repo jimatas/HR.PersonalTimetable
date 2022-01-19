@@ -1,5 +1,6 @@
 ﻿using Developist.Core.Persistence.Entities;
 
+using HR.PersonalTimetable.Api.Extensions;
 using HR.WebUntisConnector.Model;
 
 using System;
@@ -69,23 +70,29 @@ namespace HR.PersonalTimetable.Api.Models
         public DateTimeOffset? DateLastModified { get; set; }
 
         /// <summary>
-        /// Verifies that the user with the specified username has access to the timetable by verifying that the usernames match.
-        /// Returns <c>true</c> if access is granted, otherwise throws an <see cref="UnauthorizedException"/>.
+        /// Verifies that the user whose hashed username was provided in the request has access to this timetable.
         /// </summary>
         /// <param name="userNameToVerify"></param>
-        /// <returns></returns>
-        public bool VerifyAccess(string userNameToVerify) => UserName.Equals(userNameToVerify, StringComparison.OrdinalIgnoreCase) ? true
-            : throw new UnauthorizedException($"User {userNameToVerify} does not have access to {this}.");
+        /// <param name="secret"></param>
+        /// <returns><c>true</c> if access is granted.</returns>
+        /// <exception cref="UnauthorizedException">If access is denied.</exception>
+        public bool VerifyAccess(string userNameToVerify, SigningKey secret)
+        {
+            return UserName.ToSha256(secret.Key).Equals(userNameToVerify, StringComparison.OrdinalIgnoreCase) ? true
+                : throw new UnauthorizedException($"User does not have access to {this}.");
+        }
 
         /// <summary>
-        /// Verifies that the user with the specified username may actually create the timetable.
+        /// Verifies that the user whose hashed username was provided in the request is allowed to create the timetable.
         /// </summary>
         /// <param name="userNameToVerify"></param>
-        /// <returns></returns>
-        public bool VerifyCreateAccess(string userNameToVerify)
+        /// <param name="secret"></param>
+        /// <returns><c>true</c> if access is granted.</returns>
+        /// <exception cref="UnauthorizedException">If access is denied.</exception>
+        public bool VerifyCreateAccess(string userNameToVerify, SigningKey secret)
         {
-            try { return VerifyAccess(userNameToVerify); }
-            catch (UnauthorizedException) { throw new UnauthorizedException($"User {userNameToVerify} cannot create a {nameof(PersonalTimetable)} on behalf of another user."); }
+            try { return VerifyAccess(userNameToVerify, secret); }
+            catch (UnauthorizedException) { throw new UnauthorizedException($"Cannot create a {nameof(PersonalTimetable)} on behalf of another user."); }
         }
     }
 }

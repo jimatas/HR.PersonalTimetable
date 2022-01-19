@@ -25,9 +25,6 @@ namespace HR.PersonalTimetable.Api.Commands
         [Required, UserName]
         public string UserName { get; set; }
 
-        [Required, StringLength(64, MinimumLength = 64)]
-        public string UserNameHash { get; set; }
-
         [Required, StringLength(50)]
         public string InstituteName { get; set; }
 
@@ -39,8 +36,17 @@ namespace HR.PersonalTimetable.Api.Commands
         [StringLength(100)]
         public string ElementName { get; set; }
 
+        /// <summary>
+        /// The integration through which the timetable is being created.
+        /// </summary>
         internal Integration Integration { get; set; }
-        
+
+        /// <summary>
+        /// A salted hash of the username to verify.
+        /// The salt is the (current) signing key of the integration through which the timetable is being created.
+        /// </summary>
+        internal string UserNameToVerify { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (ElementId.IsNullOrDefault() && string.IsNullOrEmpty(ElementName))
@@ -68,7 +74,7 @@ namespace HR.PersonalTimetable.Api.Commands
 
         public async Task HandleAsync(AddPersonalTimetable command, CancellationToken cancellationToken)
         {
-            Models.PersonalTimetable entity = new()
+            Models.PersonalTimetable personalTimetable = new()
             {
                 Integration = command.Integration,
                 UserName = command.UserName,
@@ -79,8 +85,10 @@ namespace HR.PersonalTimetable.Api.Commands
                 SchoolYearId = (await GetSchoolYearAsync(command.InstituteName, cancellationToken).ConfigureAwait(false))?.Id,
                 DateCreated = clock.Now
             };
+
+            personalTimetable.VerifyCreateAccess(command.UserNameToVerify, command.Integration.CurrentSigningKey);
             
-            unitOfWork.Repository<Models.PersonalTimetable>().Add(entity);
+            unitOfWork.Repository<Models.PersonalTimetable>().Add(personalTimetable);
             await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
         }
 

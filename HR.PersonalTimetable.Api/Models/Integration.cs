@@ -12,11 +12,6 @@ namespace HR.PersonalTimetable.Api.Models
     /// </summary>
     public class Integration : EntityBase<Guid>
     {
-        /// <summary>
-        /// Custom HTTP header that contains the integration name.
-        /// </summary>
-        public const string HeaderName = "X-HR-Integration";
-
         public Integration() { }
         public Integration(Guid id) => Id = id;
 

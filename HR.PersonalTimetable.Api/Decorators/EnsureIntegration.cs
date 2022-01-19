@@ -15,7 +15,10 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Decorators
 {
-    public class EnsureIntegration : ICommandHandlerWrapper<AddPersonalTimetable>, IPrioritizable
+    public class EnsureIntegration : IPrioritizable,
+        ICommandHandlerWrapper<AddPersonalTimetable>, 
+        ICommandHandlerWrapper<ChangeTimetableVisibility>,
+        ICommandHandlerWrapper<RemovePersonalTimetable>
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IUnitOfWork unitOfWork;
@@ -35,10 +38,24 @@ namespace HR.PersonalTimetable.Api.Decorators
             await next().ConfigureAwait(false);
         }
 
+        public async Task HandleAsync(ChangeTimetableVisibility command, HandlerDelegate next, CancellationToken cancellationToken)
+        {
+            command.Integration = await GetIntegrationAsync(cancellationToken).ConfigureAwait(false);
+
+            await next().ConfigureAwait(false);
+        }
+
+        public async Task HandleAsync(RemovePersonalTimetable command, HandlerDelegate next, CancellationToken cancellationToken)
+        {
+            command.Integration = await GetIntegrationAsync(cancellationToken).ConfigureAwait(false);
+
+            await next().ConfigureAwait(false);
+        }
+
         private async Task<Integration> GetIntegrationAsync(CancellationToken cancellationToken)
         {
             var httpContext = httpContextAccessor.HttpContext;
-            if (httpContext.Request.Headers.TryGetValue(Integration.HeaderName, out var integrationName))
+            if (httpContext.Request.Headers.TryGetValue("X-HR-Integration", out var integrationName))
             {
                 var integration = (await unitOfWork.Repository<Integration>().FindAsync(
                     integration => integration.Name == integrationName.ToString(),
@@ -52,7 +69,7 @@ namespace HR.PersonalTimetable.Api.Decorators
                 
                 throw new NotFoundException($"No signing key found for integration with name \"{integration.Name}\".");
             }
-            throw new BadRequestException($"Required header \"{Integration.HeaderName}\" was not present.");
+            throw new BadRequestException("Required header \"X-HR-Integration\" was not present.");
         }
     }
 }
