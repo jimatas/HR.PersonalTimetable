@@ -25,6 +25,15 @@ namespace HR.PersonalTimetable.Api.Controllers
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
         }
 
+        /// <summary>
+        /// Retrieve the timetables for a particular institute and element, which is specified by its type and id and/or name, that optionally also fall between two dates.
+        /// </summary>
+        /// <remarks>
+        /// Note that either the element's id or its name (or both) must be provided.
+        /// </remarks>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
