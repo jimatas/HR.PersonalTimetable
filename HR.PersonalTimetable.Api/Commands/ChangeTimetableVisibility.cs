@@ -16,6 +16,9 @@ namespace HR.PersonalTimetable.Api.Commands
 {
     public class ChangeTimetableVisibility : ICommand
     {
+        /// <summary>
+        /// The unique identifier of the personal timetable.
+        /// </summary>
         [Required]
         [FromRoute(Name = "id")]
         public Guid PersonalTimetableId { get; set; }

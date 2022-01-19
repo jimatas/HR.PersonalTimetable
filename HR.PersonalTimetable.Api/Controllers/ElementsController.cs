@@ -26,6 +26,12 @@ namespace HR.PersonalTimetable.Api.Controllers
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
         }
 
+        /// <summary>
+        /// Retrieve all elements of a particular type that belong to a WebUntis school/RUAS institute.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IEnumerable<Element>> GetAsync([FromQuery] GetElements query, CancellationToken cancellationToken = default)
