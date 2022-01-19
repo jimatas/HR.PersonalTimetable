@@ -8,7 +8,6 @@ using HR.PersonalTimetable.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +24,15 @@ namespace HR.PersonalTimetable.Api.Commands
         [FromQuery(Name = "visible")]
         public bool IsVisible { get; set; }
 
+        /// <summary>
+        /// The integration through which the timetable is being edited.
+        /// </summary>
+        internal Integration Integration { get; set; }
+
+        /// <summary>
+        /// A salted hash of the username to verify.
+        /// The salt is the (current) signing key of the integration through which the timetable is being edited.
+        /// </summary>
         internal string UserNameToVerify { get; set; }
     }
 
@@ -47,7 +55,7 @@ namespace HR.PersonalTimetable.Api.Commands
                 throw new NotFoundException($"No {nameof(PersonalTimetable)} with {nameof(Models.PersonalTimetable.Id)} {command.PersonalTimetableId} found.");
             }
 
-            if (personalTimetable.VerifyAccess(command.UserNameToVerify) && personalTimetable.IsVisible != command.IsVisible)
+            if (personalTimetable.VerifyAccess(command.UserNameToVerify, command.Integration.CurrentSigningKey) && personalTimetable.IsVisible != command.IsVisible)
             {
                 personalTimetable.IsVisible = command.IsVisible;
                 personalTimetable.DateLastModified = clock.Now;

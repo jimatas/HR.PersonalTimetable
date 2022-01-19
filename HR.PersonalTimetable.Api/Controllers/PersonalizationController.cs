@@ -5,7 +5,6 @@ using Developist.Core.Utilities;
 using HR.PersonalTimetable.Api.Commands;
 using HR.PersonalTimetable.Api.Queries;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,11 +16,9 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class PersonalizationController : ControllerBase
     {
         private readonly ICommandDispatcher commandDispatcher;
@@ -42,7 +39,7 @@ namespace HR.PersonalTimetable.Api.Controllers
 
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status201Created), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Models.PersonalTimetable>> PostAsync([FromBody] AddPersonalTimetable command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
@@ -51,7 +48,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         }
 
         [HttpPatch("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PatchAsync([FromRoute, FromQuery] ChangeTimetableVisibility command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
@@ -59,7 +56,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteAsync([FromRoute] RemovePersonalTimetable command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
