@@ -88,10 +88,15 @@ namespace HR.PersonalTimetable.Api
                 c.CustomSchemaIds(type => type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.GetCustomAttribute<DisplayAttribute>()?.GetName() ?? type.Name);
                 c.OperationFilter<AddRequiredHeaderParameter>();
 
-                var xmlFilePath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
-                if (File.Exists(xmlFilePath))
+                foreach (var xmlFilePath in new[] {
+                    Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"),
+                    Path.Combine(AppContext.BaseDirectory, "HR.WebUntisConnector.xml")
+                })
                 {
-                    c.IncludeXmlComments(xmlFilePath);
+                    if (File.Exists(xmlFilePath))
+                    {
+                        c.IncludeXmlComments(xmlFilePath);
+                    }
                 }
             });
 
