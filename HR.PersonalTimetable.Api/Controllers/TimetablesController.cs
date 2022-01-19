@@ -42,6 +42,12 @@ namespace HR.PersonalTimetable.Api.Controllers
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieve all the timetables in a  user's personal schedule that, optionally, fall between two dates.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("personalized/{user}")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -50,6 +56,12 @@ namespace HR.PersonalTimetable.Api.Controllers
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
 
+        /// <summary>
+        /// Retrieve and export the timetables in the personal schedule of a user to iCalendar (*.ics) format.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("personalized/{user}/export")]
         [Produces("text/calendar")]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest)]
