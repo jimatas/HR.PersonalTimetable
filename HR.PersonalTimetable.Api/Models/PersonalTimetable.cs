@@ -78,7 +78,7 @@ namespace HR.PersonalTimetable.Api.Models
         /// <exception cref="UnauthorizedException">If access is denied.</exception>
         public bool VerifyAccess(string userNameToVerify, SigningKey secret)
         {
-            return UserName.ToSha256(secret.Key).Equals(userNameToVerify, StringComparison.OrdinalIgnoreCase) ? true
+            return UserName.ToLower().ToSha256(secret.Key).Equals(userNameToVerify, StringComparison.OrdinalIgnoreCase) ? true
                 : throw new UnauthorizedException($"User does not have access to {this}.");
         }
 

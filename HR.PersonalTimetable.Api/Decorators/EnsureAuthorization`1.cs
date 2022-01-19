@@ -4,26 +4,24 @@ using Developist.Core.Persistence;
 using Developist.Core.Persistence.Entities;
 using Developist.Core.Utilities;
 
-using HR.PersonalTimetable.Api.Commands;
 using HR.PersonalTimetable.Api.Models;
 
 using Microsoft.AspNetCore.Http;
 
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Decorators
 {
-    public class EnsureIntegration : IPrioritizable,
-        ICommandHandlerWrapper<AddPersonalTimetable>, 
-        ICommandHandlerWrapper<ChangeTimetableVisibility>,
-        ICommandHandlerWrapper<RemovePersonalTimetable>
+    public class EnsureAuthorization<TCommand> : IPrioritizable, ICommandHandlerWrapper<TCommand>
+        where TCommand : ICommand
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IUnitOfWork unitOfWork;
 
-        public EnsureIntegration(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
+        public EnsureAuthorization(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
         {
             this.httpContextAccessor = Ensure.Argument.NotNull(() => httpContextAccessor);
             this.unitOfWork = Ensure.Argument.NotNull(() => unitOfWork);
@@ -31,25 +29,33 @@ namespace HR.PersonalTimetable.Api.Decorators
 
         public sbyte Priority => Priorities.Higher;
 
-        public async Task HandleAsync(AddPersonalTimetable command, HandlerDelegate next, CancellationToken cancellationToken)
+        public async Task HandleAsync(TCommand command, HandlerDelegate next, CancellationToken cancellationToken)
         {
-            command.Integration = await GetIntegrationAsync(cancellationToken).ConfigureAwait(false);
+            const BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
+            var property = command.GetType().GetProperty("UserNameToVerify", bindingAttr);
+            if (property is not null && string.IsNullOrEmpty(property.GetValue(command) as string))
+            {
+                property.SetValue(command, GetUserNameToVerify());
+            }
+
+            property = command.GetType().GetProperty("Integration", bindingAttr);
+            if (property is not null && property.GetValue(command) is null)
+            {
+                property.SetValue(command, await GetIntegrationAsync(cancellationToken).ConfigureAwait(false));
+            }
 
             await next().ConfigureAwait(false);
         }
 
-        public async Task HandleAsync(ChangeTimetableVisibility command, HandlerDelegate next, CancellationToken cancellationToken)
+        private string GetUserNameToVerify()
         {
-            command.Integration = await GetIntegrationAsync(cancellationToken).ConfigureAwait(false);
-
-            await next().ConfigureAwait(false);
-        }
-
-        public async Task HandleAsync(RemovePersonalTimetable command, HandlerDelegate next, CancellationToken cancellationToken)
-        {
-            command.Integration = await GetIntegrationAsync(cancellationToken).ConfigureAwait(false);
-
-            await next().ConfigureAwait(false);
+            var httpContext = httpContextAccessor.HttpContext;
+            if (httpContext.Request.Headers.TryGetValue("X-HR-Authorization", out var userNameToVerify))
+            {
+                return userNameToVerify.ToString();
+            }
+            throw new BadRequestException("Required header \"X-HR-Authorization\" was not present.");
         }
 
         private async Task<Integration> GetIntegrationAsync(CancellationToken cancellationToken)
@@ -66,7 +72,7 @@ namespace HR.PersonalTimetable.Api.Decorators
                 {
                     return integration;
                 }
-                
+
                 throw new NotFoundException($"No signing key found for integration with name \"{integration.Name}\".");
             }
             throw new BadRequestException("Required header \"X-HR-Integration\" was not present.");
