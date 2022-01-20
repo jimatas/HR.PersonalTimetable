@@ -27,7 +27,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         }
 
         /// <summary>
-        /// Retrieve all elements of a particular type that belong to a WebUntis school/RUAS institute.
+        /// Retrieve all elements of a particular type that belong to a specified RUAS institute.
         /// </summary>
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
