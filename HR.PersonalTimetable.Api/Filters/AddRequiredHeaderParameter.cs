@@ -23,8 +23,8 @@ namespace HR.PersonalTimetable.Api.Filters
             {
                 Name = "X-HR-Authorization",
                 In = ParameterLocation.Header,
-                Description = "Salted hash of the username. The salt is the signing-key that was assigned to the integration."
-                    + "<pre>hex(sha256(lowercase(username) + signingkey))</pre>",
+                Description = "Salted hash of the username. The salt is the signing key that was assigned to the integration."
+                    + "<pre>hex(sha256(lowercase(username) + salt))</pre>",
                 Required = true,
                 AllowEmptyValue = false,
                 Schema = new OpenApiSchema { Type = "string", Pattern = "^[0-9A-Fa-f]{64}$" }
