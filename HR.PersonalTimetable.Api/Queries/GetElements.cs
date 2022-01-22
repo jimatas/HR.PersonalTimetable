@@ -19,6 +19,10 @@ namespace HR.PersonalTimetable.Api.Queries
 {
     public class GetElements : IQuery<IEnumerable<Element>>
     {
+        /// <summary>
+        /// The RUAS institute name.
+        /// Alternatively, a WebUntis school name may be supplied.
+        /// </summary>
         [Required]
         [FromQuery(Name = "institute")]
         public string InstituteName { get; set; }

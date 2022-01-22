@@ -4,6 +4,7 @@ using Developist.Core.Utilities;
 
 using HR.PersonalTimetable.Api.Extensions;
 using HR.PersonalTimetable.Api.Infrastructure;
+using HR.PersonalTimetable.Api.Models;
 using HR.PersonalTimetable.Api.Validators;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Extensions;
@@ -35,6 +36,15 @@ namespace HR.PersonalTimetable.Api.Commands
         [StringLength(100)]
         public string ElementName { get; set; }
 
+        /// <summary>
+        /// The integration through which the timetable is being created.
+        /// </summary>
+        internal Integration Integration { get; set; }
+
+        /// <summary>
+        /// A salted hash of the username to verify.
+        /// The salt is the (current) signing key of the integration through which the timetable is being created.
+        /// </summary>
         internal string UserNameToVerify { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -64,8 +74,9 @@ namespace HR.PersonalTimetable.Api.Commands
 
         public async Task HandleAsync(AddPersonalTimetable command, CancellationToken cancellationToken)
         {
-            Models.PersonalTimetable entity = new()
+            Models.PersonalTimetable personalTimetable = new()
             {
+                Integration = command.Integration,
                 UserName = command.UserName,
                 InstituteName = command.InstituteName,
                 ElementType = command.ElementType,
@@ -74,10 +85,10 @@ namespace HR.PersonalTimetable.Api.Commands
                 SchoolYearId = (await GetSchoolYearAsync(command.InstituteName, cancellationToken).ConfigureAwait(false))?.Id,
                 DateCreated = clock.Now
             };
-            
-            entity.VerifyCreateAccess(command.UserNameToVerify);
 
-            unitOfWork.Repository<Models.PersonalTimetable>().Add(entity);
+            personalTimetable.VerifyCreateAccess(command.UserNameToVerify, command.Integration.CurrentSigningKey);
+            
+            unitOfWork.Repository<Models.PersonalTimetable>().Add(personalTimetable);
             await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
         }
 
