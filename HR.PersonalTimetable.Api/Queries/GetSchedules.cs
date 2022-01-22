@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Queries
 {
-    public class GetTimetableSchedules : IQuery<IEnumerable<TimetableSchedule>>
+    public class GetSchedules : IQuery<IEnumerable<Schedule>>
     {
         /// <summary>
         /// The username of the user. 
@@ -40,23 +40,23 @@ namespace HR.PersonalTimetable.Api.Queries
         public DateTime? EndDate { get; set; }
     }
 
-    public class GetTimetableSchedulesHandler : IQueryHandler<GetTimetableSchedules, IEnumerable<TimetableSchedule>>
+    public class GetSchedulesHandler : IQueryHandler<GetSchedules, IEnumerable<Schedule>>
     {
         private readonly IQueryDispatcher queryDispatcher;
         
-        public GetTimetableSchedulesHandler(IQueryDispatcher queryDispatcher)
+        public GetSchedulesHandler(IQueryDispatcher queryDispatcher)
         {
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
         }
 
-        public async Task<IEnumerable<TimetableSchedule>> HandleAsync(GetTimetableSchedules query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Schedule>> HandleAsync(GetSchedules query, CancellationToken cancellationToken)
         {
-            var schedules = new List<TimetableSchedule>();
+            var schedules = new List<Schedule>();
 
             var personalTimetables = await queryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = query.UserName }, cancellationToken).ConfigureAwait(false);
             foreach (var personalTimetable in personalTimetables.Where(table => table.IsVisible))
             {
-                var schedule = await queryDispatcher.DispatchAsync(new GetTimetableSchedule
+                var schedule = await queryDispatcher.DispatchAsync(new GetSchedule
                 {
                     InstituteName = personalTimetable.InstituteName,
                     ElementType = personalTimetable.ElementType,

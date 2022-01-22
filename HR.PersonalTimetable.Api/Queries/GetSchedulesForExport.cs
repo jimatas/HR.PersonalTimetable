@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Queries
 {
-    public class GetTimetableSchedulesForExport : IQuery<FileContentResult>
+    public class GetSchedulesForExport : IQuery<FileContentResult>
     {
         /// <summary>
         /// The username of the user. 
@@ -29,32 +29,32 @@ namespace HR.PersonalTimetable.Api.Queries
         public string UserName { get; set; }
     }
 
-    public class GetTimetableSchedulesForExportHandler : IQueryHandler<GetTimetableSchedulesForExport, FileContentResult>
+    public class GetSchedulesForExportHandler : IQueryHandler<GetSchedulesForExport, FileContentResult>
     {
         private readonly IQueryDispatcher queryDispatcher;
         private readonly AppSettings appSettings;
         private readonly IClock clock;
 
-        public GetTimetableSchedulesForExportHandler(IQueryDispatcher queryDispatcher, IOptions<AppSettings> appSettings, IClock clock)
+        public GetSchedulesForExportHandler(IQueryDispatcher queryDispatcher, IOptions<AppSettings> appSettings, IClock clock)
         {
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
             this.appSettings = Ensure.Argument.NotNull(() => appSettings).Value;
             this.clock = Ensure.Argument.NotNull(() => clock);
         }
 
-        public async Task<FileContentResult> HandleAsync(GetTimetableSchedulesForExport query, CancellationToken cancellationToken)
+        public async Task<FileContentResult> HandleAsync(GetSchedulesForExport query, CancellationToken cancellationToken)
         {
             var startDate = clock.Now.Date.GetFirstWeekday().AddDays(-(7 * appSettings.NumberOfWeeksBeforeCurrentToExport));
             var endDate = clock.Now.Date.GetLastWeekday().AddDays(7 * appSettings.NumberOfWeeksAfterCurrentToExport);
 
-            var schedules = await queryDispatcher.DispatchAsync(new GetTimetableSchedules
+            var schedules = await queryDispatcher.DispatchAsync(new GetSchedules
             {
                 UserName = query.UserName,
                 StartDate = startDate,
                 EndDate = endDate
             }, cancellationToken).ConfigureAwait(false);
 
-            var calendarData = schedules.SelectMany(schedule => schedule.TimetableGroups).ExportCalendar(appSettings.ExportRefreshIntervalInMinutes);
+            var calendarData = schedules.SelectMany(schedule => schedule.Lessons).ExportCalendar(appSettings.ExportRefreshIntervalInMinutes);
             return new FileContentResult(Encoding.UTF8.GetBytes(calendarData), contentType: "text/calendar")
             {
                 FileDownloadName = appSettings.CalendarFileName,
