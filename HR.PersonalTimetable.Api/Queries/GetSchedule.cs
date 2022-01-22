@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Queries
 {
-    public class GetTimetableSchedule : IQuery<TimetableSchedule>, IValidatableObject
+    public class GetSchedule : IQuery<Schedule>, IValidatableObject
     {
         /// <summary>
         /// The RUAS institute name.
@@ -72,29 +72,29 @@ namespace HR.PersonalTimetable.Api.Queries
         }
     }
 
-    public class GetTimetableScheduleHandler : IQueryHandler<GetTimetableSchedule, TimetableSchedule>
+    public class GetScheduleHandler : IQueryHandler<GetSchedule, Schedule>
     {
         private readonly IApiClientFactory apiClientFactory;
         private readonly WebUntisConfigurationSection configuration;
 
-        public GetTimetableScheduleHandler(ICachedApiClientFactory apiClientFactory, WebUntisConfigurationSection configuration)
+        public GetScheduleHandler(ICachedApiClientFactory apiClientFactory, WebUntisConfigurationSection configuration)
         {
             this.apiClientFactory = Ensure.Argument.NotNull(() => apiClientFactory);
             this.configuration = Ensure.Argument.NotNull(() => configuration);
         }
 
-        public async Task<TimetableSchedule> HandleAsync(GetTimetableSchedule query, CancellationToken cancellationToken)
+        public async Task<Schedule> HandleAsync(GetSchedule query, CancellationToken cancellationToken)
         {
             var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken).ConfigureAwait(false);
             try
             {
-                return new TimetableSchedule
+                return new Schedule
                 {
                     StartDate = (DateTime)query.StartDate,
                     EndDate = (DateTime)query.EndDate,
                     Institute = GetInstitute(query.InstituteName),
                     Element = query.ElementType.CreateElement((int)query.ElementId, query.ElementName),
-                    TimetableGroups = await GetTimetableGroupsAsync(apiClient, query.ElementType, (int)query.ElementId, (DateTime)query.StartDate, (DateTime)query.EndDate, cancellationToken).ConfigureAwait(false),
+                    Lessons = await GetLessonsAsync(apiClient, query.ElementType, (int)query.ElementId, (DateTime)query.StartDate, (DateTime)query.EndDate, cancellationToken).ConfigureAwait(false),
                     Holidays = await GetHolidaysAsync(apiClient, (DateTime)query.StartDate, (DateTime)query.EndDate, cancellationToken).ConfigureAwait(false)
                 };
             }
@@ -117,11 +117,12 @@ namespace HR.PersonalTimetable.Api.Queries
                 .Where(holiday => holiday.ToDateTimeRange().Overlaps(new(startDate, endDate)));
         }
 
-        private static async Task<IEnumerable<TimetableGroup>> GetTimetableGroupsAsync(IApiClient apiClient, ElementType elementType, int elementId, DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
+        private static async Task<IEnumerable<Lesson>> GetLessonsAsync(IApiClient apiClient, ElementType elementType, int elementId, DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
         {
             var (timetables, _) = await apiClient.GetTimetablesAsync(elementType, elementId, startDate, endDate, cancellationToken).ConfigureAwait(false);
             var timegrids = await apiClient.GetTimegridsAsync(cancellationToken).ConfigureAwait(false);
-            return timetables.ToTimetableGroups(timegrids);
+            var timetableGroups = timetables.ToTimetableGroups(timegrids);
+            return timetableGroups.Select(timetableGroup => timetableGroup.ToLesson());
         }
     }
 }

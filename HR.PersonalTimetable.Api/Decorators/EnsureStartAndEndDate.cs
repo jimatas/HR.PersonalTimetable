@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Decorators
 {
-    public class EnsureStartAndEndDate : IQueryHandlerWrapper<GetTimetableSchedule, TimetableSchedule>
+    public class EnsureStartAndEndDate : IQueryHandlerWrapper<GetSchedule, Schedule>
     {
         private readonly AppSettings appSettings;
         private readonly IClock clock;
@@ -28,7 +28,7 @@ namespace HR.PersonalTimetable.Api.Decorators
             this.clock = Ensure.Argument.NotNull(() => clock);
         }
 
-        public async Task<TimetableSchedule> HandleAsync(GetTimetableSchedule query, HandlerDelegate<TimetableSchedule> next, CancellationToken cancellationToken)
+        public async Task<Schedule> HandleAsync(GetSchedule query, HandlerDelegate<Schedule> next, CancellationToken cancellationToken)
         {
             if (query.StartDate.IsNullOrDefault())
             {

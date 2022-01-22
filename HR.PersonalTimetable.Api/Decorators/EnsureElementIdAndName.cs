@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Api.Decorators
 {
-    public class EnsureElementIdAndName : ICommandHandlerWrapper<AddPersonalTimetable>, IQueryHandlerWrapper<GetTimetableSchedule, TimetableSchedule>
+    public class EnsureElementIdAndName : ICommandHandlerWrapper<AddPersonalTimetable>, IQueryHandlerWrapper<GetSchedule, Schedule>
     {
         private readonly IQueryDispatcher queryDispatcher;
 
@@ -36,7 +36,7 @@ namespace HR.PersonalTimetable.Api.Decorators
             await next().ConfigureAwait(false);
         }
 
-        public async Task<TimetableSchedule> HandleAsync(GetTimetableSchedule query, HandlerDelegate<TimetableSchedule> next, CancellationToken cancellationToken)
+        public async Task<Schedule> HandleAsync(GetSchedule query, HandlerDelegate<Schedule> next, CancellationToken cancellationToken)
         {
             (query.ElementId, query.ElementName) = await GetElementIdAndNameAsync(
                 query.InstituteName,

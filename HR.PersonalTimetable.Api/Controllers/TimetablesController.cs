@@ -37,7 +37,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<TimetableSchedule> GetAsync([FromQuery] GetTimetableSchedule query, CancellationToken cancellationToken = default)
+        public async Task<Schedule> GetAsync([FromQuery] GetSchedule query, CancellationToken cancellationToken = default)
         {
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
@@ -51,7 +51,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         [HttpGet("personalized/{user}")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IEnumerable<TimetableSchedule>> GetPersonalizedAsync([FromRoute, FromQuery] GetTimetableSchedules query, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Schedule>> GetPersonalizedAsync([FromRoute, FromQuery] GetSchedules query, CancellationToken cancellationToken = default)
         {
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
@@ -65,7 +65,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         [HttpGet("personalized/{user}/export")]
         [Produces("text/calendar")]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<FileContentResult> GetPersonalizedExportAsync([FromRoute] GetTimetableSchedulesForExport query, CancellationToken cancellationToken = default)
+        public async Task<FileContentResult> GetPersonalizedExportAsync([FromRoute] GetSchedulesForExport query, CancellationToken cancellationToken = default)
         {
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }

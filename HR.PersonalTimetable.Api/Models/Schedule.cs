@@ -6,15 +6,16 @@ using System.Collections.Generic;
 namespace HR.PersonalTimetable.Api.Models
 {
     /// <summary>
-    /// A timetable based schedule for a particular timetable, period and institute, includes holidays.
+    /// Complete lesson schedule for a particular timetable element, time period and institute.
+    /// Includes any holidays that occur in that period as well.
     /// </summary>
-    public class TimetableSchedule
+    public class Schedule
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public Institute Institute { get; set; }
         public Element Element { get; set; }
         public IEnumerable<Holiday> Holidays { get; set; }
-        public IEnumerable<TimetableGroup> TimetableGroups { get; set; }
+        public IEnumerable<Lesson> Lessons { get; set; }
     }
 }
