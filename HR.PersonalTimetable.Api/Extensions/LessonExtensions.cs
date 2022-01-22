@@ -1,4 +1,5 @@
-﻿using HR.PersonalTimetable.Api.Models;
+﻿using HR.PersonalTimetable.Api.Infrastructure;
+using HR.PersonalTimetable.Api.Models;
 using HR.WebUntisConnector.Model;
 
 using System;
@@ -43,9 +44,10 @@ namespace HR.PersonalTimetable.Api.Extensions
         /// Export a range of lessons to iCalendar (*.ics) format.
         /// </summary>
         /// <param name="lessons">The timetable data to export.</param>
+        /// <param name="clock">The clock.</param>
         /// <param name="refreshInterval">The suggested refresh interval in minutes. Default value is half an hour.</param>
         /// <returns>A string containing the exported data in iCalendar format.</returns>
-        public static string ExportCalendar(this IEnumerable<Lesson> lessons, int refreshInterval = 30)
+        public static string ExportCalendar(this IEnumerable<Lesson> lessons, IClock clock, int refreshInterval = 30)
         {
             var calendarBuilder = new StringBuilder();
 
@@ -59,7 +61,7 @@ namespace HR.PersonalTimetable.Api.Extensions
 
             foreach (var lesson in lessons)
             {
-                lesson.AppendTo(calendarBuilder);
+                lesson.AppendTo(calendarBuilder, clock);
             }
 
             calendarBuilder.AppendLine("END:VCALENDAR");
@@ -67,14 +69,14 @@ namespace HR.PersonalTimetable.Api.Extensions
             return calendarBuilder.ToString();
         }
 
-        private static void AppendTo(this Lesson lesson, StringBuilder calendarBuilder)
+        private static void AppendTo(this Lesson lesson, StringBuilder calendarBuilder, IClock clock)
         {
             calendarBuilder.AppendLine("BEGIN:VEVENT");
 
             var lessonNumber = lesson.LessonNumber;
             calendarBuilder.Append("UID:").AppendLine($"{lesson.Date}T{lesson.StartTime:0000}-LS{lessonNumber}@webuntis.hr.nl");
 
-            calendarBuilder.Append("DTSTAMP:").AppendLine(DateTime.UtcNow.ToString("yyyyMMddTHHmmssZ"));
+            calendarBuilder.Append("DTSTAMP:").AppendLine(clock.UtcNow.ToString("yyyyMMddTHHmmssZ"));
             calendarBuilder.Append("DTSTART:").AppendLine(lesson.GetStartDateTime().ToUniversalTime().ToString("yyyyMMddTHHmmssZ"));
             calendarBuilder.Append("DTEND:").AppendLine(lesson.GetEndDateTime().ToUniversalTime().ToString("yyyyMMddTHHmmssZ"));
 
