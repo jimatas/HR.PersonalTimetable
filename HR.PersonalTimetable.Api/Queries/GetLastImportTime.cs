@@ -16,6 +16,10 @@ namespace HR.PersonalTimetable.Api.Queries
 {
     public class GetLastImportTime : IQuery<DateTime>
     {
+        /// <summary>
+        /// The RUAS institute name.
+        /// Alternatively, a WebUntis school name may be supplied.
+        /// </summary>
         [Required]
         [FromRoute(Name = "institute")]
         public string InstituteName { get; set; }

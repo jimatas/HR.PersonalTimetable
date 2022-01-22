@@ -22,6 +22,10 @@ namespace HR.PersonalTimetable.Api.Queries
 {
     public class GetTimetableSchedule : IQuery<TimetableSchedule>, IValidatableObject
     {
+        /// <summary>
+        /// The RUAS institute name.
+        /// Alternatively, a WebUntis school name may be supplied.
+        /// </summary>
         [Required]
         [FromQuery(Name = "institute")]
         public string InstituteName { get; set; }
@@ -30,15 +34,29 @@ namespace HR.PersonalTimetable.Api.Queries
         [FromQuery(Name = "element")]
         public ElementType ElementType { get; set; }
 
+        /// <summary>
+        /// The primary key of the element in the WebUntis database.
+        /// </summary>
         [FromQuery(Name = "id")]
         public int? ElementId { get; set; }
 
+        /// <summary>
+        /// The unique name of the element.
+        /// </summary>
         [FromQuery(Name = "name")]
         public string ElementName { get; set; }
 
+        /// <summary>
+        /// Optional start of the date range.
+        /// Defaults to the first weekday of the current week.
+        /// </summary>
         [FromQuery(Name = "start")]
         public DateTime? StartDate { get; set; }
 
+        /// <summary>
+        /// Optional end of the date range.
+        /// Defaults to the last weekday (+1 day) of the current week.
+        /// </summary>
         [FromQuery(Name = "end")]
         public DateTime? EndDate { get; set; }
 

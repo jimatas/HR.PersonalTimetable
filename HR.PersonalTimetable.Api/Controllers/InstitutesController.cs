@@ -27,6 +27,12 @@ namespace HR.PersonalTimetable.Api.Controllers
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
         }
 
+        /// <summary>
+        /// Retrieve a listing with all the RUAS institutes.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IEnumerable<Institute>> Get([FromQuery] GetInstitutes query, CancellationToken cancellationToken = default)
@@ -34,6 +40,12 @@ namespace HR.PersonalTimetable.Api.Controllers
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
 
+        /// <summary>
+        /// Get the timestamp of when timetables were last imported from Untis.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("{institute}/last-imported")]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<DateTime> GetLastImportedAsync([FromRoute] GetLastImportTime query, CancellationToken cancellationToken = default)

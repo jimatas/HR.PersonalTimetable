@@ -15,6 +15,9 @@ namespace HR.PersonalTimetable.Api.Queries
 {
     public class GetInstitutes : IQuery<IEnumerable<Institute>>
     {
+        /// <summary>
+        /// Indicates whether to only return the institutes that are configured as visible in the configuration file.
+        /// </summary>
         [FromQuery(Name = "visibleOnly")]
         public bool VisibleOnly { get; set; } = true;
     }

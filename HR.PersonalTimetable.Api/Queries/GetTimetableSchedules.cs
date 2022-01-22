@@ -17,13 +17,25 @@ namespace HR.PersonalTimetable.Api.Queries
 {
     public class GetTimetableSchedules : IQuery<IEnumerable<TimetableSchedule>>
     {
+        /// <summary>
+        /// The username of the user. 
+        /// Depending on their role, either an employee code or a student number.
+        /// </summary>
         [Required, UserName]
         [FromRoute(Name = "user")]
         public string UserName { get; set; }
 
+        /// <summary>
+        /// Optional start of the date range.
+        /// Defaults to the first weekday of the current week.
+        /// </summary>
         [FromQuery(Name = "start")]
         public DateTime? StartDate { get; set; }
 
+        /// <summary>
+        /// Optional end of the date range.
+        /// Defaults to the last weekday (+1 day) of the current week.
+        /// </summary>
         [FromQuery(Name = "end")]
         public DateTime? EndDate { get; set; }
     }

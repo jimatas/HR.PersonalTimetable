@@ -15,6 +15,10 @@ namespace HR.PersonalTimetable.Api.Queries
 {
     public class GetPersonalTimetables : IQuery<IEnumerable<Models.PersonalTimetable>>
     {
+        /// <summary>
+        /// The username of the user. 
+        /// Depending on their role, either an employee code or a student number.
+        /// </summary>
         [Required, UserName]
         [FromRoute(Name = "user")]
         public string UserName { get; set; }

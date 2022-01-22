@@ -15,10 +15,22 @@ namespace HR.PersonalTimetable.Api.Commands
 {
     public class RemovePersonalTimetable : ICommand
     {
+        /// <summary>
+        /// The unique identifier of the personal timetable.
+        /// </summary>
         [Required]
         [FromRoute(Name = "id")]
         public Guid PersonalTimetableId { get; set; }
 
+        /// <summary>
+        /// The integration through which the timetable is being deleted.
+        /// </summary>
+        internal Integration Integration { get; set; }
+
+        /// <summary>
+        /// A salted hash of the username to verify.
+        /// The salt is the (current) signing key of the integration through which the timetable is being deleted.
+        /// </summary>
         internal string UserNameToVerify { get; set; }
     }
 
@@ -39,7 +51,7 @@ namespace HR.PersonalTimetable.Api.Commands
                 throw new NotFoundException($"No {nameof(PersonalTimetable)} with {nameof(Models.PersonalTimetable.Id)} {command.PersonalTimetableId} found.");
             }
 
-            if (personalTimetable.VerifyAccess(command.UserNameToVerify))
+            if (personalTimetable.VerifyAccess(command.UserNameToVerify, command.Integration.CurrentSigningKey))
             {
                 unitOfWork.Repository<Models.PersonalTimetable>().Remove(personalTimetable);
 
