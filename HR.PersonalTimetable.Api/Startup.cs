@@ -84,7 +84,7 @@ namespace HR.PersonalTimetable.Api
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HR.PersonalTimetable.Api", Version = "v1" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "HR.PersonalTimetable.Api", Version = "v2" });
                 c.CustomSchemaIds(type => type.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? type.GetCustomAttribute<DisplayAttribute>()?.GetName() ?? type.Name);
                 c.OperationFilter<AddRequiredHeaderParameter>();
 
@@ -124,7 +124,7 @@ namespace HR.PersonalTimetable.Api
 
             // Allow use of Swagger outside of development.
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("../swagger/v1/swagger.json", "HR.PersonalTimetable.Api v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("v2/swagger.json", "HR.PersonalTimetable.Api v2"));
 
             app.UseCors();
 
