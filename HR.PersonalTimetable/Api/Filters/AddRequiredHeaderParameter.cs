@@ -19,7 +19,7 @@ namespace HR.PersonalTimetable.Api.Filters
 
             operation.Parameters ??= new List<OpenApiParameter>();
 
-            operation.Parameters.Add(new OpenApiParameter
+            operation.Parameters.Add(new()
             {
                 Name = "X-HR-Authorization",
                 In = ParameterLocation.Header,
@@ -30,17 +30,7 @@ namespace HR.PersonalTimetable.Api.Filters
                 Schema = new OpenApiSchema { Type = "string", Pattern = "^[0-9A-Fa-f]{64}$" }
             });
 
-            operation.Parameters.Add(new OpenApiParameter
-            {
-                Name = "X-HR-Timestamp",
-                In = ParameterLocation.Header,
-                Description = "Unix timestamp that was used to compute the hash. This value represents the number of UTC seconds since the Unix epoch.",
-                Required = true,
-                AllowEmptyValue = false,
-                Schema = new OpenApiSchema { Type = "integer" }
-            });
-
-            operation.Parameters.Add(new OpenApiParameter
+            operation.Parameters.Add(new()
             {
                 Name = "X-HR-Integration",
                 In = ParameterLocation.Header,
@@ -48,6 +38,16 @@ namespace HR.PersonalTimetable.Api.Filters
                 Required = true,
                 AllowEmptyValue = false,
                 Schema = new OpenApiSchema { Type = "string" }
+            });
+
+            operation.Parameters.Add(new()
+            {
+                Name = "X-HR-Timestamp",
+                In = ParameterLocation.Header,
+                Description = "Unix timestamp that was used to compute the hash. This value represents the number of UTC seconds that have passed on the client since the Unix epoch.",
+                Required = true,
+                AllowEmptyValue = false,
+                Schema = new OpenApiSchema { Type = "integer" }
             });
         }
     }
