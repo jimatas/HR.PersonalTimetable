@@ -23,7 +23,7 @@ namespace HR.PersonalTimetable.Api.Filters
             {
                 Name = "X-HR-Authorization",
                 In = ParameterLocation.Header,
-                Description = "Hex encoded SHA-256 hash digest of the lowercased username, the integration's signing key and the Unix timestamp in seconds, concatenated together in that order."
+                Description = "Hex encoded SHA-256 hash of the lowercased username, the integration's signing key and the Unix timestamp in seconds, concatenated together in that order."
                     + "<pre>hex(sha256(lowercase(username) + signingkey + timestamp))</pre>",
                 Required = true,
                 AllowEmptyValue = false,
