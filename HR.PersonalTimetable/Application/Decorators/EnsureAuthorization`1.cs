@@ -75,8 +75,8 @@ namespace HR.PersonalTimetable.Application.Decorators
                 {
                     var utcDate = DateTimeOffset.FromUnixTimeSeconds(unixTimeSeconds);
 
-                    var clockSkew = Math.Floor(Math.Abs(clock.UtcNow.Subtract(utcDate).TotalSeconds));
-                    if (clockSkew <= appSettings.ClockSkewToleranceInSeconds)
+                    var clockSkew = (clock.UtcNow - utcDate).Duration();
+                    if (clockSkew <= appSettings.ClockSkewTolerance)
                     {
                         return unixTimeSeconds;
                     }
