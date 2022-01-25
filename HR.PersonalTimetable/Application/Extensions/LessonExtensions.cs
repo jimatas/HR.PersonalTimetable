@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace HR.PersonalTimetable.Application.Extensions
 {
@@ -45,9 +46,9 @@ namespace HR.PersonalTimetable.Application.Extensions
         /// </summary>
         /// <param name="lessons">The timetable data to export.</param>
         /// <param name="clock">The clock.</param>
-        /// <param name="refreshInterval">The suggested refresh interval in minutes. Default value is half an hour.</param>
+        /// <param name="refreshInterval">The suggested refresh interval.</param>
         /// <returns>A string containing the exported data in iCalendar format.</returns>
-        public static string ExportCalendar(this IEnumerable<Lesson> lessons, IClock clock, int refreshInterval = 30)
+        public static string ExportCalendar(this IEnumerable<Lesson> lessons, IClock clock, TimeSpan refreshInterval)
         {
             var calendarBuilder = new StringBuilder();
 
@@ -56,8 +57,8 @@ namespace HR.PersonalTimetable.Application.Extensions
             calendarBuilder.AppendLine("PRODID:-//Hogeschool Rotterdam//HR.WebUntisConnector.ApiClient//NL");
             calendarBuilder.AppendLine("CALSCALE:GREGORIAN");
             calendarBuilder.AppendLine("X-WR-CALNAME:HR Rooster");
-            calendarBuilder.AppendFormat("X-PUBLISHED-TTL;VALUE=DURATION:PT{0}M", refreshInterval).AppendLine();
-            calendarBuilder.AppendFormat("REFRESH-INTERVAL;VALUE=DURATION:PT{0}M", refreshInterval).AppendLine();
+            calendarBuilder.AppendFormat("X-PUBLISHED-TTL;VALUE=DURATION:{0}", XmlConvert.ToString(refreshInterval)).AppendLine();
+            calendarBuilder.AppendFormat("REFRESH-INTERVAL;VALUE=DURATION:{0}", XmlConvert.ToString(refreshInterval)).AppendLine();
 
             foreach (var lesson in lessons)
             {
