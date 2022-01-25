@@ -35,7 +35,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IEnumerable<Institute>> Get([FromQuery] GetInstitutes query, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Institute>> GetAsync([FromQuery] GetInstitutes query, CancellationToken cancellationToken = default)
         {
             return await queryDispatcher.DispatchAsync(query, cancellationToken);
         }
