@@ -6,9 +6,12 @@ using Developist.Core.Utilities;
 
 using HR.PersonalTimetable.Application.Exceptions;
 using HR.PersonalTimetable.Application.Models;
+using HR.PersonalTimetable.Application.Services;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -21,11 +24,15 @@ namespace HR.PersonalTimetable.Application.Decorators
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IClock clock;
+        private readonly AppSettings appSettings;
 
-        public EnsureAuthorization(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
+        public EnsureAuthorization(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings, IClock clock)
         {
             this.httpContextAccessor = Ensure.Argument.NotNull(() => httpContextAccessor);
             this.unitOfWork = Ensure.Argument.NotNull(() => unitOfWork);
+            this.appSettings = Ensure.Argument.NotNull(() => appSettings).Value;
+            this.clock = Ensure.Argument.NotNull(() => clock);
         }
 
         public sbyte Priority => Priorities.Higher;
@@ -33,28 +40,59 @@ namespace HR.PersonalTimetable.Application.Decorators
         public async Task HandleAsync(TCommand command, HandlerDelegate next, CancellationToken cancellationToken)
         {
             const BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            Integration integration = null;
 
-            var property = command.GetType().GetProperty("UserNameToVerify", bindingAttr);
-            if (property is not null && string.IsNullOrEmpty(property.GetValue(command) as string))
+            var property = command.GetType().GetProperty(nameof(Authorization), bindingAttr);
+            if (property is not null && property.PropertyType == typeof(Authorization) && property.GetValue(command) is null)
             {
-                property.SetValue(command, GetUserNameToVerify());
+                var authorization = new Authorization
+                {
+                    Timestamp = GetTimestamp(),
+                    UserName = GetAuthorization()
+                };
+
+                integration = await GetIntegrationAsync(cancellationToken).ConfigureAwait(false);
+                authorization.SigningKey = integration.CurrentSigningKey;
+
+                property.SetValue(command, authorization);
             }
 
-            property = command.GetType().GetProperty("Integration", bindingAttr);
-            if (property is not null && property.GetValue(command) is null)
+            property = command.GetType().GetProperty(nameof(Integration), bindingAttr);
+            if (property is not null && property.PropertyType == typeof(Integration) && property.GetValue(command) is null)
             {
-                property.SetValue(command, await GetIntegrationAsync(cancellationToken).ConfigureAwait(false));
+                property.SetValue(command, integration);
             }
 
             await next().ConfigureAwait(false);
         }
 
-        private string GetUserNameToVerify()
+        private int GetTimestamp()
         {
             var httpContext = httpContextAccessor.HttpContext;
-            if (httpContext.Request.Headers.TryGetValue("X-HR-Authorization", out var userNameToVerify))
+            if (httpContext.Request.Headers.TryGetValue("X-HR-Timestamp", out var timestamp))
             {
-                return userNameToVerify.ToString();
+                if (int.TryParse(timestamp, out var unixTimeSeconds))
+                {
+                    var utcDate = DateTimeOffset.FromUnixTimeSeconds(unixTimeSeconds);
+
+                    var clockSkew = Math.Floor(Math.Abs(clock.UtcNow.Subtract(utcDate).TotalSeconds));
+                    if (clockSkew <= appSettings.ClockSkewToleranceInSeconds)
+                    {
+                        return unixTimeSeconds;
+                    }
+                    throw new UnauthorizedException("Clock skew between client and server is outside of tolerance.");
+                }
+                throw new BadRequestException("Invalid timestamp value provided.");
+            }
+            throw new BadRequestException("Required header \"X-HR-Timestamp\" was not present.");
+        }
+
+        private string GetAuthorization()
+        {
+            var httpContext = httpContextAccessor.HttpContext;
+            if (httpContext.Request.Headers.TryGetValue("X-HR-Authorization", out var authorization))
+            {
+                return authorization.ToString();
             }
             throw new BadRequestException("Required header \"X-HR-Authorization\" was not present.");
         }

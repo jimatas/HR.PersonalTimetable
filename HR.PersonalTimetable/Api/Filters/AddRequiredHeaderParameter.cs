@@ -23,8 +23,8 @@ namespace HR.PersonalTimetable.Api.Filters
             {
                 Name = "X-HR-Authorization",
                 In = ParameterLocation.Header,
-                Description = "Salted hash of the username. The salt is the signing key that was assigned to the integration."
-                    + "<pre>hex(sha256(lowercase(username) + salt))</pre>",
+                Description = "Hex encoded SHA-256 hash digest of the lowercased username, the integration's signing key and the Unix timestamp in seconds, concatenated together in that order."
+                    + "<pre>hex(sha256(lowercase(username) + signingkey + timestamp))</pre>",
                 Required = true,
                 AllowEmptyValue = false,
                 Schema = new OpenApiSchema { Type = "string", Pattern = "^[0-9A-Fa-f]{64}$" }
@@ -32,9 +32,19 @@ namespace HR.PersonalTimetable.Api.Filters
 
             operation.Parameters.Add(new OpenApiParameter
             {
+                Name = "X-HR-Timestamp",
+                In = ParameterLocation.Header,
+                Description = "Unix timestamp that was used to compute the hash. This value represents the number of UTC seconds since the Unix epoch.",
+                Required = true,
+                AllowEmptyValue = false,
+                Schema = new OpenApiSchema { Type = "integer" }
+            });
+
+            operation.Parameters.Add(new OpenApiParameter
+            {
                 Name = "X-HR-Integration",
                 In = ParameterLocation.Header,
-                Description = "Name of the integration.",
+                Description = "Name of the integration whose signing key was used to compute the hash.",
                 Required = true,
                 AllowEmptyValue = false,
                 Schema = new OpenApiSchema { Type = "string" }

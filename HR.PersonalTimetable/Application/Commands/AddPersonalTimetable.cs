@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,13 +40,13 @@ namespace HR.PersonalTimetable.Application.Commands
         /// <summary>
         /// The integration through which the timetable is being created.
         /// </summary>
-        internal Integration Integration { get; set; }
+        [JsonIgnore]
+        public Integration Integration { get; set; }
 
         /// <summary>
-        /// A salted hash of the username to verify.
-        /// The salt is the (current) signing key of the integration through which the timetable is being created.
+        /// Client provided authorization data.
         /// </summary>
-        internal string UserNameToVerify { get; set; }
+        internal Authorization Authorization { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -86,7 +87,7 @@ namespace HR.PersonalTimetable.Application.Commands
                 DateCreated = clock.Now
             };
 
-            personalTimetable.VerifyCreateAccess(command.UserNameToVerify, command.Integration.CurrentSigningKey);
+            personalTimetable.VerifyCreateAccess(command.Authorization);
             
             unitOfWork.Repository<Models.PersonalTimetable>().Add(personalTimetable);
             await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
