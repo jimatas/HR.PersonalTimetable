@@ -33,5 +33,14 @@
         /// Default value is "HR_Rooster.ics"
         /// </summary>
         public string CalendarFileName { get; set; } = "HR_Rooster.ics";
+
+        /// <summary>
+        /// Clock skew to account for between client and server.
+        /// Default value is 60 seconds.
+        /// </summary>
+        /// <remarks>
+        /// See also the <c>"X-HR-Timestamp"</c> request header.
+        /// </remarks>
+        public int ClockSkewToleranceInSeconds { get; set; } = 60;
     }
 }

@@ -73,26 +73,28 @@ namespace HR.PersonalTimetable.Application.Models
         /// <summary>
         /// Verifies that the user whose hashed username was provided in the request has access to this timetable.
         /// </summary>
-        /// <param name="userNameToVerify"></param>
-        /// <param name="secret"></param>
+        /// <param name="authorization"></param>
         /// <returns><c>true</c> if access is granted.</returns>
         /// <exception cref="UnauthorizedException">If access is denied.</exception>
-        public bool VerifyAccess(string userNameToVerify, SigningKey secret)
+        public bool VerifyAccess(Authorization authorization)
         {
-            return UserName.ToLower().ToSha256(secret.Key).Equals(userNameToVerify, StringComparison.OrdinalIgnoreCase) ? true
-                : throw new UnauthorizedException($"User does not have access to {this}.");
+            var hashToVerifyAgainst = UserName.ToLower().ToSha256(salt: string.Concat(authorization.SigningKey.Key, authorization.Timestamp));
+            if (hashToVerifyAgainst.Equals(authorization.UserName, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            throw new UnauthorizedException($"User does not have access to {this}.");
         }
 
         /// <summary>
         /// Verifies that the user whose hashed username was provided in the request is allowed to create the timetable.
         /// </summary>
-        /// <param name="userNameToVerify"></param>
-        /// <param name="secret"></param>
+        /// <param name="authorization"></param>
         /// <returns><c>true</c> if access is granted.</returns>
         /// <exception cref="UnauthorizedException">If access is denied.</exception>
-        public bool VerifyCreateAccess(string userNameToVerify, SigningKey secret)
+        public bool VerifyCreateAccess(Authorization authorization)
         {
-            try { return VerifyAccess(userNameToVerify, secret); }
+            try { return VerifyAccess(authorization); }
             catch (UnauthorizedException) { throw new UnauthorizedException($"Cannot create a {nameof(PersonalTimetable)} on behalf of another user."); }
         }
     }

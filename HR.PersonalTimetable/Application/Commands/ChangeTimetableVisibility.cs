@@ -29,15 +29,9 @@ namespace HR.PersonalTimetable.Application.Commands
         public bool IsVisible { get; set; }
 
         /// <summary>
-        /// The integration through which the timetable is being edited.
+        /// Client provided authorization data.
         /// </summary>
-        internal Integration Integration { get; set; }
-
-        /// <summary>
-        /// A salted hash of the username to verify.
-        /// The salt is the (current) signing key of the integration through which the timetable is being edited.
-        /// </summary>
-        internal string UserNameToVerify { get; set; }
+        internal Authorization Authorization { get; set; }
     }
 
     public class ChangeTimetableVisibilityHandler : ICommandHandler<ChangeTimetableVisibility>
@@ -59,7 +53,7 @@ namespace HR.PersonalTimetable.Application.Commands
                 throw new NotFoundException($"No {nameof(PersonalTimetable)} with {nameof(Models.PersonalTimetable.Id)} {command.PersonalTimetableId} found.");
             }
 
-            if (personalTimetable.VerifyAccess(command.UserNameToVerify, command.Integration.CurrentSigningKey) && personalTimetable.IsVisible != command.IsVisible)
+            if (personalTimetable.VerifyAccess(command.Authorization) && personalTimetable.IsVisible != command.IsVisible)
             {
                 personalTimetable.IsVisible = command.IsVisible;
                 personalTimetable.DateLastModified = clock.Now;
