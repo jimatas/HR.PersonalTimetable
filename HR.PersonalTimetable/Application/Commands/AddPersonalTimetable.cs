@@ -3,7 +3,6 @@ using Developist.Core.Persistence;
 using Developist.Core.Utilities;
 
 using HR.PersonalTimetable.Application.Extensions;
-using HR.PersonalTimetable.Application.Models;
 using HR.PersonalTimetable.Application.Services;
 using HR.PersonalTimetable.Application.Validators;
 using HR.WebUntisConnector;
@@ -14,14 +13,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Application.Commands
 {
     [DisplayName("PersonalTimetable.Params")]
-    public class AddPersonalTimetable : ICommand, IValidatableObject
+    public class AddPersonalTimetable : AuthorizableCommandBase, IValidatableObject
     {
         [Required, UserName]
         public string UserName { get; set; }
@@ -36,17 +34,6 @@ namespace HR.PersonalTimetable.Application.Commands
 
         [StringLength(100)]
         public string ElementName { get; set; }
-
-        /// <summary>
-        /// The integration through which the timetable is being created.
-        /// </summary>
-        [JsonIgnore]
-        public Integration Integration { get; set; }
-
-        /// <summary>
-        /// Client provided authorization data.
-        /// </summary>
-        internal Authorization Authorization { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -77,7 +64,7 @@ namespace HR.PersonalTimetable.Application.Commands
         {
             Models.PersonalTimetable personalTimetable = new()
             {
-                Integration = command.Integration,
+                Integration = command.Authorization.SigningKey.Integration,
                 UserName = command.UserName,
                 InstituteName = command.InstituteName,
                 ElementType = command.ElementType,

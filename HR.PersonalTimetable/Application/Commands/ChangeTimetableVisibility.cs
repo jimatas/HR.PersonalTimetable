@@ -3,7 +3,6 @@ using Developist.Core.Persistence;
 using Developist.Core.Utilities;
 
 using HR.PersonalTimetable.Application.Exceptions;
-using HR.PersonalTimetable.Application.Models;
 using HR.PersonalTimetable.Application.Services;
 
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Application.Commands
 {
-    public class ChangeTimetableVisibility : ICommand
+    public class ChangeTimetableVisibility : AuthorizableCommandBase
     {
         /// <summary>
         /// The unique identifier of the personal timetable.
@@ -27,11 +26,6 @@ namespace HR.PersonalTimetable.Application.Commands
         [Required]
         [FromQuery(Name = "visible")]
         public bool IsVisible { get; set; }
-
-        /// <summary>
-        /// Client provided authorization data.
-        /// </summary>
-        internal Authorization Authorization { get; set; }
     }
 
     public class ChangeTimetableVisibilityHandler : ICommandHandler<ChangeTimetableVisibility>

@@ -4,6 +4,7 @@ using Developist.Core.Persistence;
 using Developist.Core.Persistence.Entities;
 using Developist.Core.Utilities;
 
+using HR.PersonalTimetable.Application.Commands;
 using HR.PersonalTimetable.Application.Exceptions;
 using HR.PersonalTimetable.Application.Models;
 using HR.PersonalTimetable.Application.Services;
@@ -13,14 +14,13 @@ using Microsoft.Extensions.Options;
 
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Application.Decorators
 {
     public class EnsureAuthorization<TCommand> : IPrioritizable, ICommandHandlerWrapper<TCommand>
-        where TCommand : ICommand
+        where TCommand : AuthorizableCommandBase
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IUnitOfWork unitOfWork;
@@ -39,29 +39,12 @@ namespace HR.PersonalTimetable.Application.Decorators
 
         public async Task HandleAsync(TCommand command, HandlerDelegate next, CancellationToken cancellationToken)
         {
-            const BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-            Integration integration = null;
-
-            var property = command.GetType().GetProperty(nameof(Authorization), bindingAttr);
-            if (property is not null && property.PropertyType == typeof(Authorization) && property.GetValue(command) is null)
+            command.Authorization ??= new()
             {
-                var authorization = new Authorization
-                {
-                    Timestamp = GetTimestamp(),
-                    UserName = GetAuthorization()
-                };
-
-                integration = await GetIntegrationAsync(cancellationToken).ConfigureAwait(false);
-                authorization.SigningKey = integration.CurrentSigningKey;
-
-                property.SetValue(command, authorization);
-            }
-
-            property = command.GetType().GetProperty(nameof(Integration), bindingAttr);
-            if (property is not null && property.PropertyType == typeof(Integration) && property.GetValue(command) is null)
-            {
-                property.SetValue(command, integration);
-            }
+                Timestamp = GetTimestamp(),
+                UserName = GetAuthorization(),
+                SigningKey = (await GetIntegrationAsync(cancellationToken).ConfigureAwait(false)).CurrentSigningKey
+            };
 
             await next().ConfigureAwait(false);
         }
