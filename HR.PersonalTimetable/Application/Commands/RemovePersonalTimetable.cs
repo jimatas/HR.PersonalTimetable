@@ -3,7 +3,6 @@ using Developist.Core.Persistence;
 using Developist.Core.Utilities;
 
 using HR.PersonalTimetable.Application.Exceptions;
-using HR.PersonalTimetable.Application.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Application.Commands
 {
-    public class RemovePersonalTimetable : ICommand
+    public class RemovePersonalTimetable : AuthorizableCommandBase
     {
         /// <summary>
         /// The unique identifier of the personal timetable.
@@ -22,11 +21,6 @@ namespace HR.PersonalTimetable.Application.Commands
         [Required]
         [FromRoute(Name = "id")]
         public Guid PersonalTimetableId { get; set; }
-
-        /// <summary>
-        /// Client provided authorization data.
-        /// </summary>
-        internal Authorization Authorization { get; set; }
     }
 
     public class RemovePersonalTimetableHandler : ICommandHandler<RemovePersonalTimetable>
