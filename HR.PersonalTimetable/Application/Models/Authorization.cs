@@ -3,7 +3,7 @@
     public class Authorization
     {
         /// <summary>
-        /// The client provided hash that is to be verified.
+        /// The client-provided hash that is to be verified.
         /// </summary>
         public string UserName { get; set; }
 
@@ -13,7 +13,7 @@
         public SigningKey SigningKey { get; set; }
 
         /// <summary>
-        /// The client provided Unix timestamp in seconds
+        /// The client-provided Unix timestamp in seconds
         /// </summary>
         public long Timestamp { get; set; }
     }
