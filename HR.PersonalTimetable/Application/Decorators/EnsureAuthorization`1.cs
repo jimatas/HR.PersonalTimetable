@@ -66,12 +66,12 @@ namespace HR.PersonalTimetable.Application.Decorators
             await next().ConfigureAwait(false);
         }
 
-        private int GetTimestamp()
+        private long GetTimestamp()
         {
             var httpContext = httpContextAccessor.HttpContext;
             if (httpContext.Request.Headers.TryGetValue("X-HR-Timestamp", out var timestamp))
             {
-                if (int.TryParse(timestamp, out var unixTimeSeconds))
+                if (long.TryParse(timestamp, out var unixTimeSeconds))
                 {
                     var utcDate = DateTimeOffset.FromUnixTimeSeconds(unixTimeSeconds);
 

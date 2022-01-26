@@ -15,6 +15,6 @@
         /// <summary>
         /// The client provided Unix timestamp in seconds
         /// </summary>
-        public int Timestamp { get; set; }
+        public long Timestamp { get; set; }
     }
 }
