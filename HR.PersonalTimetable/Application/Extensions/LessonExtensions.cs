@@ -77,9 +77,9 @@ namespace HR.PersonalTimetable.Application.Extensions
             var lessonNumber = lesson.LessonNumber;
             calendarBuilder.Append("UID:").AppendLine($"{lesson.Date}T{lesson.StartTime:0000}-LS{lessonNumber}@webuntis.hr.nl");
 
-            calendarBuilder.Append("DTSTAMP:").AppendLine(clock.UtcNow.ToString("yyyyMMdd'T'HHmmssZ"));
-            calendarBuilder.Append("DTSTART:").AppendLine(lesson.GetStartDateTime().ToUniversalTime().ToString("yyyyMMdd'T'HHmmssZ"));
-            calendarBuilder.Append("DTEND:").AppendLine(lesson.GetEndDateTime().ToUniversalTime().ToString("yyyyMMdd'T'HHmmssZ"));
+            calendarBuilder.Append("DTSTAMP:").AppendLine(clock.UtcNow.ToString("yyyyMMdd'T'HHmmss'Z'"));
+            calendarBuilder.Append("DTSTART:").AppendLine(lesson.GetStartDateTime().ToUniversalTime().ToString("yyyyMMdd'T'HHmmss'Z'"));
+            calendarBuilder.Append("DTEND:").AppendLine(lesson.GetEndDateTime().ToUniversalTime().ToString("yyyyMMdd'T'HHmmss'Z'"));
 
             var rooms = lesson.GetRooms();
             if (rooms.Any())
