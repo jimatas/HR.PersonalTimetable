@@ -41,7 +41,7 @@ namespace HR.PersonalTimetable.Application.Queries
         public int? ElementId { get; set; }
 
         /// <summary>
-        /// The unique name of the element.
+        /// The abbreviated name of the element.
         /// </summary>
         [FromQuery(Name = "name")]
         public string ElementName { get; set; }

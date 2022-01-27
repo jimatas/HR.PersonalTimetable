@@ -12,7 +12,7 @@ namespace HR.PersonalTimetable.Application.Extensions
         /// </summary>
         /// <param name="elementType"></param>
         /// <param name="id">The primary key of the element in the WebUntis database.</param>
-        /// <param name="name">The unique name of the element.</param>
+        /// <param name="name">The abbreviated name of the element.</param>
         /// <returns></returns>
         public static Element CreateElement(this ElementType elementType, int id, string name) => elementType switch
         {
