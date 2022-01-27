@@ -49,7 +49,7 @@ namespace HR.PersonalTimetable.Application.Models
         public int ElementId { get; set; }
 
         /// <summary>
-        /// The unique name of the element. 
+        /// The abbreviated name of the element. 
         /// Provides an alternative way of identifiying elements.
         /// </summary>
         /// <seealso cref="Element.Name"/>
