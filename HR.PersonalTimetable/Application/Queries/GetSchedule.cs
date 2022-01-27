@@ -1,12 +1,14 @@
 ﻿using Developist.Core.Cqrs.Queries;
 using Developist.Core.Utilities;
 
+using HR.PersonalTimetable.Application.Exceptions;
 using HR.PersonalTimetable.Application.Extensions;
 using HR.PersonalTimetable.Application.Models;
 using HR.PersonalTimetable.Application.Services;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Configuration;
 using HR.WebUntisConnector.Extensions;
+using HR.WebUntisConnector.Infrastructure;
 using HR.WebUntisConnector.Model;
 
 using Microsoft.AspNetCore.Mvc;
@@ -119,9 +121,19 @@ namespace HR.PersonalTimetable.Application.Queries
 
         private static async Task<IEnumerable<Lesson>> GetLessonsAsync(IApiClient apiClient, ElementType elementType, int elementId, DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
         {
-            var (timetables, _) = await apiClient.GetTimetablesAsync(elementType, elementId, startDate, endDate, cancellationToken).ConfigureAwait(false);
+            IEnumerable<Timetable> timetables;
+            try
+            {
+                (timetables, _) = await apiClient.GetTimetablesAsync(elementType, elementId, startDate, endDate, cancellationToken).ConfigureAwait(false);
+            }
+            catch (JsonRpcException exception) when (exception.ErrorCode == -7002) // No such element.
+            {
+                throw new NotFoundException($"No {elementType} with {nameof(Element.Id)} {elementId} found.", exception);
+            }
+            
             var timegrids = await apiClient.GetTimegridsAsync(cancellationToken).ConfigureAwait(false);
             var timetableGroups = timetables.ToTimetableGroups(timegrids);
+            
             return timetableGroups.Select(timetableGroup => timetableGroup.ToLesson());
         }
     }
