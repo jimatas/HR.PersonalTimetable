@@ -12,7 +12,7 @@ namespace HR.PersonalTimetable.Application.Extensions
         /// <param name="data">A string containing the data to hash.</param>
         /// <param name="salt">A string containing the salt to append to the data.</param>
         /// <param name="encoding">The text encoding to use for converting the string to a byte array. Defaults to UTF-8 if not specified.</param>
-        /// <returns>A lower-cased hexadecimal string containing the SHA-256 hash.</returns>
+        /// <returns>A lowercased hexadecimal string containing the SHA-256 hash.</returns>
         public static string ToSha256(this string data, string salt, Encoding encoding = null)
         {
             return ToHexString((encoding ?? Encoding.UTF8).GetBytes(data).ToSha256((encoding ?? Encoding.UTF8).GetBytes(salt)));
