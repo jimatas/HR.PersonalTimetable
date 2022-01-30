@@ -65,7 +65,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         }
 
         /// <summary>
-        /// Allow a user to temporarily hide a timetable from their personal schedule without having to delete it.
+        /// Allow a user to temporarily hide a timetable without having to delete it from their personal schedule.
         /// </summary>
         /// <param name="command"></param>
         /// <param name="cancellationToken"></param>
