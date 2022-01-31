@@ -2,7 +2,6 @@
 using Developist.Core.Persistence;
 using Developist.Core.Utilities;
 
-using HR.PersonalTimetable.Application.Extensions;
 using HR.PersonalTimetable.Application.Services;
 using HR.PersonalTimetable.Application.Validators;
 using HR.WebUntisConnector;
