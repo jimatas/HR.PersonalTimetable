@@ -5,7 +5,6 @@ using Developist.Core.Utilities;
 
 using HR.PersonalTimetable.Application.Commands;
 using HR.PersonalTimetable.Application.Exceptions;
-using HR.PersonalTimetable.Application.Extensions;
 using HR.PersonalTimetable.Application.Models;
 using HR.PersonalTimetable.Application.Queries;
 using HR.WebUntisConnector.Model;
