@@ -1,9 +1,10 @@
-﻿using Developist.Core.Utilities;
+﻿// Copyright (c) 2021 Jim Atas. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for details.
 
 using System;
 using System.Threading.Tasks;
 
-namespace HR.PersonalTimetable.Infrastructure.Services
+namespace Developist.Core.Utilities
 {
     public class AsyncDisposableBase : DisposableBase, IAsyncDisposable
     {
