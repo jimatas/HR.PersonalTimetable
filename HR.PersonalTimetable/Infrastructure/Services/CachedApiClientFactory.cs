@@ -33,15 +33,15 @@ namespace HR.PersonalTimetable.Infrastructure.Services
         /// <inheritdoc/>
         public IApiClient CreateApiClient(string schoolOrInstituteName, out string userName, out string password)
         {
-            CachedApiClient apiClient;
             var school = configuration.FindSchool(schoolOrInstituteName)
                 ?? throw new NotFoundException($"No school or institute with the name \"{schoolOrInstituteName}\" found.");
 
+            CachedApiClient apiClient;
             using (mutex.WaitAndRelease())
             {
-                if (cachedApiClients.TryGetValue(school.Name, out var cachedApiClientEntry))
+                if (cachedApiClients.TryGetValue(school.Name, out var cachedApiClient))
                 {
-                    (apiClient, userName, password) = cachedApiClientEntry;
+                    (apiClient, userName, password) = cachedApiClient;
                 }
                 else
                 {
