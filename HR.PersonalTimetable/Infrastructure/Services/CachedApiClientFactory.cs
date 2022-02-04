@@ -8,18 +8,20 @@ using HR.WebUntisConnector;
 using HR.WebUntisConnector.Configuration;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Infrastructure.Services
 {
     /// <summary>
     /// Wraps an actual <see cref="IApiClientFactory"/> implementation and caches the <see cref="IApiClient"/> objects that are created by it.
     /// </summary>
-    public class CachedApiClientFactory : ICachedApiClientFactory
+    public class CachedApiClientFactory : AsyncDisposableBase, ICachedApiClientFactory
     {
         private readonly IApiClientFactory apiClientFactory;
         private readonly WebUntisConfigurationSection configuration;
-        private readonly IDictionary<string, CachedApiClient> cachedApiClients = new Dictionary<string, CachedApiClient>();
+        private readonly IDictionary<string, CachedApiClientEntry> cachedApiClients = new Dictionary<string, CachedApiClientEntry>();
         private readonly SemaphoreSlim mutex = new(1, 1);
 
         public CachedApiClientFactory(IApiClientFactory apiClientFactory, WebUntisConfigurationSection configuration)
@@ -31,25 +33,40 @@ namespace HR.PersonalTimetable.Infrastructure.Services
         /// <inheritdoc/>
         public IApiClient CreateApiClient(string schoolOrInstituteName, out string userName, out string password)
         {
-            IApiClient apiClient;
+            CachedApiClient apiClient;
             var school = configuration.FindSchool(schoolOrInstituteName)
                 ?? throw new NotFoundException($"No school or institute with the name \"{schoolOrInstituteName}\" found.");
 
             using (mutex.WaitAndRelease())
             {
-                if (cachedApiClients.TryGetValue(school.Name, out var cachedApiClient))
+                if (cachedApiClients.TryGetValue(school.Name, out var cachedApiClientEntry))
                 {
-                    (apiClient, userName, password) = cachedApiClient;
+                    (apiClient, userName, password) = cachedApiClientEntry;
                 }
                 else
                 {
-                    apiClient = apiClientFactory.CreateApiClient(school.Name, out userName, out password);
+                    apiClient = new CachedApiClient(apiClientFactory.CreateApiClient(school.Name, out userName, out password), schoolOrInstituteName);
                     cachedApiClients.Add(school.Name, new(apiClient, userName, password));
                 }
             }
             return apiClient;
         }
 
-        private record CachedApiClient(IApiClient ApiClient, string UserName, string Password);
+        /// <inheritdoc/>
+        protected override async ValueTask ReleaseManagedResourcesAsync()
+        {
+            foreach (var apiClient in cachedApiClients.Values.Select(entry => entry.ApiClient))
+            {
+                if (apiClient.IsAuthenticated)
+                {
+                    await apiClient.LogOutAsync(force: true).ConfigureAwait(false);
+                }
+            }
+            cachedApiClients.Clear();
+
+            await base.ReleaseManagedResourcesAsync().ConfigureAwait(false);
+        }
+
+        private record CachedApiClientEntry(CachedApiClient ApiClient, string UserName, string Password);
     }
 }
