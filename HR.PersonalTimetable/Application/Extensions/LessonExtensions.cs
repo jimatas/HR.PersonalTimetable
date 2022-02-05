@@ -45,10 +45,11 @@ namespace HR.PersonalTimetable.Application.Extensions
         /// Export a range of lessons to iCalendar (*.ics) format.
         /// </summary>
         /// <param name="lessons">The timetable data to export.</param>
-        /// <param name="clock">The clock.</param>
+        /// <param name="calendarName">The default calendar name.</param>
         /// <param name="refreshInterval">The suggested refresh interval.</param>
+        /// <param name="clock">The system clock abstraction.</param>
         /// <returns>A string containing the exported data in iCalendar format.</returns>
-        public static string ExportCalendar(this IEnumerable<Lesson> lessons, IClock clock, TimeSpan refreshInterval)
+        public static string ExportCalendar(this IEnumerable<Lesson> lessons, string calendarName, TimeSpan refreshInterval, IClock clock)
         {
             var calendarBuilder = new StringBuilder();
 
@@ -56,7 +57,7 @@ namespace HR.PersonalTimetable.Application.Extensions
             calendarBuilder.AppendLine("VERSION:2.0");
             calendarBuilder.AppendLine("PRODID:-//Hogeschool Rotterdam//HR.WebUntisConnector.ApiClient//NL");
             calendarBuilder.AppendLine("CALSCALE:GREGORIAN");
-            calendarBuilder.AppendLine("X-WR-CALNAME:HR Rooster");
+            calendarBuilder.AppendFormat("X-WR-CALNAME:{0}", calendarName.EscapePropertyValue()).AppendLine();
             calendarBuilder.AppendFormat("X-PUBLISHED-TTL;VALUE=DURATION:{0}", XmlConvert.ToString(refreshInterval)).AppendLine();
             calendarBuilder.AppendFormat("REFRESH-INTERVAL;VALUE=DURATION:{0}", XmlConvert.ToString(refreshInterval)).AppendLine();
 
