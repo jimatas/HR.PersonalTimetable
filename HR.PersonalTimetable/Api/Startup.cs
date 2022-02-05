@@ -11,16 +11,19 @@ using HR.WebUntisConnector.Configuration;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -89,6 +92,13 @@ namespace HR.PersonalTimetable.Api
                     policy.SetIsOriginAllowed(_ => true);
                 });
             });
+
+            services.AddLocalization().AddRequestLocalization(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(CultureInfo.GetCultureInfo("en"));
+                options.SupportedCultures = new[] { CultureInfo.GetCultureInfo("en"), CultureInfo.GetCultureInfo("nl") };
+                options.SupportedUICultures = new[] { CultureInfo.GetCultureInfo("en"), CultureInfo.GetCultureInfo("nl") };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +118,7 @@ namespace HR.PersonalTimetable.Api
             app.UseCors();
 
             app.UseHttpsRedirection();
+            app.UseRequestLocalization();
             app.UseRouting();
 
             app.UseAuthorization();

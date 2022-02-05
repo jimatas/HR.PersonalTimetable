@@ -4,9 +4,11 @@ using Developist.Core.Utilities;
 using HR.PersonalTimetable.Application.Extensions;
 using HR.PersonalTimetable.Application.Services;
 using HR.PersonalTimetable.Application.Validators;
+using HR.PersonalTimetable.Resources;
 using HR.WebUntisConnector.Extensions;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
 using System.ComponentModel.DataAnnotations;
@@ -33,12 +35,14 @@ namespace HR.PersonalTimetable.Application.Queries
         private readonly IQueryDispatcher queryDispatcher;
         private readonly AppSettings appSettings;
         private readonly IClock clock;
+        private readonly IStringLocalizer localizer;
 
-        public GetSchedulesForExportHandler(IQueryDispatcher queryDispatcher, IOptions<AppSettings> appSettings, IClock clock)
+        public GetSchedulesForExportHandler(IQueryDispatcher queryDispatcher, IOptions<AppSettings> appSettings, IClock clock, IStringLocalizer<SharedResource> localizer)
         {
             this.queryDispatcher = Ensure.Argument.NotNull(() => queryDispatcher);
             this.appSettings = Ensure.Argument.NotNull(() => appSettings).Value;
             this.clock = Ensure.Argument.NotNull(() => clock);
+            this.localizer = Ensure.Argument.NotNull(() => localizer);
         }
 
         public async Task<FileContentResult> HandleAsync(GetSchedulesForExport query, CancellationToken cancellationToken)
@@ -53,7 +57,7 @@ namespace HR.PersonalTimetable.Application.Queries
                 EndDate = endDate
             }, cancellationToken).WithoutCapturingContext();
 
-            var calendarData = schedules.SelectMany(schedule => schedule.Lessons).ExportCalendar(appSettings.CalendarName, appSettings.ExportRefreshInterval, clock);
+            var calendarData = schedules.SelectMany(schedule => schedule.Lessons).ExportCalendar(appSettings.CalendarName, appSettings.ExportRefreshInterval, clock, localizer);
             return new FileContentResult(Encoding.UTF8.GetBytes(calendarData), contentType: "text/calendar")
             {
                 FileDownloadName = appSettings.CalendarFileName,
