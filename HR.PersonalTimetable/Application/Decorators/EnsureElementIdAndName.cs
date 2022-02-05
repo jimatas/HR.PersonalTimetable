@@ -31,9 +31,9 @@ namespace HR.PersonalTimetable.Application.Decorators
                 command.InstituteName,
                 command.ElementType,
                 command.ElementId,
-                command.ElementName, cancellationToken).ConfigureAwait(false);
+                command.ElementName, cancellationToken).WithoutCapturingContext();
 
-            await next().ConfigureAwait(false);
+            await next().WithoutCapturingContext();
         }
 
         public async Task<Schedule> HandleAsync(GetSchedule query, HandlerDelegate<Schedule> next, CancellationToken cancellationToken)
@@ -42,9 +42,9 @@ namespace HR.PersonalTimetable.Application.Decorators
                 query.InstituteName,
                 query.ElementType,
                 query.ElementId,
-                query.ElementName, cancellationToken).ConfigureAwait(false);
+                query.ElementName, cancellationToken).WithoutCapturingContext();
 
-            return await next().ConfigureAwait(false);
+            return await next().WithoutCapturingContext();
         }
 
         private async Task<(int, string)> GetElementIdAndNameAsync(string instituteName, ElementType elementType, int? elementId, string elementName, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ namespace HR.PersonalTimetable.Application.Decorators
                 {
                     InstituteName = instituteName,
                     ElementType = elementType
-                }, cancellationToken).ConfigureAwait(false);
+                }, cancellationToken).WithoutCapturingContext();
 
                 var element = elements.FirstOrDefault(e => e.Id == elementId || e.Name.Equals(elementName, StringComparison.OrdinalIgnoreCase));
                 if (element is null)

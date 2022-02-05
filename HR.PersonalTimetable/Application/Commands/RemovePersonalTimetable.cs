@@ -34,7 +34,7 @@ namespace HR.PersonalTimetable.Application.Commands
 
         public async Task HandleAsync(RemovePersonalTimetable command, CancellationToken cancellationToken)
         {
-            var personalTimetable = await unitOfWork.Repository<Models.PersonalTimetable>().GetAsync(command.PersonalTimetableId, cancellationToken).ConfigureAwait(false);
+            var personalTimetable = await unitOfWork.Repository<Models.PersonalTimetable>().GetAsync(command.PersonalTimetableId, cancellationToken).WithoutCapturingContext();
             if (personalTimetable is null)
             {
                 throw new NotFoundException($"No {nameof(PersonalTimetable)} with {nameof(Models.PersonalTimetable.Id)} {command.PersonalTimetableId} found.");
@@ -44,7 +44,7 @@ namespace HR.PersonalTimetable.Application.Commands
             {
                 unitOfWork.Repository<Models.PersonalTimetable>().Remove(personalTimetable);
 
-                await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+                await unitOfWork.CompleteAsync(cancellationToken).WithoutCapturingContext();
             }
         }
     }

@@ -87,7 +87,7 @@ namespace HR.PersonalTimetable.Application.Queries
 
         public async Task<Schedule> HandleAsync(GetSchedule query, CancellationToken cancellationToken)
         {
-            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken).ConfigureAwait(false);
+            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken).WithoutCapturingContext();
             try
             {
                 return new Schedule
@@ -96,13 +96,13 @@ namespace HR.PersonalTimetable.Application.Queries
                     EndDate = (DateTime)query.EndDate,
                     Institute = GetInstitute(query.InstituteName),
                     Element = query.ElementType.CreateElement((int)query.ElementId, query.ElementName),
-                    Lessons = await GetLessonsAsync(apiClient, query.ElementType, (int)query.ElementId, (DateTime)query.StartDate, (DateTime)query.EndDate, cancellationToken).ConfigureAwait(false),
-                    Holidays = await GetHolidaysAsync(apiClient, (DateTime)query.StartDate, (DateTime)query.EndDate, cancellationToken).ConfigureAwait(false)
+                    Lessons = await GetLessonsAsync(apiClient, query.ElementType, (int)query.ElementId, (DateTime)query.StartDate, (DateTime)query.EndDate, cancellationToken).WithoutCapturingContext(),
+                    Holidays = await GetHolidaysAsync(apiClient, (DateTime)query.StartDate, (DateTime)query.EndDate, cancellationToken).WithoutCapturingContext()
                 };
             }
             finally
             {
-                await apiClient.LogOutAsync(cancellationToken).ConfigureAwait(false);
+                await apiClient.LogOutAsync(cancellationToken).WithoutCapturingContext();
             }
         }
 
@@ -115,7 +115,7 @@ namespace HR.PersonalTimetable.Application.Queries
 
         private static async Task<IEnumerable<Holiday>> GetHolidaysAsync(IApiClient apiClient, DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
         {
-            return (await apiClient.GetHolidaysAsync(cancellationToken).ConfigureAwait(false))
+            return (await apiClient.GetHolidaysAsync(cancellationToken).WithoutCapturingContext())
                 .Where(holiday => holiday.ToDateTimeRange().Overlaps(new(startDate, endDate)));
         }
 
@@ -124,14 +124,14 @@ namespace HR.PersonalTimetable.Application.Queries
             IEnumerable<Timetable> timetables;
             try
             {
-                (timetables, _) = await apiClient.GetTimetablesAsync(elementType, elementId, startDate, endDate, cancellationToken).ConfigureAwait(false);
+                (timetables, _) = await apiClient.GetTimetablesAsync(elementType, elementId, startDate, endDate, cancellationToken).WithoutCapturingContext();
             }
             catch (JsonRpcException exception) when (exception.ErrorCode == -7002) // No such element.
             {
                 throw new NotFoundException($"No {elementType} with {nameof(Element.Id)} {elementId} found.", exception);
             }
             
-            var timegrids = await apiClient.GetTimegridsAsync(cancellationToken).ConfigureAwait(false);
+            var timegrids = await apiClient.GetTimegridsAsync(cancellationToken).WithoutCapturingContext();
             var timetableGroups = timetables.ToTimetableGroups(timegrids);
             
             return timetableGroups.Select(timetableGroup => timetableGroup.ToLesson());
