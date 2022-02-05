@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CalendarFileName" xml:space="preserve">
+    <value>HR_Rooster.ics</value>
+  </data>
+  <data name="CalendarName" xml:space="preserve">
+    <value>HR Rooster</value>
+  </data>
   <data name="Class" xml:space="preserve">
     <value>Klas</value>
   </data>

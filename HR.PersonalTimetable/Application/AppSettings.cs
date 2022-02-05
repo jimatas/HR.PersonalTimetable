@@ -31,18 +31,6 @@ namespace HR.PersonalTimetable.Application
         public TimeSpan ExportRefreshInterval { get; set; } = TimeSpan.FromMinutes(30);
 
         /// <summary>
-        /// The file download name to use for the calendar export.
-        /// Default value is "HR_Rooster.ics"
-        /// </summary>
-        public string CalendarFileName { get; set; } = "HR_Rooster.ics";
-
-        /// <summary>
-        /// The default calendar name to use.
-        /// Default value is "HR Rooster"
-        /// </summary>
-        public string CalendarName { get; set; } = "HR Rooster";
-
-        /// <summary>
         /// Clock skew to account for between client and server.
         /// Default value is 1 minute.
         /// </summary>

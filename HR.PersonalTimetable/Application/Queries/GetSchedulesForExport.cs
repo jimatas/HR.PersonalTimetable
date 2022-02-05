@@ -57,10 +57,10 @@ namespace HR.PersonalTimetable.Application.Queries
                 EndDate = endDate
             }, cancellationToken).WithoutCapturingContext();
 
-            var calendarData = schedules.SelectMany(schedule => schedule.Lessons).ExportCalendar(appSettings.CalendarName, appSettings.ExportRefreshInterval, clock, localizer);
+            var calendarData = schedules.SelectMany(schedule => schedule.Lessons).ExportCalendar(appSettings.ExportRefreshInterval, clock, localizer);
             return new FileContentResult(Encoding.UTF8.GetBytes(calendarData), contentType: "text/calendar")
             {
-                FileDownloadName = appSettings.CalendarFileName,
+                FileDownloadName = localizer["CalendarFileName"],
                 LastModified = clock.Now
             };
         }
