@@ -2,6 +2,8 @@
 using HR.PersonalTimetable.Application.Services;
 using HR.WebUntisConnector.Model;
 
+using Microsoft.Extensions.Localization;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -48,22 +50,23 @@ namespace HR.PersonalTimetable.Application.Extensions
         /// <param name="calendarName">The default calendar name.</param>
         /// <param name="refreshInterval">The suggested refresh interval.</param>
         /// <param name="clock">The system clock abstraction.</param>
+        /// <param name="localizer">The localization provider to use.</param>
         /// <returns>A string containing the exported data in iCalendar format.</returns>
-        public static string ExportCalendar(this IEnumerable<Lesson> lessons, string calendarName, TimeSpan refreshInterval, IClock clock)
+        public static string ExportCalendar(this IEnumerable<Lesson> lessons, string calendarName, TimeSpan refreshInterval, IClock clock, IStringLocalizer localizer)
         {
             var calendarBuilder = new StringBuilder();
 
             calendarBuilder.AppendLine("BEGIN:VCALENDAR");
             calendarBuilder.AppendLine("VERSION:2.0");
-            calendarBuilder.AppendLine("PRODID:-//Hogeschool Rotterdam//HR.WebUntisConnector.ApiClient//NL");
+            calendarBuilder.Append("PRODID:").AppendLine(localizer["ProductId"]);
             calendarBuilder.AppendLine("CALSCALE:GREGORIAN");
-            calendarBuilder.AppendFormat("X-WR-CALNAME:{0}", calendarName.EscapePropertyValue()).AppendLine();
-            calendarBuilder.AppendFormat("X-PUBLISHED-TTL;VALUE=DURATION:{0}", XmlConvert.ToString(refreshInterval)).AppendLine();
-            calendarBuilder.AppendFormat("REFRESH-INTERVAL;VALUE=DURATION:{0}", XmlConvert.ToString(refreshInterval)).AppendLine();
+            calendarBuilder.Append("X-WR-CALNAME:").AppendLine(calendarName.EscapePropertyValue());
+            calendarBuilder.Append("X-PUBLISHED-TTL;VALUE=DURATION:").AppendLine(XmlConvert.ToString(refreshInterval));
+            calendarBuilder.Append("REFRESH-INTERVAL;VALUE=DURATION:").AppendLine(XmlConvert.ToString(refreshInterval));
 
             foreach (var lesson in lessons)
             {
-                lesson.AppendTo(calendarBuilder, clock);
+                lesson.AppendTo(calendarBuilder, clock, localizer);
             }
 
             calendarBuilder.AppendLine("END:VCALENDAR");
@@ -71,7 +74,7 @@ namespace HR.PersonalTimetable.Application.Extensions
             return calendarBuilder.ToString();
         }
 
-        private static void AppendTo(this Lesson lesson, StringBuilder calendarBuilder, IClock clock)
+        private static void AppendTo(this Lesson lesson, StringBuilder calendarBuilder, IClock clock, IStringLocalizer localizer)
         {
             calendarBuilder.AppendLine("BEGIN:VEVENT");
 
@@ -88,7 +91,7 @@ namespace HR.PersonalTimetable.Application.Extensions
                 calendarBuilder.Append("LOCATION:").AppendLine(string.Join(", ", rooms.Select(room => room.Name)).EscapePropertyValue());
             }
 
-            calendarBuilder.Append("SUMMARY:").AppendLine((lesson.Subject?.LongName ?? lesson.Subject?.Name ?? $"Les {lessonNumber}").EscapePropertyValue());
+            calendarBuilder.Append("SUMMARY:").AppendLine((lesson.Subject?.LongName ?? lesson.Subject?.Name ?? $"{localizer["Lesson"]} {lessonNumber}").EscapePropertyValue());
 
             var descriptionBuilder = new StringBuilder();
             foreach (var details in lesson.Details)
@@ -97,7 +100,7 @@ namespace HR.PersonalTimetable.Application.Extensions
                 {
                     descriptionBuilder.Append("\\n");
                 }
-                details.AppendTo(descriptionBuilder);
+                details.AppendTo(descriptionBuilder, localizer);
             }
             calendarBuilder.Append("DESCRIPTION:").AppendLine(descriptionBuilder.ToString().EscapePropertyValue());
 
@@ -106,14 +109,14 @@ namespace HR.PersonalTimetable.Application.Extensions
             calendarBuilder.AppendLine("END:VEVENT");
         }
 
-        private static void AppendTo(this LessonDetails details, StringBuilder descriptionBuilder)
+        private static void AppendTo(this LessonDetails details, StringBuilder descriptionBuilder, IStringLocalizer localizer)
         {
-            descriptionBuilder.Append("Klas: ").Append(string.Join(", ", details.Klassen.Select(klasse => klasse.Name))).Append("\\n");
-            descriptionBuilder.Append("Docent: ").Append(string.Join(", ", details.Teachers.Select(teacher => teacher.Name))).Append("\\n");
-            descriptionBuilder.Append("Locatie: ").Append(string.Join(", ", details.Rooms.Select(room => room.Name))).Append("\\n");
+            descriptionBuilder.Append(localizer["Class"]).Append(": ").Append(string.Join(", ", details.Klassen.Select(klasse => klasse.Name))).Append("\\n");
+            descriptionBuilder.Append(localizer["Instructor"]).Append(": ").Append(string.Join(", ", details.Teachers.Select(teacher => teacher.Name))).Append("\\n");
+            descriptionBuilder.Append(localizer["Location"]).Append(": ").Append(string.Join(", ", details.Rooms.Select(room => room.Name))).Append("\\n");
             if (!string.IsNullOrEmpty(details.LessonText))
             {
-                descriptionBuilder.Append("Opmerkingen: ").Append(details.LessonText).Append("\\n");
+                descriptionBuilder.Append(localizer["Remark"]).Append(": ").Append(details.LessonText).Append("\\n");
             }
         }
 
