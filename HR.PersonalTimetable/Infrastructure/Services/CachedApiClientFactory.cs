@@ -59,12 +59,12 @@ namespace HR.PersonalTimetable.Infrastructure.Services
             {
                 if (apiClient.IsAuthenticated)
                 {
-                    await apiClient.LogOutAsync(force: true).ConfigureAwait(false);
+                    await apiClient.LogOutAsync(force: true).WithoutCapturingContext();
                 }
             }
             cachedApiClients.Clear();
 
-            await base.ReleaseManagedResourcesAsync().ConfigureAwait(false);
+            await base.ReleaseManagedResourcesAsync().WithoutCapturingContext();
         }
 
         private record CachedApiClientEntry(CachedApiClient ApiClient, string UserName, string Password);

@@ -76,7 +76,7 @@ namespace HR.PersonalTimetable.Infrastructure.Services
 
             try
             {
-                await apiClient.LogInAsync(userName, password, cancellationToken).ConfigureAwait(false);
+                await apiClient.LogInAsync(userName, password, cancellationToken).WithoutCapturingContext();
             }
             catch (JsonRpcException exception) when (exception.ErrorCode == -8500) // WebUntis: invalid schoolname.
             {
@@ -91,7 +91,7 @@ namespace HR.PersonalTimetable.Infrastructure.Services
         {
             if (force)
             {
-                await apiClient.LogOutAsync(cancellationToken).ConfigureAwait(false);
+                await apiClient.LogOutAsync(cancellationToken).WithoutCapturingContext();
             }
         }
     }

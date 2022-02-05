@@ -35,7 +35,7 @@ namespace HR.PersonalTimetable.Application.Queries
 
         public async Task<IEnumerable<Application.Models.PersonalTimetable>> HandleAsync(GetPersonalTimetables query, CancellationToken cancellationToken)
         {
-            return await unitOfWork.Repository<Application.Models.PersonalTimetable>().FindAsync(table => table.UserName == query.UserName, cancellationToken).ConfigureAwait(false);
+            return await unitOfWork.Repository<Application.Models.PersonalTimetable>().FindAsync(table => table.UserName == query.UserName, cancellationToken).WithoutCapturingContext();
         }
     }
 }

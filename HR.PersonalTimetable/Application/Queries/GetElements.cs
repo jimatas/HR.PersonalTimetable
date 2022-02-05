@@ -43,22 +43,22 @@ namespace HR.PersonalTimetable.Application.Queries
 
         public async Task<IEnumerable<Element>> HandleAsync(GetElements query, CancellationToken cancellationToken)
         {
-            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken).ConfigureAwait(false);
+            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken).WithoutCapturingContext();
             try
             {
                 return query.ElementType switch
                 {
-                    ElementType.Klasse => await apiClient.GetKlassenAsync(cancellationToken).ConfigureAwait(false),
-                    ElementType.Teacher => await apiClient.GetTeachersAsync(cancellationToken).ConfigureAwait(false),
-                    ElementType.Subject => await apiClient.GetSubjectsAsync(cancellationToken).ConfigureAwait(false),
-                    ElementType.Room => await apiClient.GetRoomsAsync(cancellationToken).ConfigureAwait(false),
-                    ElementType.Student => await apiClient.GetStudentsAsync(cancellationToken).ConfigureAwait(false),
+                    ElementType.Klasse => await apiClient.GetKlassenAsync(cancellationToken).WithoutCapturingContext(),
+                    ElementType.Teacher => await apiClient.GetTeachersAsync(cancellationToken).WithoutCapturingContext(),
+                    ElementType.Subject => await apiClient.GetSubjectsAsync(cancellationToken).WithoutCapturingContext(),
+                    ElementType.Room => await apiClient.GetRoomsAsync(cancellationToken).WithoutCapturingContext(),
+                    ElementType.Student => await apiClient.GetStudentsAsync(cancellationToken).WithoutCapturingContext(),
                     _ => throw new InvalidEnumArgumentException($"{nameof(query)}.{nameof(query.ElementType)}", Convert.ToInt32(query.ElementType), typeof(ElementType)),
                 };
             }
             finally
             {
-                await apiClient.LogOutAsync(cancellationToken).ConfigureAwait(false);
+                await apiClient.LogOutAsync(cancellationToken).WithoutCapturingContext();
             }
         }
     }

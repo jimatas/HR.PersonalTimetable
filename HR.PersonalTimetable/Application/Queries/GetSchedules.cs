@@ -53,7 +53,7 @@ namespace HR.PersonalTimetable.Application.Queries
         {
             var schedules = new List<Schedule>();
 
-            var personalTimetables = await queryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = query.UserName }, cancellationToken).ConfigureAwait(false);
+            var personalTimetables = await queryDispatcher.DispatchAsync(new GetPersonalTimetables { UserName = query.UserName }, cancellationToken).WithoutCapturingContext();
             foreach (var personalTimetable in personalTimetables.Where(table => table.IsVisible))
             {
                 var schedule = await queryDispatcher.DispatchAsync(new GetSchedule
@@ -64,7 +64,7 @@ namespace HR.PersonalTimetable.Application.Queries
                     ElementName = personalTimetable.ElementName,
                     StartDate = query.StartDate,
                     EndDate = query.EndDate
-                }, cancellationToken).ConfigureAwait(false);
+                }, cancellationToken).WithoutCapturingContext();
 
                 schedules.Add(schedule);
             }

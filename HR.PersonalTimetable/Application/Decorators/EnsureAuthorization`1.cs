@@ -43,10 +43,10 @@ namespace HR.PersonalTimetable.Application.Decorators
             {
                 Timestamp = GetTimestamp(),
                 UserName = GetAuthorization(),
-                SigningKey = (await GetIntegrationAsync(cancellationToken).ConfigureAwait(false)).CurrentSigningKey
+                SigningKey = (await GetIntegrationAsync(cancellationToken).WithoutCapturingContext()).CurrentSigningKey
             };
 
-            await next().ConfigureAwait(false);
+            await next().WithoutCapturingContext();
         }
 
         private long GetTimestamp()
@@ -88,7 +88,7 @@ namespace HR.PersonalTimetable.Application.Decorators
                 var integration = (await unitOfWork.Repository<Integration>().FindAsync(
                     integration => integration.Name == integrationName.ToString(),
                     includePaths => includePaths.Include(integration => integration.SigningKeys),
-                    cancellationToken).ConfigureAwait(false)).SingleOrDefault() ?? throw new NotFoundException($"No integration with name \"{integrationName}\" found.");
+                    cancellationToken).WithoutCapturingContext()).SingleOrDefault() ?? throw new NotFoundException($"No integration with name \"{integrationName}\" found.");
 
                 if (integration.SigningKeys.Any())
                 {

@@ -28,7 +28,7 @@ namespace HR.PersonalTimetable.Infrastructure.Decorators
             logger.LogDebug("Executing {QueryType} query {QueryDetails}", query.GetType().Name, JsonSerialize(query));
 
             var stopwatch = Stopwatch.StartNew();
-            var result = await next().ConfigureAwait(false);
+            var result = await next().WithoutCapturingContext();
             stopwatch.Stop();
 
             logger.LogDebug("Executed {QueryType} query in {Milliseconds} ms.", query.GetType().Name, stopwatch.ElapsedMilliseconds);

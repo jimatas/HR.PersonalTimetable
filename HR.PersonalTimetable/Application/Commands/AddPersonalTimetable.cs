@@ -69,26 +69,26 @@ namespace HR.PersonalTimetable.Application.Commands
                 ElementType = command.ElementType,
                 ElementName = command.ElementName,
                 ElementId = (int)command.ElementId,
-                SchoolYearId = (await GetSchoolYearAsync(command.InstituteName, cancellationToken).ConfigureAwait(false))?.Id,
+                SchoolYearId = (await GetSchoolYearAsync(command.InstituteName, cancellationToken).WithoutCapturingContext())?.Id,
                 DateCreated = clock.Now
             };
 
             personalTimetable.VerifyCreateAccess(command.Authorization);
             
             unitOfWork.Repository<Models.PersonalTimetable>().Add(personalTimetable);
-            await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+            await unitOfWork.CompleteAsync(cancellationToken).WithoutCapturingContext();
         }
 
         private async Task<SchoolYear> GetSchoolYearAsync(string instituteName, CancellationToken cancellationToken)
         {
-            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(instituteName, cancellationToken).ConfigureAwait(false);
+            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(instituteName, cancellationToken).WithoutCapturingContext();
             try
             {
-                return await apiClient.GetCurrentSchoolYearAsync(cancellationToken).ConfigureAwait(false);
+                return await apiClient.GetCurrentSchoolYearAsync(cancellationToken).WithoutCapturingContext();
             }
             finally
             {
-                await apiClient.LogOutAsync(cancellationToken).ConfigureAwait(false);
+                await apiClient.LogOutAsync(cancellationToken).WithoutCapturingContext();
             }
         }
     }
