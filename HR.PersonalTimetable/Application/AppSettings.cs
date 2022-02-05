@@ -37,6 +37,12 @@ namespace HR.PersonalTimetable.Application
         public string CalendarFileName { get; set; } = "HR_Rooster.ics";
 
         /// <summary>
+        /// The default calendar name to use.
+        /// Default value is "HR Rooster"
+        /// </summary>
+        public string CalendarName { get; set; } = "HR Rooster";
+
+        /// <summary>
         /// Clock skew to account for between client and server.
         /// Default value is 1 minute.
         /// </summary>
