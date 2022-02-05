@@ -123,22 +123,7 @@
   <data name="CalendarName" xml:space="preserve">
     <value>RUAS Schedule</value>
   </data>
-  <data name="Class" xml:space="preserve">
-    <value>Class</value>
-  </data>
-  <data name="Instructor" xml:space="preserve">
-    <value>Instructor</value>
-  </data>
-  <data name="Lesson" xml:space="preserve">
-    <value>Lesson</value>
-  </data>
-  <data name="Location" xml:space="preserve">
-    <value>Location</value>
-  </data>
   <data name="ProductId" xml:space="preserve">
     <value>-//Rotterdam University of Applied Sciences//HR.WebUntisConnector.ApiClient//EN</value>
-  </data>
-  <data name="Remark" xml:space="preserve">
-    <value>Remark</value>
   </data>
 </root>
