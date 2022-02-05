@@ -47,12 +47,11 @@ namespace HR.PersonalTimetable.Application.Extensions
         /// Export a range of lessons to iCalendar (*.ics) format.
         /// </summary>
         /// <param name="lessons">The timetable data to export.</param>
-        /// <param name="calendarName">The default calendar name.</param>
         /// <param name="refreshInterval">The suggested refresh interval.</param>
         /// <param name="clock">The system clock abstraction.</param>
         /// <param name="localizer">The localization provider to use.</param>
         /// <returns>A string containing the exported data in iCalendar format.</returns>
-        public static string ExportCalendar(this IEnumerable<Lesson> lessons, string calendarName, TimeSpan refreshInterval, IClock clock, IStringLocalizer localizer)
+        public static string ExportCalendar(this IEnumerable<Lesson> lessons, TimeSpan refreshInterval, IClock clock, IStringLocalizer localizer)
         {
             var calendarBuilder = new StringBuilder();
 
@@ -60,7 +59,7 @@ namespace HR.PersonalTimetable.Application.Extensions
             calendarBuilder.AppendLine("VERSION:2.0");
             calendarBuilder.Append("PRODID:").AppendLine(localizer["ProductId"]);
             calendarBuilder.AppendLine("CALSCALE:GREGORIAN");
-            calendarBuilder.Append("X-WR-CALNAME:").AppendLine(calendarName.EscapePropertyValue());
+            calendarBuilder.Append("X-WR-CALNAME:").AppendLine(localizer["CalendarName"]);
             calendarBuilder.Append("X-PUBLISHED-TTL;VALUE=DURATION:").AppendLine(XmlConvert.ToString(refreshInterval));
             calendarBuilder.Append("REFRESH-INTERVAL;VALUE=DURATION:").AppendLine(XmlConvert.ToString(refreshInterval));
 
