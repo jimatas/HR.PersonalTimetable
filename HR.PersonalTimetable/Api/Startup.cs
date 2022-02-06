@@ -70,7 +70,7 @@ namespace HR.PersonalTimetable.Api
                 c.OperationFilter<AddRequiredHeaderParameter>();
 
                 foreach (var xmlFilePath in new[] {
-                    Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"),
+                    Path.Combine(AppContext.BaseDirectory, "HR.PersonalTimetable.xml"),
                     Path.Combine(AppContext.BaseDirectory, "HR.WebUntisConnector.xml")
                 })
                 {
