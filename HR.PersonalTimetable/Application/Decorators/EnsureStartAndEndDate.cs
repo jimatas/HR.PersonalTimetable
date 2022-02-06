@@ -40,9 +40,9 @@ namespace HR.PersonalTimetable.Application.Decorators
                 query.EndDate = clock.Now.Date.GetLastWeekday().AddDays(1);
             }
 
-            if (new DateTimeRange((DateTime)query.StartDate, (DateTime)query.EndDate).Duration.TotalDays > appSettings.MaxDaysInTimetableDateRange)
+            if (new DateTimeRange((DateTime)query.StartDate, (DateTime)query.EndDate).Duration.TotalDays > appSettings.TimetableMaxDays)
             {
-                throw new BadRequestException($"Requested date range too large. Maximum of {appSettings.MaxDaysInTimetableDateRange} days allowed.");
+                throw new BadRequestException($"Requested date range too large. Maximum of {appSettings.TimetableMaxDays} days allowed.");
             }
 
             return await next().WithoutCapturingContext();

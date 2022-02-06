@@ -47,8 +47,8 @@ namespace HR.PersonalTimetable.Application.Queries
 
         public async Task<FileContentResult> HandleAsync(GetSchedulesForExport query, CancellationToken cancellationToken)
         {
-            var startDate = clock.Now.Date.GetFirstWeekday().AddDays(-(7 * appSettings.NumberOfWeeksBeforeCurrentToExport));
-            var endDate = clock.Now.Date.GetLastWeekday().AddDays(7 * appSettings.NumberOfWeeksAfterCurrentToExport);
+            var startDate = clock.Now.Date.GetFirstWeekday().AddDays(-(7 * appSettings.CalendarWeeksInPast));
+            var endDate = clock.Now.Date.GetLastWeekday().AddDays(7 * appSettings.CalendarWeeksInFuture);
 
             var schedules = await queryDispatcher.DispatchAsync(new GetSchedules
             {
@@ -57,7 +57,7 @@ namespace HR.PersonalTimetable.Application.Queries
                 EndDate = endDate
             }, cancellationToken).WithoutCapturingContext();
 
-            var calendarData = schedules.SelectMany(schedule => schedule.Lessons).ExportCalendar(appSettings.ExportRefreshInterval, clock, localizer);
+            var calendarData = schedules.SelectMany(schedule => schedule.Lessons).ExportCalendar(appSettings.CalendarRefreshInterval, clock, localizer);
             return new FileContentResult(Encoding.UTF8.GetBytes(calendarData), contentType: "text/calendar")
             {
                 FileDownloadName = localizer["CalendarFileName"],
