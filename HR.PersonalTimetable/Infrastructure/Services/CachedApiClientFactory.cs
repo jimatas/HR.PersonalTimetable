@@ -3,7 +3,6 @@
 using HR.PersonalTimetable.Application.Exceptions;
 using HR.PersonalTimetable.Application.Extensions;
 using HR.PersonalTimetable.Application.Services;
-using HR.PersonalTimetable.Infrastructure.Extensions;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Configuration;
 
@@ -35,7 +34,7 @@ namespace HR.PersonalTimetable.Infrastructure.Services
         {
             var school = configuration.FindSchool(schoolOrInstituteName)
                 ?? throw new NotFoundException($"No school or institute with the name \"{schoolOrInstituteName}\" found.");
-
+            
             CachedApiClient apiClient;
             using (mutex.WaitAndRelease())
             {
@@ -55,14 +54,18 @@ namespace HR.PersonalTimetable.Infrastructure.Services
         /// <inheritdoc/>
         protected override async ValueTask ReleaseManagedResourcesAsync()
         {
-            foreach (var apiClient in cachedApiClients.Values.Select(entry => entry.ApiClient))
+            await using (mutex.WaitAndReleaseAsync().WithoutCapturingContext())
             {
-                if (apiClient.IsAuthenticated)
+                foreach (var apiClient in cachedApiClients.Values.Select(entry => entry.ApiClient))
                 {
-                    await apiClient.LogOutAsync(force: true).WithoutCapturingContext();
+                    if (apiClient.IsAuthenticated)
+                    {
+                        await apiClient.LogOutAsync(force: true).WithoutCapturingContext();
+                    }
                 }
+                cachedApiClients.Clear();
             }
-            cachedApiClients.Clear();
+            mutex.Dispose();
 
             await base.ReleaseManagedResourcesAsync().WithoutCapturingContext();
         }
