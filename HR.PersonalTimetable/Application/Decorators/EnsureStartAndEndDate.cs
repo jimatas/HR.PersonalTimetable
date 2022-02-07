@@ -45,7 +45,7 @@ namespace HR.PersonalTimetable.Application.Decorators
                 throw new BadRequestException($"Requested date range too large. Maximum of {appSettings.TimetableMaxDays} days allowed.");
             }
 
-            return await next().WithoutCapturingContext();
+            return await next();
         }
     }
 }

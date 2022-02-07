@@ -41,7 +41,7 @@ namespace HR.PersonalTimetable.Application.Commands
 
         public async Task HandleAsync(ChangeTimetableVisibility command, CancellationToken cancellationToken)
         {
-            var personalTimetable = await unitOfWork.Repository<Models.PersonalTimetable>().GetAsync(command.PersonalTimetableId, cancellationToken).WithoutCapturingContext();
+            var personalTimetable = await unitOfWork.Repository<Models.PersonalTimetable>().GetAsync(command.PersonalTimetableId, cancellationToken);
             if (personalTimetable is null)
             {
                 throw new NotFoundException($"No {nameof(PersonalTimetable)} with {nameof(Models.PersonalTimetable.Id)} {command.PersonalTimetableId} found.");
@@ -52,7 +52,7 @@ namespace HR.PersonalTimetable.Application.Commands
                 personalTimetable.IsVisible = command.IsVisible;
                 personalTimetable.DateLastModified = clock.Now;
 
-                await unitOfWork.CompleteAsync(cancellationToken).WithoutCapturingContext();
+                await unitOfWork.CompleteAsync(cancellationToken);
             }
         }
     }

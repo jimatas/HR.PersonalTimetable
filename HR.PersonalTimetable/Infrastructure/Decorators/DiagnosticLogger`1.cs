@@ -28,7 +28,7 @@ namespace HR.PersonalTimetable.Infrastructure.Decorators
             logger.LogDebug("Executing {CommandType} command {CommandDetails}", command.GetType().Name, JsonSerialize(command));
 
             var stopwatch = Stopwatch.StartNew();
-            await next().WithoutCapturingContext();
+            await next();
             stopwatch.Stop();
 
             logger.LogDebug("Executed {CommandType} command in {Milliseconds} ms.", command.GetType().Name, stopwatch.ElapsedMilliseconds);

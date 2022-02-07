@@ -55,7 +55,7 @@ namespace HR.PersonalTimetable.Application.Queries
                 UserName = query.UserName,
                 StartDate = startDate,
                 EndDate = endDate
-            }, cancellationToken).WithoutCapturingContext();
+            }, cancellationToken);
 
             var calendarData = schedules.SelectMany(schedule => schedule.Lessons).ExportCalendar(appSettings.CalendarRefreshInterval, clock, localizer);
             return new FileContentResult(Encoding.UTF8.GetBytes(calendarData), contentType: "text/calendar")

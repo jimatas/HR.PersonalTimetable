@@ -10,7 +10,7 @@
     <PackageReference Include="Developist.Core.Persistence" Version="3.0.1" />
     <PackageReference Include="Developist.Core.Persistence.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection" Version="3.0.0" />
-    <PackageReference Include="Developist.Core.Utilities" Version="2.5.0" />
+    <PackageReference Include="Developist.Core.Utilities" Version="3.1.0" />
     <PackageReference Include="HR.CwipsClient" Version="3.0.1" />
     <PackageReference Include="HR.WebUntisConnector" Version="2.3.1" />
     <PackageReference Include="HR.WebUntisConnector.DependencyInjection" Version="2.0.1" />

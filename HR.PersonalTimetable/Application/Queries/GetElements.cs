@@ -43,22 +43,22 @@ namespace HR.PersonalTimetable.Application.Queries
 
         public async Task<IEnumerable<Element>> HandleAsync(GetElements query, CancellationToken cancellationToken)
         {
-            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken).WithoutCapturingContext();
+            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken);
             try
             {
                 return query.ElementType switch
                 {
-                    ElementType.Klasse => await apiClient.GetKlassenAsync(cancellationToken).WithoutCapturingContext(),
-                    ElementType.Teacher => await apiClient.GetTeachersAsync(cancellationToken).WithoutCapturingContext(),
-                    ElementType.Subject => await apiClient.GetSubjectsAsync(cancellationToken).WithoutCapturingContext(),
-                    ElementType.Room => await apiClient.GetRoomsAsync(cancellationToken).WithoutCapturingContext(),
-                    ElementType.Student => await apiClient.GetStudentsAsync(cancellationToken).WithoutCapturingContext(),
+                    ElementType.Klasse => await apiClient.GetKlassenAsync(cancellationToken),
+                    ElementType.Teacher => await apiClient.GetTeachersAsync(cancellationToken),
+                    ElementType.Subject => await apiClient.GetSubjectsAsync(cancellationToken),
+                    ElementType.Room => await apiClient.GetRoomsAsync(cancellationToken),
+                    ElementType.Student => await apiClient.GetStudentsAsync(cancellationToken),
                     _ => throw new InvalidEnumArgumentException($"{nameof(query)}.{nameof(query.ElementType)}", Convert.ToInt32(query.ElementType), typeof(ElementType)),
                 };
             }
             finally
             {
-                await apiClient.LogOutAsync(cancellationToken).WithoutCapturingContext();
+                await apiClient.LogOutAsync(cancellationToken);
             }
         }
     }
