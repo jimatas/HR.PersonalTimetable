@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Application.Queries
 {
-    public class GetPersonalTimetables : IQuery<IEnumerable<Application.Models.PersonalTimetable>>
+    public class GetPersonalTimetables : IQuery<IEnumerable<Models.PersonalTimetable>>
     {
         /// <summary>
         /// The username of the user. 
@@ -24,7 +24,7 @@ namespace HR.PersonalTimetable.Application.Queries
         public string UserName { get; set; }
     }
 
-    public class GetPersonalTimetablesHandler : IQueryHandler<GetPersonalTimetables, IEnumerable<Application.Models.PersonalTimetable>>
+    public class GetPersonalTimetablesHandler : IQueryHandler<GetPersonalTimetables, IEnumerable<Models.PersonalTimetable>>
     {
         private readonly IUnitOfWork unitOfWork;
 
@@ -33,9 +33,9 @@ namespace HR.PersonalTimetable.Application.Queries
             this.unitOfWork = Ensure.Argument.NotNull(() => unitOfWork);
         }
 
-        public async Task<IEnumerable<Application.Models.PersonalTimetable>> HandleAsync(GetPersonalTimetables query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Models.PersonalTimetable>> HandleAsync(GetPersonalTimetables query, CancellationToken cancellationToken)
         {
-            return await unitOfWork.Repository<Application.Models.PersonalTimetable>().FindAsync(table => table.UserName == query.UserName, cancellationToken);
+            return await unitOfWork.Repository<Models.PersonalTimetable>().FindAsync(table => table.UserName == query.UserName, cancellationToken);
         }
     }
 }
