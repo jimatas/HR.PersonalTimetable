@@ -36,14 +36,14 @@ namespace HR.PersonalTimetable.Application.Queries
 
         public async Task<DateTime> HandleAsync(GetLastImportTime query, CancellationToken cancellationToken)
         {
-            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken).WithoutCapturingContext();
+            var apiClient = await apiClientFactory.CreateApiClientAndLogInAsync(query.InstituteName, cancellationToken);
             try
             {
-                return await apiClient.GetLatestImportTimeAsync(cancellationToken).WithoutCapturingContext();
+                return await apiClient.GetLatestImportTimeAsync(cancellationToken);
             }
             finally
             {
-                await apiClient.LogOutAsync(cancellationToken).WithoutCapturingContext();
+                await apiClient.LogOutAsync(cancellationToken);
             }
         }
     }

@@ -54,20 +54,20 @@ namespace HR.PersonalTimetable.Infrastructure.Services
         /// <inheritdoc/>
         protected override async ValueTask ReleaseManagedResourcesAsync()
         {
-            await using (mutex.WaitAndReleaseAsync().WithoutCapturingContext())
+            await using (await mutex.WaitAndReleaseAsync())
             {
                 foreach (var apiClient in cachedApiClients.Values.Select(entry => entry.ApiClient))
                 {
                     if (apiClient.IsAuthenticated)
                     {
-                        await apiClient.LogOutAsync(force: true).WithoutCapturingContext();
+                        await apiClient.LogOutAsync(force: true);
                     }
                 }
                 cachedApiClients.Clear();
             }
             mutex.Dispose();
 
-            await base.ReleaseManagedResourcesAsync().WithoutCapturingContext();
+            await base.ReleaseManagedResourcesAsync();
         }
 
         private record CachedApiClientEntry(CachedApiClient ApiClient, string UserName, string Password);
