@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Developist.Core.Cqrs" Version="2.2.3" />
-    <PackageReference Include="Developist.Core.Cqrs.DependencyInjection" Version="2.2.3" />
+    <PackageReference Include="Developist.Core.Cqrs" Version="2.2.4" />
+    <PackageReference Include="Developist.Core.Cqrs.DependencyInjection" Version="2.2.4" />
     <PackageReference Include="Developist.Core.Persistence" Version="3.0.3" />
     <PackageReference Include="Developist.Core.Persistence.EntityFrameworkCore" Version="3.0.3" />
     <PackageReference Include="Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection" Version="3.0.3" />
