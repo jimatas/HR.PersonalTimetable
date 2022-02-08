@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HR.PersonalTimetable.Infrastructure.Persistence.Configurations
 {
-    public class IntegrationConfiguration : IEntityTypeConfiguration<Integration>
+    internal class IntegrationConfiguration : IEntityTypeConfiguration<Integration>
     {
         public void Configure(EntityTypeBuilder<Integration> builder)
         {
