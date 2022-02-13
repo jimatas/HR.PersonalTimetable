@@ -63,9 +63,9 @@ namespace HR.PersonalTimetable.Application.Decorators
                     {
                         return unixTimeSeconds;
                     }
-                    throw new UnauthorizedException("Clock skew between client and server is outside of tolerance.");
+                    throw new BadRequestException("Clock skew between client and server is outside of tolerance.");
                 }
-                throw new BadRequestException("Invalid timestamp value provided.");
+                throw new BadRequestException("No or invalid timestamp value provided.");
             }
             throw new BadRequestException("Required header \"X-HR-Timestamp\" was not present.");
         }
