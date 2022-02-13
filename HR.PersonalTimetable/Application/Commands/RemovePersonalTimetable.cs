@@ -40,7 +40,7 @@ namespace HR.PersonalTimetable.Application.Commands
                 throw new NotFoundException($"No {nameof(PersonalTimetable)} with {nameof(Models.PersonalTimetable.Id)} {command.PersonalTimetableId} found.");
             }
 
-            if (personalTimetable.VerifyAccess(command.Authorization))
+            if (command.Authorization.VerifyAccess(personalTimetable))
             {
                 unitOfWork.Repository<Models.PersonalTimetable>().Remove(personalTimetable);
 

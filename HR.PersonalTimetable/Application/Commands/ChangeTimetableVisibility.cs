@@ -47,7 +47,7 @@ namespace HR.PersonalTimetable.Application.Commands
                 throw new NotFoundException($"No {nameof(PersonalTimetable)} with {nameof(Models.PersonalTimetable.Id)} {command.PersonalTimetableId} found.");
             }
 
-            if (personalTimetable.VerifyAccess(command.Authorization) && personalTimetable.IsVisible != command.IsVisible)
+            if (command.Authorization.VerifyAccess(personalTimetable) && personalTimetable.IsVisible != command.IsVisible)
             {
                 personalTimetable.IsVisible = command.IsVisible;
                 personalTimetable.DateLastModified = clock.Now;
