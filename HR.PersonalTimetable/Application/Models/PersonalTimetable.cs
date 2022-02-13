@@ -1,7 +1,5 @@
 ﻿using Developist.Core.Persistence.Entities;
 
-using HR.PersonalTimetable.Application.Exceptions;
-using HR.PersonalTimetable.Application.Extensions;
 using HR.WebUntisConnector.Model;
 
 using System;
@@ -69,33 +67,5 @@ namespace HR.PersonalTimetable.Application.Models
 
         public DateTimeOffset DateCreated { get; set; }
         public DateTimeOffset? DateLastModified { get; set; }
-
-        /// <summary>
-        /// Verifies that the user whose hashed username was provided in the request has access to this timetable.
-        /// </summary>
-        /// <param name="authorization"></param>
-        /// <returns><c>true</c> if access is granted.</returns>
-        /// <exception cref="UnauthorizedException">If access is denied.</exception>
-        public bool VerifyAccess(Authorization authorization)
-        {
-            var hashToVerifyAgainst = UserName.ToLower().ToSha256(salt: string.Concat(authorization.SigningKey.Key, authorization.Timestamp));
-            if (hashToVerifyAgainst.Equals(authorization.UserName, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-            throw new UnauthorizedException($"User does not have access to {this}.");
-        }
-
-        /// <summary>
-        /// Verifies that the user whose hashed username was provided in the request is allowed to create the timetable.
-        /// </summary>
-        /// <param name="authorization"></param>
-        /// <returns><c>true</c> if access is granted.</returns>
-        /// <exception cref="UnauthorizedException">If access is denied.</exception>
-        public bool VerifyCreateAccess(Authorization authorization)
-        {
-            try { return VerifyAccess(authorization); }
-            catch (UnauthorizedException) { throw new UnauthorizedException($"Cannot create a {nameof(PersonalTimetable)} on behalf of another user."); }
-        }
     }
 }

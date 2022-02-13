@@ -73,7 +73,7 @@ namespace HR.PersonalTimetable.Application.Commands
                 DateCreated = clock.Now
             };
 
-            personalTimetable.VerifyCreateAccess(command.Authorization);
+            command.Authorization.VerifyCreateAccess(personalTimetable);
 
             unitOfWork.Repository<Models.PersonalTimetable>().Add(personalTimetable);
             await unitOfWork.CompleteAsync(cancellationToken);
