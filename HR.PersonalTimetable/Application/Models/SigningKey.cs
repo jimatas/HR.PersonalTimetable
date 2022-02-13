@@ -28,5 +28,8 @@ namespace HR.PersonalTimetable.Application.Models
         public Integration Integration { get; set; }
 
         public DateTimeOffset DateCreated { get; set; }
+
+        /// <inheritdoc/>
+        public override string ToString() => Key ?? string.Empty;
     }
 }
