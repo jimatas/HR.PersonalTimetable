@@ -30,7 +30,7 @@ namespace HR.PersonalTimetable.Application.Models
         /// <exception cref="UnauthorizedException">If access is denied.</exception>
         public bool VerifyAccess(PersonalTimetable timetable)
         {
-            var hashToVerifyAgainst = string.Concat(timetable.UserName.ToLower(), SigningKey.Key, Timestamp).ToSha256();
+            var hashToVerifyAgainst = string.Concat(timetable.UserName.ToLowerInvariant(), SigningKey, Timestamp).ToSha256();
             if (hashToVerifyAgainst.Equals(UserName, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
