@@ -27,7 +27,7 @@ namespace HR.PersonalTimetable.Application.Models
         /// </summary>
         /// <param name="timetable"></param>
         /// <returns><c>true</c> if access is granted.</returns>
-        /// <exception cref="UnauthorizedException">If access is denied.</exception>
+        /// <exception cref="ForbiddenException">If access is denied.</exception>
         public bool VerifyAccess(PersonalTimetable timetable)
         {
             var hashToVerifyAgainst = string.Concat(timetable.UserName.ToLowerInvariant(), SigningKey, Timestamp).ToSha256();
@@ -35,7 +35,7 @@ namespace HR.PersonalTimetable.Application.Models
             {
                 return true;
             }
-            throw new UnauthorizedException($"User does not have access to {timetable}.");
+            throw new ForbiddenException($"User does not have access to {timetable}.");
         }
 
         /// <summary>
@@ -43,11 +43,11 @@ namespace HR.PersonalTimetable.Application.Models
         /// </summary>
         /// <param name="timetable"></param>
         /// <returns><c>true</c> if access is granted.</returns>
-        /// <exception cref="UnauthorizedException">If access is denied.</exception>
+        /// <exception cref="ForbiddenException">If access is denied.</exception>
         public bool VerifyCreateAccess(PersonalTimetable timetable)
         {
             try { return VerifyAccess(timetable); }
-            catch (UnauthorizedException) { throw new UnauthorizedException($"Cannot create a {nameof(PersonalTimetable)} on behalf of another user."); }
+            catch (ForbiddenException) { throw new ForbiddenException($"Cannot create a {nameof(PersonalTimetable)} on behalf of another user."); }
         }
     }
 }
