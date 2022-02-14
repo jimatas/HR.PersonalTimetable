@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Infrastructure.Decorators
 {
-    public class DiagnosticLogger<TCommand> : ICommandHandlerWrapper<TCommand>
+    public class DiagnosticLogger<TCommand> : IPrioritizable, ICommandHandlerWrapper<TCommand>
         where TCommand : ICommand
     {
         private static JsonSerializerOptions serializerOptions;
@@ -22,6 +22,8 @@ namespace HR.PersonalTimetable.Infrastructure.Decorators
         {
             this.logger = Ensure.Argument.NotNull(() => logger);
         }
+
+        public sbyte Priority => Priorities.VeryHigh;
 
         public async Task HandleAsync(TCommand command, HandlerDelegate next, CancellationToken cancellationToken)
         {
