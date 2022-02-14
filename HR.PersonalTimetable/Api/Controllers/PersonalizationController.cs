@@ -56,7 +56,9 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status201Created),
+            ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status422UnprocessableEntity),
+            ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<Application.Models.PersonalTimetable>> PostAsync([FromBody] AddPersonalTimetable command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
@@ -71,7 +73,9 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPatch("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status204NoContent),
+            ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status422UnprocessableEntity),
+            ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> PatchAsync([FromRoute, FromQuery] ChangeTimetableVisibility command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
@@ -85,7 +89,9 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status204NoContent),
+            ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status422UnprocessableEntity),
+            ProducesResponseType(StatusCodes.Status404NotFound), ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteAsync([FromRoute] RemovePersonalTimetable command, CancellationToken cancellationToken = default)
         {
             await commandDispatcher.DispatchAsync(command, cancellationToken);
