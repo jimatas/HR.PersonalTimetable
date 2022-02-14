@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,7 +64,7 @@ namespace HR.PersonalTimetable.Application.Decorators
                     {
                         return unixTimeSeconds;
                     }
-                    throw new BadRequestException("Clock skew between client and server is outside of tolerance.");
+                    throw new ApiException(HttpStatusCode.UnprocessableEntity, "Clock skew between client and server is outside of tolerance.");
                 }
                 throw new BadRequestException("No or invalid timestamp value provided.");
             }
