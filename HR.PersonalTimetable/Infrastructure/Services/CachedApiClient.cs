@@ -64,8 +64,24 @@ namespace HR.PersonalTimetable.Infrastructure.Services
         public Task<IEnumerable<Timetable>> GetTimetablesAsync(TimetableParameters parameters, CancellationToken cancellationToken = default)
             => apiClient.GetTimetablesAsync(parameters, cancellationToken);
 
-        public Task<IEnumerable<Timetable>> GetTimetablesAsync(ComprehensiveTimetableParameters parameters, CancellationToken cancellationToken = default)
-            => apiClient.GetTimetablesAsync(parameters, cancellationToken);
+        public async Task<IEnumerable<Timetable>> GetTimetablesAsync(ComprehensiveTimetableParameters parameters, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await apiClient.GetTimetablesAsync(parameters, cancellationToken);
+            }
+            catch (JsonRpcException exception) when (exception.ErrorCode == -7002) // WebUntis: no such element.
+            {
+                var element = parameters.Options.Element;
+                throw element.KeyType switch
+                {
+                    KeyTypes.Id => new NotFoundException($"No {element.Type} with {nameof(Element.Id)} {element.Id} found.", exception),
+                    KeyTypes.Name => new NotFoundException($"No {element.Type} with {nameof(Element.Name)} \"{element.Id}\" found.", exception),
+                    KeyTypes.ExternalKey => new NotFoundException($"No {element.Type} with {nameof(Element.ExternalKey)} \"{element.Id}\" found.", exception),
+                    _ => exception
+                };
+            }
+        }
 
         public async Task LogInAsync(string userName, string password, CancellationToken cancellationToken = default)
         {
