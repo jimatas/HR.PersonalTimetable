@@ -38,5 +38,11 @@ namespace HR.PersonalTimetable.Application
         /// See also the <c>"X-HR-Timestamp"</c> request header.
         /// </remarks>
         public TimeSpan ClockSkewTolerance { get; set; } = TimeSpan.FromMinutes(1);
+
+        /// <summary>
+        /// Indicates whether to disclose the details of internal server errors, such as the exception stack trace, as problem details to the client.
+        /// This setting should be set to <c>false</c> in production.
+        /// </summary>
+        public bool DiscloseInternalServerErrorDetails { get; set; } 
     }
 }
