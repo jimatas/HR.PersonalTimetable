@@ -43,6 +43,11 @@ namespace HR.PersonalTimetable.Application
         /// Indicates whether to disclose the details of internal server errors, such as the exception stack trace, as problem details to the client.
         /// This setting should be set to <c>false</c> in production.
         /// </summary>
-        public bool DiscloseInternalServerErrorDetails { get; set; } 
+        public bool DiscloseInternalServerErrorDetails { get; set; }
+
+        /// <summary>
+        /// If set to <c>true</c> and the element's ID was supplied in the API call, it will be discarded so that the ID will always be resolved from the WebUntis database using the element's name.
+        /// </summary>
+        public bool AlwaysLookUpElementId { get; set; }
     }
 }
