@@ -96,7 +96,7 @@ namespace HR.PersonalTimetable.Infrastructure.Services
             }
             catch (JsonRpcException exception) when (exception.ErrorCode == -8500) // WebUntis: invalid schoolname.
             {
-                throw new NotFoundException($"No school or institute with the name \"{schoolOrInstituteName}\" found.");
+                throw new NotFoundException($"No school or institute with the name \"{schoolOrInstituteName}\" found.", exception);
             }
         }
 
