@@ -26,7 +26,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         }
 
         /// <summary>
-        /// Retrieve the timetables for a particular institute and element, which is specified by its type and id and/or name, that optionally also fall between two dates.
+        /// Retrieve the timetables for a particular institute and element that fall between an optionally specified start and end date.
         /// </summary>
         /// <remarks>
         /// Note that either the element's id or its name (or both) must be provided.
@@ -43,7 +43,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         }
 
         /// <summary>
-        /// Retrieve all the timetables in a  user's personal schedule that, optionally, fall between two dates.
+        /// Retrieve all the timetables in a user's personal schedule that fall between an optionally specified start and end date.
         /// </summary>
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>

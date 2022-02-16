@@ -17,9 +17,9 @@ namespace HR.PersonalTimetable.Api.Filters
     {
         public override void OnException(ExceptionContext context)
         {
+            var apiException = context.Exception as ApiException;
             AppSettings appSettings = null;
-            var apiException = context.Exception as ApiException; 
-            
+
             if (apiException is null)
             {
                 appSettings = context.HttpContext.RequestServices.GetRequiredService<IOptions<AppSettings>>().Value;
