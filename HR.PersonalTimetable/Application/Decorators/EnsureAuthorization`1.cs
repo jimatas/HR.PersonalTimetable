@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Application.Decorators
 {
-    public class EnsureAuthorization<TCommand> : IPrioritizable, ICommandHandlerWrapper<TCommand>
+    public class EnsureAuthorization<TCommand> : ICommandHandlerWrapper<TCommand>
         where TCommand : AuthorizableCommandBase
     {
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -35,8 +35,6 @@ namespace HR.PersonalTimetable.Application.Decorators
             this.appSettings = Ensure.Argument.NotNull(() => appSettings).Value;
             this.clock = Ensure.Argument.NotNull(() => clock);
         }
-
-        public sbyte Priority => Priorities.Higher;
 
         public async Task HandleAsync(TCommand command, HandlerDelegate next, CancellationToken cancellationToken)
         {
