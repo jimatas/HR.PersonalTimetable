@@ -27,8 +27,8 @@ namespace HR.PersonalTimetable.Application.Extensions
         /// <returns>A byte array containing the hash value.</returns>
         public static byte[] ToSha256(this byte[] data)
         {
-            using var cryptoProvider = HashAlgorithm.Create(HashAlgorithmName.SHA256.Name);
-            return cryptoProvider.ComputeHash(data.ToArray());
+            using var hashAlgorithm = HashAlgorithm.Create(HashAlgorithmName.SHA256.Name);
+            return hashAlgorithm.ComputeHash(data.ToArray());
         }
     }
 }
