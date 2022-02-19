@@ -51,16 +51,21 @@ namespace HR.PersonalTimetable.Api
             services.AddSingleton(_ => configuration);
 
             services.AddCachedApiClientFactory(configuration);
-            services.AddDispatcher();
-            services.AddHandlersFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddDispatcher().AddHandlersFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddHttpContextAccessor();
 
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddControllers(options => options.Filters.Add(new ApiExceptionFilterAttribute())).AddJsonOptions(options =>
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new ApiExceptionFilterAttribute());
+            }).AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            }).ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressMapClientErrors = true;
             });
 
             services.AddSwaggerGen(c =>
