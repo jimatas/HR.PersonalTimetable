@@ -12,12 +12,13 @@ using HR.WebUntisConnector.Model;
 using Microsoft.Extensions.Options;
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.PersonalTimetable.Application.Decorators
 {
-    public class EnsureStartAndEndDate : IQueryHandlerWrapper<GetSchedule, Schedule>
+    public class EnsureStartAndEndDate : IQueryHandlerWrapper<GetSchedule, Schedule>, IQueryHandlerWrapper<GetHolidays, IEnumerable<Holiday>>
     {
         private readonly AppSettings appSettings;
         private readonly IClock clock;
@@ -46,6 +47,14 @@ namespace HR.PersonalTimetable.Application.Decorators
             }
 
             return await next();
+        }
+
+        public Task<IEnumerable<Holiday>> HandleAsync(GetHolidays query, HandlerDelegate<IEnumerable<Holiday>> next, CancellationToken cancellationToken)
+        {
+            query.StartDate ??= DateTime.MinValue;
+            query.EndDate ??= DateTime.MaxValue;
+
+            return next();
         }
     }
 }
