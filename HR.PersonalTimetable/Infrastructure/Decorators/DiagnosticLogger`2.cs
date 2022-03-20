@@ -15,7 +15,7 @@ namespace HR.PersonalTimetable.Infrastructure.Decorators
     public class DiagnosticLogger<TQuery, TResult> : IPrioritizable, IQueryHandlerWrapper<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {
-        private static JsonSerializerOptions serializerOptions;
+        private static JsonSerializerOptions jsonOptions;
         private readonly ILogger logger;
 
         public DiagnosticLogger(ILogger<DiagnosticLogger<TQuery, TResult>> logger)
@@ -40,9 +40,9 @@ namespace HR.PersonalTimetable.Infrastructure.Decorators
 
         private static object JsonSerialize(object value)
         {
-            return new DeferredToString(() => JsonSerializer.Serialize(value, CreateDefaultSerializerOptions()));
+            return new DeferredToString(() => JsonSerializer.Serialize(value, CreateDefaultJsonOptions()));
 
-            static JsonSerializerOptions CreateDefaultSerializerOptions() => serializerOptions ??= new()
+            static JsonSerializerOptions CreateDefaultJsonOptions() => jsonOptions ??= new()
             {
                 WriteIndented = false,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
