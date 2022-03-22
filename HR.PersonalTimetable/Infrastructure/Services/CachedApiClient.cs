@@ -1,5 +1,4 @@
-﻿using Developist.Core.Utilities;
-
+﻿using HR.Common.Utilities;
 using HR.PersonalTimetable.Application.Exceptions;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Infrastructure;

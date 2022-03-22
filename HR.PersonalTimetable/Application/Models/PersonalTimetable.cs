@@ -1,5 +1,4 @@
-﻿using Developist.Core.Persistence.Entities;
-
+﻿using HR.Common.Persistence.Entities;
 using HR.WebUntisConnector.Model;
 
 using System;

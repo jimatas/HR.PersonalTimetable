@@ -1,6 +1,5 @@
-﻿using Developist.Core.Cqrs.Queries;
-using Developist.Core.Utilities;
-
+﻿using HR.Common.Cqrs.Queries;
+using HR.Common.Utilities;
 using HR.PersonalTimetable.Application.Models;
 using HR.PersonalTimetable.Application.Queries;
 

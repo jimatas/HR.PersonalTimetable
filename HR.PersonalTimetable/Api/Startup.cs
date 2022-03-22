@@ -1,6 +1,5 @@
-using Developist.Core.Cqrs.DependencyInjection;
-using Developist.Core.Persistence.EntityFrameworkCore.DependencyInjection;
-
+using HR.Common.Cqrs.Infrastructure;
+using HR.Common.Persistence.EntityFrameworkCore;
 using HR.PersonalTimetable.Api.Filters;
 using HR.PersonalTimetable.Application;
 using HR.PersonalTimetable.Application.Services;

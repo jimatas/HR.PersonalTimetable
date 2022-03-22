@@ -1,6 +1,6 @@
-﻿using Developist.Core.Cqrs;
-using Developist.Core.Cqrs.Commands;
-using Developist.Core.Utilities;
+﻿using HR.Common.Cqrs;
+using HR.Common.Cqrs.Commands;
+using HR.Common.Utilities;
 
 using Microsoft.Extensions.Logging;
 
