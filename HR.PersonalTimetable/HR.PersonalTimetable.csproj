@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HR.Common.Cqrs" Version="1.0.0" />
-    <PackageReference Include="HR.Common.Persistence" Version="1.0.1" />
-    <PackageReference Include="HR.Common.Persistence.EntityFrameworkCore" Version="1.0.1" />
+    <PackageReference Include="HR.Common.Cqrs" Version="1.0.1" />
+    <PackageReference Include="HR.Common.Persistence" Version="1.0.2" />
+    <PackageReference Include="HR.Common.Persistence.EntityFrameworkCore" Version="1.0.2" />
     <PackageReference Include="HR.Common.Utilities" Version="1.1.0" />
     <PackageReference Include="HR.CwipsClient" Version="3.0.1" />
     <PackageReference Include="HR.WebUntisConnector" Version="2.3.3" />
