@@ -3,6 +3,7 @@ using HR.Common.Cqrs.Queries;
 using HR.Common.Utilities;
 using HR.PersonalTimetable.Application.Models;
 using HR.PersonalTimetable.Application.Queries;
+using HR.WebUntisConnector.Model;
 
 using Microsoft.Extensions.Options;
 
@@ -24,7 +25,8 @@ namespace HR.PersonalTimetable.Application.Decorators
 
         public Task<Schedule> HandleAsync(GetSchedule query, HandlerDelegate<Schedule> next, CancellationToken cancellationToken)
         {
-            if (!query.ElementId.IsNullOrDefault() && !string.IsNullOrEmpty(query.ElementName) && appSettings.AlwaysLookUpElementId)
+            if (!query.ElementId.IsNullOrDefault() && !string.IsNullOrEmpty(query.ElementName) && appSettings.AlwaysLookUpElementId
+                && (appSettings.LookUpOnlyIfKlasse.IsNullOrDefault() || query.ElementType == ElementType.Klasse))
             {
                 // If the element's ID was specified in the API call, discard it so that the next decorator in the pipeline (which ensures both the element's ID and name are set)
                 // will look up the missing ID from the correct WebUntis environment before ultimately passing along the query to the handler.
