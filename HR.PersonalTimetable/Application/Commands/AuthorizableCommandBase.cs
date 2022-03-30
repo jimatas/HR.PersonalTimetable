@@ -1,5 +1,4 @@
-﻿using Developist.Core.Cqrs.Commands;
-
+﻿using HR.Common.Cqrs.Commands;
 using HR.PersonalTimetable.Application.Models;
 
 namespace HR.PersonalTimetable.Application.Commands

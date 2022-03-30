@@ -1,9 +1,8 @@
-﻿using Developist.Core.Cqrs;
-using Developist.Core.Cqrs.Commands;
-using Developist.Core.Persistence;
-using Developist.Core.Persistence.Entities;
-using Developist.Core.Utilities;
-
+﻿using HR.Common.Cqrs;
+using HR.Common.Cqrs.Commands;
+using HR.Common.Persistence;
+using HR.Common.Persistence.Entities;
+using HR.Common.Utilities;
 using HR.PersonalTimetable.Application.Commands;
 using HR.PersonalTimetable.Application.Exceptions;
 using HR.PersonalTimetable.Application.Models;

@@ -1,11 +1,11 @@
-﻿using Developist.Core.Utilities;
-
+﻿using HR.Common.Utilities;
 using HR.PersonalTimetable.Application.Exceptions;
 using HR.PersonalTimetable.Application.Extensions;
 using HR.PersonalTimetable.Application.Services;
 using HR.WebUntisConnector;
 using HR.WebUntisConnector.Configuration;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,7 +16,7 @@ namespace HR.PersonalTimetable.Infrastructure.Services
     /// <summary>
     /// Wraps an actual <see cref="IApiClientFactory"/> implementation and caches the <see cref="IApiClient"/> objects that are created by it.
     /// </summary>
-    public class CachedApiClientFactory : AsyncDisposableBase, ICachedApiClientFactory
+    public class CachedApiClientFactory : ICachedApiClientFactory, IAsyncDisposable
     {
         private readonly IApiClientFactory apiClientFactory;
         private readonly WebUntisConfigurationSection configuration;
@@ -34,7 +34,7 @@ namespace HR.PersonalTimetable.Infrastructure.Services
         {
             var school = configuration.FindSchool(schoolOrInstituteName)
                 ?? throw new NotFoundException($"No school or institute with the name \"{schoolOrInstituteName}\" found.");
-            
+
             CachedApiClient apiClient;
             using (mutex.WaitAndRelease())
             {
@@ -51,24 +51,36 @@ namespace HR.PersonalTimetable.Infrastructure.Services
             return apiClient;
         }
 
-        /// <inheritdoc/>
-        protected override async ValueTask ReleaseManagedResourcesAsync()
-        {
-            await using (await mutex.WaitAndReleaseAsync())
-            {
-                foreach (var apiClient in cachedApiClients.Values.Select(entry => entry.ApiClient))
-                {
-                    if (apiClient.IsAuthenticated)
-                    {
-                        await apiClient.LogOutAsync(force: true);
-                    }
-                }
-                cachedApiClients.Clear();
-            }
-            mutex.Dispose();
+        #region IAsyncDisposable support
+        protected bool IsDisposed { get; private set; }
 
-            await base.ReleaseManagedResourcesAsync();
+        protected virtual async ValueTask DisposeAsyncCore()
+        {
+            if (!IsDisposed)
+            {
+                using (await mutex.WaitAndReleaseAsync())
+                {
+                    foreach (var apiClient in cachedApiClients.Values.Select(entry => entry.ApiClient))
+                    {
+                        if (apiClient.IsAuthenticated)
+                        {
+                            await apiClient.LogOutAsync(force: true);
+                        }
+                    }
+                    cachedApiClients.Clear();
+                }
+                mutex.Dispose();
+
+                IsDisposed = true;
+            }
         }
+
+        public async ValueTask DisposeAsync()
+        {
+            await DisposeAsyncCore();
+            GC.SuppressFinalize(this);
+        }
+        #endregion
 
         private record CachedApiClientEntry(CachedApiClient ApiClient, string UserName, string Password);
     }

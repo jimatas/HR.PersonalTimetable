@@ -1,12 +1,12 @@
 <Project>
   <PropertyGroup>
     <Product>HR.PersonalTimetable.Api</Product>
-    <Authors>atask</Authors>
+    <Authors>Jim Atas</Authors>
     <Company>Rotterdam University of Applied Sciences</Company>
-    <Copyright>Copyright (c) 2021-2022 Rotterdam University of Applied Sciences</Copyright>
+    <Copyright>Copyright (c) $(Authors), $(Company). All rights reserved.</Copyright>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>2.0.0</Version>
+    <Version>2.0.2</Version>
     <Major>$(Version.Split('.')[0])</Major>
     <Minor>$(Version.Split('.')[1])</Minor>
     <Build>$([System.Math]::Floor($([System.DateTime]::Now.Subtract($([System.DateTime]::Parse("01-01-2000"))).TotalDays)))</Build>

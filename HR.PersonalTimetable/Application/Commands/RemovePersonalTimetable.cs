@@ -1,7 +1,6 @@
-﻿using Developist.Core.Cqrs.Commands;
-using Developist.Core.Persistence;
-using Developist.Core.Utilities;
-
+﻿using HR.Common.Cqrs.Commands;
+using HR.Common.Persistence;
+using HR.Common.Utilities;
 using HR.PersonalTimetable.Application.Exceptions;
 
 using Microsoft.AspNetCore.Mvc;
