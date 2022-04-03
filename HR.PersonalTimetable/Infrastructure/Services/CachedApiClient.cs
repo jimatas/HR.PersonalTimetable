@@ -69,7 +69,7 @@ namespace HR.PersonalTimetable.Infrastructure.Services
             {
                 return await apiClient.GetTimetablesAsync(parameters, cancellationToken);
             }
-            catch (JsonRpcException exception) when (exception.ErrorCode == -7002) // WebUntis: no such element.
+            catch (JsonRpcException exception) when (exception.ErrorCode == -7002) // WebUntis: "no such element"
             {
                 var element = parameters.Options.Element;
                 throw element.KeyType switch
@@ -79,6 +79,10 @@ namespace HR.PersonalTimetable.Infrastructure.Services
                     KeyTypes.ExternalKey => new NotFoundException($"No {element.Type} with {nameof(Element.ExternalKey)} \"{element.Id}\" found.", exception),
                     _ => exception
                 };
+            }
+            catch (JsonRpcException exception) when (exception.ErrorCode == -7004) // WebUntis: "no allowed date"
+            {
+                throw new BadRequestException($"Invalid timetable start and/or end date.");
             }
         }
 
