@@ -61,7 +61,7 @@ namespace HR.PersonalTimetable.Application.Decorators
                     {
                         return unixTimeSeconds;
                     }
-                    throw new ApiException(HttpStatusCode.UnprocessableEntity, "Clock skew between client and server is outside of tolerance.");
+                    throw new ForbiddenException("Clock skew between client and server is outside of tolerance.");
                 }
                 throw new BadRequestException("No or invalid timestamp value provided.");
             }

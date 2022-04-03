@@ -33,7 +33,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet(Name = nameof(GetSchedule))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<Schedule> GetAsync([FromQuery] GetSchedule query, CancellationToken cancellationToken = default)
@@ -47,7 +47,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("personalized/{user}")]
+        [HttpGet("personalized/{user}", Name = nameof(GetSchedules))]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IEnumerable<Schedule>> GetPersonalizedAsync([FromRoute, FromQuery] GetSchedules query, CancellationToken cancellationToken = default)
@@ -61,7 +61,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("personalized/{user}/export")]
+        [HttpGet("personalized/{user}/export", Name = nameof(GetSchedulesForExport))]
         [Produces("text/calendar")]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<FileContentResult> GetPersonalizedExportAsync([FromRoute] GetSchedulesForExport query, CancellationToken cancellationToken = default)

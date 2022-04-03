@@ -33,7 +33,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet(Name = nameof(GetInstitutes))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IEnumerable<Institute>> GetAsync([FromQuery] GetInstitutes query, CancellationToken cancellationToken = default)
         {
@@ -46,7 +46,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("{institute}/last-imported")]
+        [HttpGet("{institute}/last-imported", Name = nameof(GetLastImportTime))]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<DateTime> GetLastImportedAsync([FromRoute] GetLastImportTime query, CancellationToken cancellationToken = default)
         {
@@ -59,7 +59,7 @@ namespace HR.PersonalTimetable.Api.Controllers
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("{institute}/holidays")]
+        [HttpGet("{institute}/holidays", Name = nameof(GetHolidays))]
         [ProducesResponseType(StatusCodes.Status200OK), ProducesResponseType(StatusCodes.Status400BadRequest), ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IEnumerable<Holiday>> GetHolidaysAsync([FromRoute, FromQuery] GetHolidays query, CancellationToken cancellationToken = default)
         {
