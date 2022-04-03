@@ -82,7 +82,7 @@ namespace HR.PersonalTimetable.Infrastructure.Services
             }
             catch (JsonRpcException exception) when (exception.ErrorCode == -7004) // WebUntis: "no allowed date"
             {
-                throw new BadRequestException($"Invalid timetable start and/or end date.");
+                throw new BadRequestException($"Invalid timetable start and/or end date.", exception);
             }
         }
 
