@@ -361,4 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# WebUntis client configuration
 /HR.PersonalTimetable/Api/webuntis.config
