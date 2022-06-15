@@ -63,11 +63,10 @@ namespace HR.PersonalTimetable.Application.Queries
         {
             if (ElementId.IsNullOrDefault() && string.IsNullOrEmpty(ElementName))
             {
-                var errorMessage = $"Either the {nameof(ElementId)} field or the {nameof(ElementName)} field, or both must be specified.";
-                var memberNames = new[] { nameof(ElementId), nameof(ElementName) };
-                return new ValidationResult[] { new(errorMessage, memberNames) };
+                yield return new ValidationResult(
+                    errorMessage: $"Either the {nameof(ElementId)} field or the {nameof(ElementName)} field, or both must be specified.",
+                    memberNames: new[] { nameof(ElementId), nameof(ElementName) });
             }
-            return Enumerable.Empty<ValidationResult>();
         }
     }
 
